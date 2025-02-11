@@ -42,7 +42,7 @@ else:
 print("Installing required libraries in the virtual environment...")
 try:
     subprocess.run(
-        [python_executable, "-m", "pip", "install", "jupyter", "ipykernel", "opencv-python", "numpy", "matplotlib", "pillow", "pandas", "albumentations", "scikit-learn", "tensorflow", "torch", "tf-keras"],
+        [python_executable, "-m", "pip", "install", "jupyter", "ipykernel", "opencv-python", "numpy", "matplotlib", "pillow", "pandas", "albumentations", "scikit-learn", "tensorflow", "torch", "tf-keras", "Flask"],
         check=True,
     )
     print("Libraries installed successfully.")
