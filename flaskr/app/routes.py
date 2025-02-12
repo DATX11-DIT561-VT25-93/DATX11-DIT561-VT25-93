@@ -16,21 +16,23 @@ def get_planets():
 @main.route('/sign_in', methods=['POST', 'GET'])
 def sign_in():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        # Needs login functionality
-        msg = 'Login attempt for ' + str(username)
-        return msg
-    return 'This is the login page'
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No JSON data received"}), 400
+        username = data.get('username')
+        password = data.get('password')
+        return jsonify({"message": f"Sign in attempt for user {username}"})
+    return 'This is the sign in page'
 
 @main.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        # Needs registration functionality
-        msg = 'Registration attempt for user ' + str(username)
-        return msg
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No JSON data received"}), 400
+        username = data.get('username')
+        password = data.get('password')
+        return jsonify({"message": f"Registration attempt for user {username}"})
     return 'This is the registration page'
 
 
