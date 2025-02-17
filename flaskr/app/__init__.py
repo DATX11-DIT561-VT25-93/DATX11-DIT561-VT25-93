@@ -9,7 +9,10 @@ def create_app():
     # Initialize Supabase
     app.supabase = create_client(app.config['SUPABASE_URL'], app.config['SUPABASE_KEY'])
 
-    from app.routes import main
-    app.register_blueprint(main)
+    from app.routes import password_auth_bp
+    app.register_blueprint(password_auth_bp)
+
+    from app.face_auth import face_auth_bp
+    app.register_blueprint(face_auth_bp)
 
     return app

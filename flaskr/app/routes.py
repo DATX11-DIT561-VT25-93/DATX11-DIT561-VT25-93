@@ -1,18 +1,20 @@
 from flask import Blueprint, render_template, jsonify, request, current_app
 
-main = Blueprint('main', __name__)
+# RENAME FILE to 'password_auth.py'
 
-@main.route('/')
+password_auth_bp = Blueprint('password_auth_bp', __name__)
+
+@password_auth_bp.route('/')
 def home():
     return render_template('index.html')
 
-@main.route('/planets')
+@password_auth_bp.route('/planets')
 def get_planets():
     supabase = current_app.supabase
     response = supabase.table('test_planets').select("description").execute()
     return jsonify(response.data)
 
-@main.route('/login', methods=['POST', 'GET'])
+@password_auth_bp.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
         data = request.get_json()
@@ -38,11 +40,11 @@ def login():
     #return render_template('login.html')
 
 # TODO: Implement logout function below
-@main.route('/logout')
+@password_auth_bp.route('/logout')
 def logout():
     return 'This is the logout page'
 
-@main.route('/register', methods=['POST', 'GET'])
+@password_auth_bp.route('/register', methods=['POST', 'GET'])
 def register():
     supabase = current_app.supabase
 
@@ -79,10 +81,4 @@ def register():
     return jsonify(response.data)
     #return render_template('register.html')
 
-
-# For later
-@main.route('/frame', methods=['POST'])
-def handle_frame():
-    #frame = request...
-    return 'Frame handled'
 
