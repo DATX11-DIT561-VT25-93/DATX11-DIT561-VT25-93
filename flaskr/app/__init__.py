@@ -11,6 +11,7 @@ def create_app():
 
     from app.routes import password_auth_bp
     app.register_blueprint(password_auth_bp)
+    app.secret_key = "super_secret_move to .env"
 
     from app.face_auth import face_auth_bp
     app.register_blueprint(face_auth_bp)
