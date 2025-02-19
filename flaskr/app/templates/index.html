@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>BioAuth</title>
+    <title>BioAuth - Home</title>
 </head>
 <body>
     <h1>BioAuth</h1>
+    
     <h2>Secure the Web With Your Face</h2>
 
+    <h3>Register User</h3>
     <button onclick="window.location.href='/register'">Register</button>
+    
+    <h3>Login</h3>
     <button onclick="window.location.href='/login'">Login</button>
 
+    <h3>Läsa Om Fina Planeter</h3>
     <button onclick="fetchPlanets()">Get Planets</button>
     <div id="planetsList"></div>
 
-    <h2>Register User</h2>
-    <button onclick="registerUser()">Register</button>
-    <p id="response"></p>
-
+    
     <script>
         async function fetchPlanets() {
             let response = await fetch('/planets');
