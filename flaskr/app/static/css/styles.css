@@ -15,3 +15,12 @@ form {
 label, input, button, p {
     margin: 10px 0;
 }
+
+
+
+#canvas {
+    display:none;
+}
+#webcam {
+    display:none;
+}

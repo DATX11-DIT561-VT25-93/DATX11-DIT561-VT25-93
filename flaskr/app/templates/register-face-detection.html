@@ -1,0 +1,11 @@
+{% extends "register.html" %}
+
+{% block registration_content %}
+<h1>Streaming Webcam to Backend</h1>
+    <video id="webcam" autoplay playsinline></video>
+    <canvas id="canvas"></canvas>
+
+    <button id="startButton">Start Webcam</button>
+
+    <script src="{{ url_for('static', filename='js/webcam.js') }}"></script>
+{% endblock %}
