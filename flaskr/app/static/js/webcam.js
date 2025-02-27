@@ -1,6 +1,8 @@
 const video = document.getElementById('webcam');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
+const initialDelay = 1000; // Time (in ms) before webcam starts capturing and sending frames
+const newFrameDelay = 5000; // Time (in ms) before a new frame is captured and sent
 
 async function startWebcam() {
     try {
@@ -12,14 +14,14 @@ async function startWebcam() {
     }
 }
 
-function captureAndSendFrame() {
+function captureAndSendFrame(url) {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     const imageData = canvas.toDataURL('image/jpeg'); // Convert to Base64
 
-    fetch('/register-face-detection', {  // Send to Flask backend
+    fetch(url, {  // Send to Flask backend
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ image: imageData })
@@ -33,13 +35,21 @@ function captureAndSendFrame() {
             console.error('Error sending frame:', error);
         });
 
-    setTimeout(captureAndSendFrame, 5000); // Capture every 5000ms
+    setTimeout(() => captureAndSendFrame(url), newFrameDelay); 
 }
 
-document.getElementById('startButton').addEventListener('click', () => {
+document.querySelector(".startButton").addEventListener("click", (event) => {
     document.getElementById('webcam').style.display = 'block';
-    document.getElementById('startButton').style.display = 'none';
+    event.target.style.display = "none";
+
+    let url; // URL to which the frames are sent 
+
+    if (event.target.id === "faceRegisterButton") {
+        url = '/register-face-detection';
+    } else {
+        url = "/login-face-detection";
+    }
 
     startWebcam();
-    setTimeout(captureAndSendFrame, 1000); // Start streaming after 1s
+    setTimeout(() => captureAndSendFrame(url), initialDelay);
 });

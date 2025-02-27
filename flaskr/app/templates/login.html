@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
+    {% block login_content %}
     <h1>Login Page</h1>
     <form action="{{ url_for('password_auth_bp.login') }}" method="post">
         <label for="username">Username:</label>
@@ -15,6 +16,7 @@
         <br>
         <button type="submit">Login</button>
     </form>
+    {% endblock %}
     <p>Don't have an account? <a href="{{ url_for('password_auth_bp.register') }}">Register here</a></p>
 
     <h3></h3>
