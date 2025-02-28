@@ -12,13 +12,15 @@ def register():
     if request.method == 'POST':
         data = request.get_json()
         
-        if 'image' not in data:
-            return jsonify({'error': 'No image received'}), 400
+        if 'image' not in data or 'username' not in data:
+            return jsonify({'error': 'Missing image or username'}), 400
 
         try:
             # Extract and decode the image
-            print("Webcam frame received")
             image_data = data['image'].split(',')[1] # Remove 'data:image/jpeg;base64,'
+            username = data['username']
+
+            print("Webcam frame received from " + str(username))
 
             # Uncomment the three lines below (and import packages above) to see what the webcam frames looks like from the Python point of view
             #image_bytes = base64.b64decode(image_data) 
@@ -58,13 +60,15 @@ def login():
     if request.method == 'POST':
         data = request.get_json()
         
-        if 'image' not in data:
-            return jsonify({'error': 'No image received'}), 400
+        if 'image' not in data or 'username' not in data:
+            return jsonify({'error': 'Missing image or username'}), 400
 
         try:
             # Extract and decode the image
-            print("Webcam frame received")
             image_data = data['image'].split(',')[1] # Remove 'data:image/jpeg;base64,'
+            username = data['username']
+
+            print("Webcam frame received from " + str(username))
 
             # Uncomment the three lines below (and import packages above) to see what the webcam frames looks like from the Python point of view
             #image_bytes = base64.b64decode(image_data) 

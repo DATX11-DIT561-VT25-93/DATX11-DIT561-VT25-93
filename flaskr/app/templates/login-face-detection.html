@@ -7,5 +7,8 @@
 
     <button id="faceLoginButton" class="startButton">Start Webcam</button>
 
+    <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
     <script src="{{ url_for('static', filename='js/webcam.js') }}"></script>
 {% endblock %}

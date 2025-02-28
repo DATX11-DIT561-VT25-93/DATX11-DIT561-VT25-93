@@ -2,7 +2,7 @@ const video = document.getElementById('webcam');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const initialDelay = 1000; // Time (in ms) before webcam starts capturing and sending frames
-const newFrameDelay = 5000; // Time (in ms) before a new frame is captured and sent
+const newFrameDelay = 5000; // Time (in ms) before a new frame is captured and sent 
 
 async function startWebcam() {
     try {
@@ -14,7 +14,7 @@ async function startWebcam() {
     }
 }
 
-function captureAndSendFrame(url) {
+function captureAndSendFrame(url, username) {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -24,7 +24,7 @@ function captureAndSendFrame(url) {
     fetch(url, {  // Send to Flask backend
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: imageData })
+        body: JSON.stringify({ image: imageData, username: username })
     })
         .then(response => response.json())
         .then(data => {
@@ -35,10 +35,17 @@ function captureAndSendFrame(url) {
             console.error('Error sending frame:', error);
         });
 
-    setTimeout(() => captureAndSendFrame(url), newFrameDelay); 
+    setTimeout(() => captureAndSendFrame(url, username), newFrameDelay); 
 }
 
 document.querySelector(".startButton").addEventListener("click", (event) => {
+    let username = document.getElementById("username").value.trim();
+
+    if (!username) {
+        alert("Please enter a username before proceeding.");
+        return;  // Stop execution if the input is empty
+    }
+
     document.getElementById('webcam').style.display = 'block';
     event.target.style.display = "none";
 
@@ -51,5 +58,5 @@ document.querySelector(".startButton").addEventListener("click", (event) => {
     }
 
     startWebcam();
-    setTimeout(() => captureAndSendFrame(url), initialDelay);
+    setTimeout(() => captureAndSendFrame(url, username), initialDelay);
 });
