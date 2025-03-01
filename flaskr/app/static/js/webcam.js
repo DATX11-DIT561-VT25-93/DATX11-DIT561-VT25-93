@@ -3,6 +3,8 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const initialDelay = 1000; // Time (in ms) before webcam starts capturing and sending frames
 const newFrameDelay = 5000; // Time (in ms) before a new frame is captured and sent 
+const urlRegisterFace = '/register-face-detection'
+const urlLoginFace = "/login-face-detection"
 
 async function startWebcam() {
     try {
@@ -29,7 +31,22 @@ function captureAndSendFrame(url, username) {
         .then(response => response.json())
         .then(data => {
             console.log('Response from backend, ', data);
-            // Handle the response from the server here
+
+            if (data.message === 'Face detected' && data.new_image_data) {
+                // If face is detected and new_image_data is present in the response
+
+                const img = new Image();
+                img.src = 'data:image/jpeg;base64,' + data.new_image_data; // Base64 string prepended with data URI scheme
+
+                // When the image is loaded, draw it on the canvas
+                img.onload = function() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height); // Optional: Clear the canvas before drawing new image
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height); // Draw image on canvas
+                };
+            } else {
+                // Handle case where no face is detected (optional)
+                console.log('No face detected.');
+            }
         })
         .catch(error => {
             console.error('Error sending frame:', error);
@@ -47,14 +64,15 @@ document.querySelector(".startButton").addEventListener("click", (event) => {
     }
 
     document.getElementById('webcam').style.display = 'block';
+    document.getElementById('canvas').style.display = 'block';
     event.target.style.display = "none";
 
     let url; // URL to which the frames are sent 
 
     if (event.target.id === "faceRegisterButton") {
-        url = '/register-face-detection';
+        url = urlRegisterFace;
     } else {
-        url = "/login-face-detection";
+        url = urlLoginFace;
     }
 
     startWebcam();

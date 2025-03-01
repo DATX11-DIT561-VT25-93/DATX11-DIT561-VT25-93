@@ -1,10 +1,8 @@
 from flask import Blueprint, render_template, jsonify, request, current_app, redirect, url_for, session
-#import base64
-#import io
-#from PIL import Image
+from .functionality.detection import detect_face
+
 
 face_auth_bp = Blueprint('face_auth_bp', __name__)
-
 
 @face_auth_bp.route('/register-face-detection', methods=['POST', 'GET']) 
 def register():
@@ -16,33 +14,15 @@ def register():
             return jsonify({'error': 'Missing image or username'}), 400
 
         try:
-            # Extract and decode the image
-            image_data = data['image'].split(',')[1] # Remove 'data:image/jpeg;base64,'
+            image_data = data['image'] # Webcam image in shape of base64 string        
             username = data['username']
 
             print("Webcam frame received from " + str(username))
-
-            # Uncomment the three lines below (and import packages above) to see what the webcam frames looks like from the Python point of view
-            #image_bytes = base64.b64decode(image_data) 
-
-            # Convert to PIL Image (optional for processing)
-            #image = Image.open(io.BytesIO(image_bytes))
-
-            #image.show()  # Open the image for debugging
             
-            ######################################
-            # TODO: Perform face detection below #
-            ######################################
-            """ # Convert the image to OpenCV format (if needed)
-            open_cv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-
-            # You can perform face detection here
-            face_image = detect_face(open_cv_image)
+            face_data, new_image_data = detect_face(image_data) # Get array containing face data and image with marked faces in shape of base64 string
             
-            if face_image is not None:
-                #face_pil = Image.fromarray(cv2.cvtColor(face_image, cv2.COLOR_BGR2RGB))
-                #face_pil.show()  # Opens the image in the default viewer
-                return jsonify({'message': 'Face detected'}) """
+            if face_data is not None:
+                return jsonify({'message': 'Face detected', 'new_image_data': new_image_data})
 
         except Exception as e:
             return jsonify({"error": f"Invalid image data: {str(e)}"}), 400
@@ -64,33 +44,15 @@ def login():
             return jsonify({'error': 'Missing image or username'}), 400
 
         try:
-            # Extract and decode the image
-            image_data = data['image'].split(',')[1] # Remove 'data:image/jpeg;base64,'
+            image_data = data['image'] # Webcam image in shape of base64 string        
             username = data['username']
 
             print("Webcam frame received from " + str(username))
-
-            # Uncomment the three lines below (and import packages above) to see what the webcam frames looks like from the Python point of view
-            #image_bytes = base64.b64decode(image_data) 
-
-            # Convert to PIL Image (optional for processing)
-            #image = Image.open(io.BytesIO(image_bytes))
-
-            #image.show()  # Open the image for debugging
             
-            ######################################
-            # TODO: Perform face detection below #
-            ######################################
-            """ # Convert the image to OpenCV format (if needed)
-            open_cv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-
-            # You can perform face detection here
-            face_image = detect_face(open_cv_image)
+            face_data, new_image_data = detect_face(image_data) # Get array containing face data and image with marked faces in shape of base64 string
             
-            if face_image is not None:
-                #face_pil = Image.fromarray(cv2.cvtColor(face_image, cv2.COLOR_BGR2RGB))
-                #face_pil.show()  # Opens the image in the default viewer
-                return jsonify({'message': 'Face detected'}) """
+            if face_data is not None:
+                return jsonify({'message': 'Face detected', 'new_image_data': new_image_data})
 
         except Exception as e:
             return jsonify({"error": f"Invalid image data: {str(e)}"}), 400
@@ -98,4 +60,3 @@ def login():
         return jsonify({'message': 'No face detected'})
 
     return render_template('login-face-detection.html')
-
