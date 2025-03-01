@@ -4,6 +4,7 @@ from .functionality.detection import detect_face
 
 face_auth_bp = Blueprint('face_auth_bp', __name__)
 
+
 @face_auth_bp.route('/register-face-detection', methods=['POST', 'GET']) 
 def register():
     #supabase = current_app.supabase
@@ -22,7 +23,9 @@ def register():
             face_data, new_image_data = detect_face(image_data) # Get array containing face data and image with marked faces in shape of base64 string
             
             if face_data is not None:
-                return jsonify({'message': 'Face detected', 'new_image_data': new_image_data})
+                # TODO: add new user to database
+                session['user'] = username
+                return jsonify({'message': 'Successful registration', 'new_image_data': new_image_data, "redirect": url_for('face_auth_bp.account')})
 
         except Exception as e:
             return jsonify({"error": f"Invalid image data: {str(e)}"}), 400
@@ -52,7 +55,8 @@ def login():
             face_data, new_image_data = detect_face(image_data) # Get array containing face data and image with marked faces in shape of base64 string
             
             if face_data is not None:
-                return jsonify({'message': 'Face detected', 'new_image_data': new_image_data})
+                session['user'] = username
+                return jsonify({'message': 'Successful login', 'new_image_data': new_image_data, "redirect": url_for('face_auth_bp.account')})
 
         except Exception as e:
             return jsonify({"error": f"Invalid image data: {str(e)}"}), 400
@@ -60,3 +64,11 @@ def login():
         return jsonify({'message': 'No face detected'})
 
     return render_template('login-face-detection.html')
+
+
+
+@face_auth_bp.route('/account')
+def account():
+    if 'user' not in session:
+        return redirect(url_for('face_auth_bp.login'))
+    return render_template('account.html', username=session['user'])

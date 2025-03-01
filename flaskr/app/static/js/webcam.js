@@ -1,10 +1,15 @@
 const video = document.getElementById('webcam');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
+
 const initialDelay = 1000; // Time (in ms) before webcam starts capturing and sending frames
 const newFrameDelay = 5000; // Time (in ms) before a new frame is captured and sent 
+const redirectDelay = 3000; // Time (in ms) before a verified user is redirected to the account page
+
 const urlRegisterFace = '/register-face-detection'
 const urlLoginFace = "/login-face-detection"
+const successMsgLogin = 'Successful login'
+const successMsgRegister = 'Successful registration'
 
 async function startWebcam() {
     try {
@@ -32,19 +37,18 @@ function captureAndSendFrame(url, username) {
         .then(data => {
             console.log('Response from backend, ', data);
 
-            if (data.message === 'Face detected' && data.new_image_data) {
-                // If face is detected and new_image_data is present in the response
-
+            if (data.message === successMsgLogin || data.message === successMsgRegister) { // If face is detected and new_image_data is present in the response
                 const img = new Image();
                 img.src = 'data:image/jpeg;base64,' + data.new_image_data; // Base64 string prepended with data URI scheme
 
-                // When the image is loaded, draw it on the canvas
+                // When image is loaded, draw it on the canvas
                 img.onload = function() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height); // Optional: Clear the canvas before drawing new image
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height); // Draw image on canvas
                 };
-            } else {
-                // Handle case where no face is detected (optional)
+                
+                setTimeout(() => window.location.href = data.redirect, redirectDelay);
+            } else { // Handle case where no face is detected (optional)
                 console.log('No face detected.');
             }
         })
