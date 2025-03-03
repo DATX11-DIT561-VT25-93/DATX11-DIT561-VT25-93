@@ -8,7 +8,6 @@ def save_user_to_db(username, face_data):
     with current_app.app_context():
         supabase = current_app.supabase
 
-        # TODO: add existing users check
         existing_user = supabase.table('registered_users_detection').select("id").eq("username", username).execute()
         
         if existing_user.data:
