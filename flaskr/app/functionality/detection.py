@@ -28,11 +28,13 @@ def detect_face(base64_string):
 
     faces = detector.detect(image)[1] # Returns an array with length 15 and dtype=float32
     
+    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
     if faces is not None:
         image_w_rectangles = draw_face_rectangles(image, faces) # Image with marked faces in shape of base64 string 
-        return (faces, image_w_rectangles)
+        return (faces, image_w_rectangles, image_rgb)
     
-    return (None, None)
+    return (None, None, None)
 
 # Turns base64 image string into shape that our OpenCV face detector can handle
 def process_base64_image(base64_string):
