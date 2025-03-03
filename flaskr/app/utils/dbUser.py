@@ -9,6 +9,10 @@ def save_user_to_db(username, face_data):
         supabase = current_app.supabase
 
         # TODO: add existing users check
+        existing_user = supabase.table('registered_users_detection').select("id").eq("username", username).execute()
+        
+        if existing_user.data:
+            return jsonify({"error": "Username already taken"}), 409 
 
         if isinstance(face_data, np.ndarray):
             face_data = face_data.tolist()
@@ -24,4 +28,4 @@ def save_user_to_db(username, face_data):
         
         if isinstance(response, dict) and "error" in response and response["error"]:
             return jsonify({"error": "Database error", "details": response["error"]}), 500
-        return None
+        return jsonify({"success": "User was successfully registered"}), 200

@@ -24,7 +24,7 @@ def register():
             face_data, new_image_data, image_rgb = detect_face(image_data) # Get array containing face data and image with marked faces in shape of base64 string
             
             if face_data is not None:
-                save_user_to_db(username, new_image_data) # Adds new user to database
+                save_user_to_db(username, face_data) # Adds new user to database
 
                 session['user'] = username
                 return jsonify({'message': 'Successful registration', 'new_image_data': new_image_data, "redirect": url_for('face_auth_bp.account')})
