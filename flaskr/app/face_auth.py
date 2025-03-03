@@ -20,7 +20,7 @@ def register():
 
             print("Webcam frame received from " + str(username))
             
-            face_data, new_image_data = detect_face(image_data) # Get array containing face data and image with marked faces in shape of base64 string
+            face_data, new_image_data, image_rgb = detect_face(image_data) # Get array containing face data and image with marked faces in shape of base64 string
             
             if face_data is not None:
                 # TODO: add new user to database
@@ -52,7 +52,7 @@ def login():
 
             print("Webcam frame received from " + str(username))
             
-            face_data, new_image_data = detect_face(image_data) # Get array containing face data and image with marked faces in shape of base64 string
+            face_data, new_image_data, image_rgb = detect_face(image_data) # Get array containing face data and image with marked faces in shape of base64 string
             
             if face_data is not None:
                 session['user'] = username
