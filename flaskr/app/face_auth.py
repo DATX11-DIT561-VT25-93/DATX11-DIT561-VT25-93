@@ -1,13 +1,22 @@
 from flask import Blueprint, render_template, jsonify, request, current_app, redirect, url_for, session
 from .functionality.detection import detect_face
-
+from .functionality.feature_extraction import extract_features
+from.functionality.verification import compare_faces_euclidean
+from deepface.models.facial_recognition import Facenet
+import os
 
 face_auth_bp = Blueprint('face_auth_bp', __name__)
 
+new_deepface_home = "flaskr/app/functionality/facenet_weights"
+os.makedirs(new_deepface_home, exist_ok=True)
+os.environ["DEEPFACE_HOME"] = new_deepface_home
+
+rec_model = Facenet.load_facenet512d_model()
 
 @face_auth_bp.route('/register-face-detection', methods=['POST', 'GET']) 
 def register():
-    #supabase = current_app.supabase
+    supabase = current_app.supabase
+
     if request.method == 'POST':
         data = request.get_json()
         
@@ -24,6 +33,8 @@ def register():
             
             if face_data is not None:
                 # TODO: add new user to database
+                feature_vectors = extract_features(face_data, image_rgb, rec_model)
+
                 session['user'] = username
                 return jsonify({'message': 'Successful registration', 'new_image_data': new_image_data, "redirect": url_for('face_auth_bp.account')})
 
@@ -38,7 +49,7 @@ def register():
 
 @face_auth_bp.route('/login-face-detection', methods=['POST', 'GET'])
 def login():
-    #supabase = current_app.supabase
+    supabase = current_app.supabase
 
     if request.method == 'POST':
         data = request.get_json()
