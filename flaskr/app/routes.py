@@ -92,4 +92,4 @@ def logout():
 def account():
     if 'user' not in session:
         return redirect(url_for('password_auth_bp.login'))
-    return render_template('account.html', username=session['user'])
+    return render_template('account.html', email=session['user'])

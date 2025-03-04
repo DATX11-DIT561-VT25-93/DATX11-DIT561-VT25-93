@@ -12,21 +12,21 @@ def register():
     if request.method == 'POST':
         data = request.get_json()
         
-        if 'image' not in data or 'username' not in data:
-            return jsonify({'error': 'Missing image or username'}), 400
+        if 'image' not in data or 'email' not in data:
+            return jsonify({'error': 'Missing image or email'}), 400
 
         try:
             image_data = data['image'] # Webcam image in shape of base64 string        
-            username = data['username']
+            email = data['email']
 
-            print("Webcam frame received from " + str(username))
+            print("Webcam frame received from " + str(email))
             
             face_data, new_image_data, image_rgb = detect_face(image_data) # Get array containing face data and image with marked faces in shape of base64 string
             
             if face_data is not None:
-                save_user_to_db(username, face_data) # Adds new user to database
+                save_user_to_db(email, face_data) # Adds new user to database
 
-                session['user'] = username
+                session['user'] = email
                 return jsonify({'message': 'Successful registration', 'new_image_data': new_image_data, "redirect": url_for('face_auth_bp.account')})
 
         except Exception as e:
