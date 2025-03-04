@@ -4,11 +4,11 @@ import base64
 from flask import jsonify, request, current_app, redirect, url_for, session
 
 
-def save_user_to_db(username, face_data):
+def save_user_to_db(email, face_data):
     with current_app.app_context():
         supabase = current_app.supabase
 
-        existing_user = supabase.table('registered_users_detection').select("id").eq("username", username).execute()
+        existing_user = supabase.table('registered_users_detection').select("id").eq("email", email).execute()
         
         if existing_user.data:
             return jsonify({"error": "Username already taken"}), 409 
@@ -19,7 +19,7 @@ def save_user_to_db(username, face_data):
             face_data = base64.b64encode(face_data).decode('utf-8')
 
         new_user = {
-            "username": username,
+            "email": email,
             "face_features": face_data  
         }
         
