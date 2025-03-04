@@ -2,13 +2,15 @@
 
 {% block registration_content %}
 <h1>Streaming Webcam to Backend</h1>
-    <video id="webcam" autoplay playsinline></video>
-    <canvas id="canvas"></canvas>
+    <div id="container">
+        <video id="webcam" autoplay playsinline></video>
+        <canvas id="canvas"></canvas>
+    </div>
 
     <button id="faceRegisterButton" class="startButton">Start Webcam</button>
 
-    <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+    <label for="username">Email:</label>
+        <input type="text" id="email" name="email" required>
 
     <script src="{{ url_for('static', filename='js/webcam.js') }}"></script>
 {% endblock %}
