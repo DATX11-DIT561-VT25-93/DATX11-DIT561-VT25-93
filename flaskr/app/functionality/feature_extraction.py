@@ -11,22 +11,19 @@ def preprocess_face(face):
     face_resized = np.expand_dims(face_resized, axis=0)  # Add batch dimension
     return face_resized
 
-def extract_features(faces, image_rgb, model):
-    feature_vectors = []
+def bounding_box_area(face):
+    x, y, w, h = map(int, face[:4])
+    return w * h
 
-    if faces is not None:
-        for face in faces:
-            x, y, w, h = map(int, face[:4])
-            face_crop = image_rgb[y:y+h, x:x+w]
+def extract_feature(faces, image_rgb, model):
+    closest_face = max(faces, key=bounding_box_area)
+    
+    x, y, w, h = map(int, closest_face[:4])
+    face_crop = image_rgb[y:y+h, x:x+w]
 
-            if face_crop.shape[0] > 0 and face_crop.shape[1] > 0:
-                face_preprocessed = preprocess_face(face_crop)
-                feature_vector = model.predict(face_preprocessed)[0]
-                feature_vector = normalize_vector(feature_vector)
+    face_preprocessed = preprocess_face(face_crop)
+    feature_vector = model.predict(face_preprocessed)[0]
+    feature_vector = normalize_vector(feature_vector)
 
-                feature_vectors.append(feature_vector)
-            else:
-                feature_vectors.append(np.array([]))
-
-        return feature_vectors
+    return feature_vector
 
