@@ -1,14 +1,18 @@
 {% extends "register.html" %}
 
 {% block registration_content %}
-<h1>Streaming Webcam to Backend</h1>
-    <video id="webcam" autoplay playsinline></video>
-    <canvas id="canvas"></canvas>
+<div class="container text-center">
+    <h1 class="mb-4">Streaming Webcam to Backend</h1>
+    <video id="webcam" autoplay playsinline class="mb-3"></video>
+    <canvas id="canvas" class="d-none"></canvas>
 
-    <button id="faceRegisterButton" class="startButton">Start Webcam</button>
+    <button id="faceRegisterButton" class="btn btn-primary mb-3">Start Webcam</button>
 
-    <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" class="form-control w-50 mx-auto" required>
+    </div>
+</div>
 
-    <script src="{{ url_for('static', filename='js/webcam.js') }}"></script>
+<script src="{{ url_for('static', filename='js/webcam.js') }}"></script>
 {% endblock %}
