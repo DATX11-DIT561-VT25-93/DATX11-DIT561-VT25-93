@@ -8,7 +8,7 @@ face_auth_bp = Blueprint('face_auth_bp', __name__)
 
 @face_auth_bp.route('/register-face-detection', methods=['POST', 'GET']) 
 def register():
-    supabase = current_app.supabase
+    
     if request.method == 'POST':
         data = request.get_json()
         
