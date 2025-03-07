@@ -3,8 +3,8 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
 const initialDelay = 1000; // Time (in ms) before webcam starts capturing and sending frames
-const newFrameDelay = 1000; // Time (in ms) before a new frame is captured and sent 
-const redirectDelay = 800; // Time (in ms) before a verified user is redirected to the account page
+const newFrameDelay = 3000; // Time (in ms) before a new frame is captured and sent 
+const redirectDelay = 1500; // Time (in ms) before a verified user is redirected to the account page
 
 const urlRegisterFace = '/register-face-detection'
 const urlLoginFace = "/login-face-detection"
@@ -67,8 +67,7 @@ document.querySelector(".startButton").addEventListener("click", (event) => {
         return;  // Stop execution if the input is empty
     }
 
-    document.getElementById('webcam').style.display = 'block';
-    document.getElementById('canvas').style.display = 'block';
+    document.getElementById('container').style.display = 'block';
     event.target.style.display = "none";
 
     let url; // URL to which the frames are sent 
