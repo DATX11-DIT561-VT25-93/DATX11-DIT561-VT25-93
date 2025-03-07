@@ -3,11 +3,19 @@
 <head>
     <title>BioAuth - {{username}}</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-</head>
-<body>
-    <h1>Account Page</h1>
-    <p>Email: {{ email }}</p> 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-    <button onclick="window.location.href='/logout'">Logout</button>
+</head>
+
+<body class="d-flex flex-column align-items-center justify-content-center vh-100">
+    <div class="container">
+        <h1 class="text-center mb-4">Account Page</h1>
+        <p class="text-center">Email: {{ email }}</p>
+        <div class="text-center mt-3">
+            <button class="btn btn-secondary" onclick="window.location.href='/logout'">Logout</button>
+        </div>
+    </div>
+
+
 </body>
 </html>

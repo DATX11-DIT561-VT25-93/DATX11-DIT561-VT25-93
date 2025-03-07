@@ -2,29 +2,33 @@
 <html lang="en">
 <head>
     <title>BioAuth - Register</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
 </head>
-<body>
+<body class="d-flex flex-column align-items-center justify-content-center vh-100">
     {% block registration_content %}
-    <h1>Register Page</h1>
-    <form action="{{ url_for('password_auth_bp.register') }}" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <br>
-        <button type="submit">Register</button>
-        <p>Register using Facedetection <a href="{{ url_for('password_auth_bp.login') }}">Register Here</a></p>
-    </form>
-    {% endblock %}
-    
-    <p>Already have an account? <a href="{{ url_for('password_auth_bp.login') }}">Login here</a></p>
 
-    <h3></h3>
-    <button onclick="window.location.href='/'">Back To Homepage</button>
-    
+    <div class="container">
+        <h1 class="text-center mb-4">Register Page</h1>
+        
+        <form action="{{ url_for('password_auth_bp.register') }}" method="post" class="w-50 mx-auto">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Register</button>
+        </form>
+        {% endblock %}
+        <p class="text-center mt-3">Already have an account? <a href="{{ url_for('password_auth_bp.login') }}">Login here</a></p>
+        <div class="text-center mt-3">
+            <button class="btn btn-secondary" onclick="window.location.href='/'">Back To Homepage</button>
+        </div>
+    </div>
+
 </body>
 </html>

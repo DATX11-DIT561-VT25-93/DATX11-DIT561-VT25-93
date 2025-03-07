@@ -3,23 +3,33 @@
 <head>
     <title>BioAuth - Login</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-</head>
-<body>
-    {% block login_content %}
-    <h1>Login Page</h1>
-    <form action="{{ url_for('password_auth_bp.login') }}" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <br>
-        <button type="submit">Login</button>
-    </form>
-    {% endblock %}
-    <p>Don't have an account? <a href="{{ url_for('password_auth_bp.register') }}">Register here</a></p>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-    <h3></h3>
-    <button onclick="window.location.href='/'">Back To Homepage</button>
+
+
+</head>
+<body class="d-flex flex-column align-items-center justify-content-center vh-100">
+    {% block login_content %}
+    <div class="container"></div>
+        <h1 class="text-center mb-4"> Login Page </h1>
+         <form action="{{ url_for('password_auth_bp.login') }}" method="post" class="w-50 mx-auto">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
+        {% endblock %}
+        <p class="text-center mt-3"> Don't have an account? <a href="{{ url_for('password_auth_bp.register') }}">Register here</a></p>
+        <div class="text-center mt-3">
+            <button class="btn btn-secondary" onclick="window.location.href='/'">Back To Homepage</button>
+        </div>
+    </div>
+
+
 </body>
 </html>
