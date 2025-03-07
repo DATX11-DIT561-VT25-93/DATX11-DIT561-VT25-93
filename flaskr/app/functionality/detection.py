@@ -17,8 +17,8 @@ def detect_face(base64_string):
         "",         # Backend target (usually left empty)
         (320, 320), # Default size for the detector
         0.9,        # Confidence threshold
-        0.3,        # Non Max Supression (NMS) threshold
-        10          # Max number of detections
+        0.1,        # Non Max Supression (NMS) threshold
+        10         # Max number of detections
     )
 
     # Convert image and detect faces
@@ -27,7 +27,7 @@ def detect_face(base64_string):
     detector.setInputSize((w, h))
 
     faces = detector.detect(image)[1] # Returns an array with length 15 and dtype=float32
-    
+
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
     if faces is not None:
@@ -79,8 +79,7 @@ def draw_face_rectangles(image, faces):
         x, y, w, h = map(int, face[:4])  # Extract bounding box coordinates
         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)  # Green box
 
-    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    base64_string = to_base64_image(image_rgb)
+    base64_string = to_base64_image(image)
 
     # Displaying the image
     #face_pil = Image.fromarray(image_rgb)
