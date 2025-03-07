@@ -1,18 +1,22 @@
 {% extends "login.html" %}
 
 {% block login_content %}
+
 <div class="container text-center">
     <h1 class="mb-4">Login with Face Detection</h1>
     <video id="webcam" autoplay playsinline class="mb-3"></video>
     <canvas id="canvas" class="d-none"></canvas>
 
+
     <button id="faceLoginButton" class="btn btn-primary mb-3">Start Webcam</button>
+
 
     <div class="form-group">
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" class="form-control w-25 mx-auto" required>
     </div>
 </div>
+
 
 <script src="{{ url_for('static', filename='js/webcam.js') }}"></script>
 {% endblock %}

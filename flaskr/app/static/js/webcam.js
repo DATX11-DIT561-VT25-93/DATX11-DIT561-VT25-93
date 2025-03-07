@@ -3,8 +3,8 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
 const initialDelay = 1000; // Time (in ms) before webcam starts capturing and sending frames
-const newFrameDelay = 5000; // Time (in ms) before a new frame is captured and sent 
-const redirectDelay = 3000; // Time (in ms) before a verified user is redirected to the account page
+const newFrameDelay = 1000; // Time (in ms) before a new frame is captured and sent 
+const redirectDelay = 800; // Time (in ms) before a verified user is redirected to the account page
 
 const urlRegisterFace = '/register-face-detection'
 const urlLoginFace = "/login-face-detection"
@@ -21,7 +21,7 @@ async function startWebcam() {
     }
 }
 
-function captureAndSendFrame(url, username) {
+function captureAndSendFrame(url, email) {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -31,7 +31,7 @@ function captureAndSendFrame(url, username) {
     fetch(url, {  // Send to Flask backend
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: imageData, username: username })
+        body: JSON.stringify({ image: imageData, email: email })
     })
         .then(response => response.json())
         .then(data => {
@@ -56,14 +56,14 @@ function captureAndSendFrame(url, username) {
             console.error('Error sending frame:', error);
         });
 
-    setTimeout(() => captureAndSendFrame(url, username), newFrameDelay); 
+    setTimeout(() => captureAndSendFrame(url, email), newFrameDelay); 
 }
 
 document.querySelector(".startButton").addEventListener("click", (event) => {
-    let username = document.getElementById("username").value.trim();
+    let email = document.getElementById("email").value.trim();
 
-    if (!username) {
-        alert("Please enter a username before proceeding.");
+    if (!email) {
+        alert("Please enter an email before proceeding.");
         return;  // Stop execution if the input is empty
     }
 
@@ -80,5 +80,5 @@ document.querySelector(".startButton").addEventListener("click", (event) => {
     }
 
     startWebcam();
-    setTimeout(() => captureAndSendFrame(url, username), initialDelay);
+    setTimeout(() => captureAndSendFrame(url, email), initialDelay);
 });
