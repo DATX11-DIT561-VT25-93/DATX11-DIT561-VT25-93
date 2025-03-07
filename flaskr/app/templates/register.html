@@ -17,6 +17,7 @@
         <input type="password" id="password" name="password" required>
         <br>
         <button type="submit">Register</button>
+        <p>Register using Facedetection <a href="{{ url_for('password_auth_bp.login') }}">Register Here</a></p>
     </form>
     {% endblock %}
     
@@ -24,6 +25,6 @@
 
     <h3></h3>
     <button onclick="window.location.href='/'">Back To Homepage</button>
-
+    
 </body>
 </html>
