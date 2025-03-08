@@ -9,7 +9,8 @@ import os
 
 face_auth_bp = Blueprint('face_auth_bp', __name__)
 
-new_deepface_home = "flaskr/app/functionality/facenet_weights"
+base_dir = os.path.abspath(os.path.dirname(__file__))
+new_deepface_home = os.path.join(base_dir, "functionality", "facenet_weights")
 os.makedirs(new_deepface_home, exist_ok=True)
 os.environ["DEEPFACE_HOME"] = new_deepface_home
 
