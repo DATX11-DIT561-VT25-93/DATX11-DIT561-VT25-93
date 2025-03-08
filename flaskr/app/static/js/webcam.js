@@ -3,8 +3,8 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
 const initialDelay = 1000; // Time (in ms) before webcam starts capturing and sending frames
-const newFrameDelay = 3000; // Time (in ms) before a new frame is captured and sent 
-const redirectDelay = 1500; // Time (in ms) before a verified user is redirected to the account page
+const newFrameDelay = 1000; // Time (in ms) before a new frame is captured and sent 
+const redirectDelay = 2000; // Time (in ms) before a verified user is redirected to the account page
 
 const urlRegisterFace = '/register-face-detection'
 const urlLoginFace = "/login-face-detection"
@@ -44,19 +44,18 @@ function captureAndSendFrame(url, email) {
                 // When image is loaded, draw it on the canvas
                 img.onload = function() {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height); // Draw image on canvas
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 };
                 
                 setTimeout(() => window.location.href = data.redirect, redirectDelay);
-            } else { // Handle case where no face is detected (optional)
+            } else { // Handle case where no face is detected
                 console.log('No face detected.');
+                setTimeout(() => captureAndSendFrame(url, email), newFrameDelay);
             }
         })
         .catch(error => {
             console.error('Error sending frame:', error);
         });
-
-    setTimeout(() => captureAndSendFrame(url, email), newFrameDelay); 
 }
 
 document.querySelector(".startButton").addEventListener("click", (event) => {
