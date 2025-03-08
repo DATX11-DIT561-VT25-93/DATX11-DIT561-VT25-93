@@ -6,8 +6,6 @@ const initialDelay = 1000; // Time (in ms) before webcam starts capturing and se
 const newFrameDelay = 1000; // Time (in ms) before a new frame is captured and sent 
 const redirectDelay = 2000; // Time (in ms) before a verified user is redirected to the account page
 
-const urlRegisterFace = '/register-face-detection'
-const urlLoginFace = "/login-face-detection"
 const successMsgLogin = 'Successful login'
 const successMsgRegister = 'Successful registration'
 
@@ -58,7 +56,9 @@ function captureAndSendFrame(url, email) {
         });
 }
 
-document.querySelector(".startButton").addEventListener("click", (event) => {
+const startBtn = document.querySelector(".startButton");
+
+startBtn.addEventListener("click", (event) => {
     let email = document.getElementById("email").value.trim();
 
     if (!email) {
@@ -69,13 +69,7 @@ document.querySelector(".startButton").addEventListener("click", (event) => {
     document.getElementById('container').style.display = 'block';
     event.target.style.display = "none";
 
-    let url; // URL to which the frames are sent 
-
-    if (event.target.id === "faceRegisterButton") {
-        url = urlRegisterFace;
-    } else {
-        url = urlLoginFace;
-    }
+    let url = event.target.id;; // URL (determined by button id) to which the frames are sent 
 
     startWebcam();
     setTimeout(() => captureAndSendFrame(url, email), initialDelay);
