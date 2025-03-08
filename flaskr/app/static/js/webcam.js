@@ -69,7 +69,7 @@ startBtn.addEventListener("click", (event) => {
     document.getElementById('container').style.display = 'block';
     event.target.style.display = "none";
 
-    let url = event.target.id;; // URL (determined by button id) to which the frames are sent 
+    let url = event.target.id; // URL (determined by button id) to which the frames are sent 
 
     startWebcam();
     setTimeout(() => captureAndSendFrame(url, email), initialDelay);
