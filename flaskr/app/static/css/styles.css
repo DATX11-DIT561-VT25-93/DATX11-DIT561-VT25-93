@@ -30,15 +30,10 @@ label, input, button, p {
     display: flex; /* Arrange elements in a row */
     gap: 20px; /* Space between video and canvas */
     align-items: center; /* Align elements vertically */
+    display: none;
 }
 video, canvas {
     width: 50%; /* Adjust as needed */
     max-width: 400px; /* Limit size */
     border: 2px solid black; /* Optional border for visibility */
-}
-#canvas {
-    display:none;
-}
-#webcam {
-    display:none;
 }
