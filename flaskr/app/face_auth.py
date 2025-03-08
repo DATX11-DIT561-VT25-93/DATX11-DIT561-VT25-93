@@ -1,22 +1,15 @@
 from flask import Blueprint, render_template, jsonify, request, current_app, redirect, url_for, session
 from .functionality.detection import detect_face
 from .utils.dbUser import save_user_to_db, check_existing_user, get_user_from_db
-from .functionality.feature_extraction import extract_feature
+from .functionality.feature_extraction import extract_feature, init_facenet
 from.functionality.verification import compare_faces_euclidean
-from deepface.models.facial_recognition import Facenet
 import numpy as np
-import os
 import json
 
 
 face_auth_bp = Blueprint('face_auth_bp', __name__)
 
-base_dir = os.path.abspath(os.path.dirname(__file__))
-new_deepface_home = os.path.join(base_dir, "functionality", "facenet_weights")
-os.makedirs(new_deepface_home, exist_ok=True)
-os.environ["DEEPFACE_HOME"] = new_deepface_home
-
-rec_model = Facenet.load_facenet512d_model()
+rec_model = init_facenet()
 
 @face_auth_bp.route('/register-face-detection', methods=['POST', 'GET']) 
 def register():
