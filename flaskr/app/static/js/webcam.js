@@ -4,10 +4,8 @@ const ctx = canvas.getContext('2d');
 
 const initialDelay = 1000; // Time (in ms) before webcam starts capturing and sending frames
 const newFrameDelay = 1000; // Time (in ms) before a new frame is captured and sent 
-const redirectDelay = 800; // Time (in ms) before a verified user is redirected to the account page
+const redirectDelay = 2000; // Time (in ms) before a verified user is redirected to the account page
 
-const urlRegisterFace = '/register-face-detection'
-const urlLoginFace = "/login-face-detection"
 const successMsgLogin = 'Successful login'
 const successMsgRegister = 'Successful registration'
 
@@ -44,22 +42,23 @@ function captureAndSendFrame(url, email) {
                 // When image is loaded, draw it on the canvas
                 img.onload = function() {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height); // Draw image on canvas
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 };
                 
                 setTimeout(() => window.location.href = data.redirect, redirectDelay);
-            } else { // Handle case where no face is detected (optional)
+            } else { // Handle case where no face is detected
                 console.log('No face detected.');
+                setTimeout(() => captureAndSendFrame(url, email), newFrameDelay);
             }
         })
         .catch(error => {
             console.error('Error sending frame:', error);
         });
-
-    setTimeout(() => captureAndSendFrame(url, email), newFrameDelay); 
 }
 
-document.querySelector(".startButton").addEventListener("click", (event) => {
+const startBtn = document.querySelector(".startButton");
+
+startBtn.addEventListener("click", (event) => {
     let email = document.getElementById("email").value.trim();
 
     if (!email) {
@@ -67,17 +66,10 @@ document.querySelector(".startButton").addEventListener("click", (event) => {
         return;  // Stop execution if the input is empty
     }
 
-    document.getElementById('webcam').style.display = 'block';
-    document.getElementById('canvas').style.display = 'block';
+    document.getElementById('container').style.display = 'block';
     event.target.style.display = "none";
 
-    let url; // URL to which the frames are sent 
-
-    if (event.target.id === "faceRegisterButton") {
-        url = urlRegisterFace;
-    } else {
-        url = urlLoginFace;
-    }
+    let url = event.target.id; // URL (determined by button id) to which the frames are sent 
 
     startWebcam();
     setTimeout(() => captureAndSendFrame(url, email), initialDelay);
