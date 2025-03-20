@@ -3,7 +3,10 @@ import random
 import base64
 from io import BytesIO
 from PIL import Image
+
 import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 
 from functionality.detection import detect_face
 from functionality.feature_extraction import extract_feature
@@ -21,8 +24,9 @@ rec_model = Facenet.load_facenet512d_model()
 # Path to dataset
 DATASET_PATH = "test_images"
 
+# TODO: separate this and store the face_dict data in a database
 # Load images and convert to feature vectors
-face_dict = {}  # Dictionary to store images per person
+face_dict = {}  # Dictionary to store images for each person
 for person in os.listdir(DATASET_PATH):
     person_path = os.path.join(DATASET_PATH, person)
     if os.path.isdir(person_path):
@@ -39,32 +43,69 @@ for person in os.listdir(DATASET_PATH):
                 else:
                     print("No face detected")
 
-# Generate verification pairs
+# Generate verification pairs to be used as test cases
 positive_pairs = []
 negative_pairs = []
 persons = list(face_dict.keys())
+persons = [p for p in persons if face_dict[p]] # To ensure only persons with feature vectors are present
 
 # Create positive pairs (same person)
 for person, f_vectors in face_dict.items():
     if len(f_vectors) > 1:
-        for _ in range(5):  # Generate multiple pairs per person
-            img1, img2 = random.sample(f_vectors, 2)
-            positive_pairs.append((img1, img2, True, person, person))
+        f_vect_1, f_vect_2 = random.sample(f_vectors, 2)
+        while np.array_equal(f_vect_1, f_vect_2): # To avoid identical pairs
+            f_vect_1, f_vect_2 = random.sample(f_vectors, 2)
+        positive_pairs.append((f_vect_1, f_vect_2, True, person, person)) # Set classifier as true
 
 # Create negative pairs (different persons)
-for _ in range(5 * len(persons)): 
+num_of_neg_pairs = int(len(persons)/4) 
+for _ in range(num_of_neg_pairs): 
     p1, p2 = random.sample(persons, 2)
-    img1 = random.choice(face_dict[p1])
-    img2 = random.choice(face_dict[p2])
-    negative_pairs.append((img1, img2, False, p1, p2))
+    f_vect_1 = random.choice(face_dict[p1])
+    f_vect_2 = random.choice(face_dict[p2])
+
+    while np.array_equal(f_vect_1, f_vect_2): # To avoid identical pairs
+        p1, p2 = random.sample(persons, 2) # Pick new persons
+        f_vect_1 = random.choice(face_dict[p1])
+        f_vect_2 = random.choice(face_dict[p2])
+    
+    negative_pairs.append((f_vect_1, f_vect_2, False, p1, p2)) # Set classifier as false
 
 # Combine and shuffle
 all_pairs = positive_pairs + negative_pairs
 random.shuffle(all_pairs)
 
-for i in range(len(all_pairs)):
-    _, _, status, p1, p2 = all_pairs[i]
-    print('Pair number ', str(i), ' ', p1, ' and ', p2)
-    print(str(status) + '\n')
+y_true = [pair[2] for pair in all_pairs] # Create list consisting of the correct classifiers
+y_pred = []
 
+# Test the verification functionality on each test case pair 
+for f_vect_1, f_vect_2, has_same_face, p1, p2 in all_pairs:
+    prediction = compare_faces_euclidean(f_vect_1, f_vect_2) #prediction, distance = compare_faces_euclidean(f_vect_1, f_vect_2)
+    y_pred.append(prediction)
+    """ if prediction == has_same_face:
+        pass
+    else:
+        print('Incorrect prediction: ', p1, ' and ', p2)
+        print('Distance: ', str(distance)) """
 
+accuracy = accuracy_score(y_true, y_pred)
+precision = precision_score(y_true, y_pred)
+recall = recall_score(y_true, y_pred)
+f1 = f1_score(y_true, y_pred)
+
+print(f"Accuracy: {accuracy:.4f}, Precision: {precision:.4f}, Recall: {recall:.4f}, F1-score: {f1:.4f}")
+
+# Confusion matrix
+cm = confusion_matrix(y_true, y_pred)
+
+# Ploting
+plt.figure(figsize=(5, 4))
+plt.imshow(cm, cmap="Blues", interpolation="nearest")
+plt.colorbar()
+
+# Labels
+plt.xlabel("Predicted Label")
+plt.ylabel("True Label")
+plt.title("Confusion Matrix")
+
+plt.show()
