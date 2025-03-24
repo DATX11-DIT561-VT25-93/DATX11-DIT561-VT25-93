@@ -3,45 +3,59 @@ import random
 import base64
 from io import BytesIO
 from PIL import Image
+import cv2
 
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 
-from functionality.detection import detect_face
-from functionality.feature_extraction import extract_feature
-from functionality.verification import compare_faces_euclidean
-from deepface.models.facial_recognition import Facenet
+#from functionality.detection import detect_face
+from feature_extraction import extract_feature
+from verification import compare_faces_euclidean
+from model_setup import init_detection_model, init_recognition_model
+#from deepface.models.facial_recognition import Facenet
 import os
+import time
 
-base_dir = os.path.abspath(os.path.dirname(__file__))
-new_deepface_home = os.path.join(base_dir, "functionality", "facenet_weights")
-os.makedirs(new_deepface_home, exist_ok=True)
-os.environ["DEEPFACE_HOME"] = new_deepface_home
+detection_model = init_detection_model()
+recognition_model = init_recognition_model()
 
-rec_model = Facenet.load_facenet512d_model()
+def detect_face(image_array, model=detection_model):
+    h, w = image_array.shape[:2]
+    model.setInputSize((w, h))
+
+    faces = model.detect(image_array)[1]
+    image_rgb = cv2.cvtColor(image_array, cv2.COLOR_BGR2RGB)
+
+    if faces is not None:
+        return faces, None, image_rgb
+    return None, None, None
 
 # Path to dataset
-DATASET_PATH = "test_images"
+DATASET_PATH = "test_images_LFW"
 
-# TODO: separate this and store the face_dict data in a database
-# Load images and convert to feature vectors
-face_dict = {}  # Dictionary to store images for each person
+# Map feature vectors for all available faces to the correct person
+face_dict = {}  # Dictionary to store feature vector(s) for each person
 for person in os.listdir(DATASET_PATH):
     person_path = os.path.join(DATASET_PATH, person)
     if os.path.isdir(person_path):
         face_dict[person] = []
         for img_name in os.listdir(person_path):
+            #start = time.time()
             img_path = os.path.join(person_path, img_name)
-            with open(img_path, "rb") as img_file:
-                base64_string = base64.b64encode(img_file.read()).decode("utf-8")
-                face_data, _, image_rgb = detect_face(base64_string) # Get array containing face data and image with marked faces in shape of base64 string
-           
-                if face_data is not None:
-                    feature_vector = extract_feature(face_data, image_rgb, rec_model)
-                    face_dict[person].append(feature_vector)
-                else:
-                    print("No face detected")
+            img_array = cv2.imread(img_path)
+            face_data, _, image_rgb = detect_face(img_array)
+            #end = time.time()
+            #print("Time for face DETECTION: ", str(end-start))
+
+            #start = time.time()
+            if face_data is not None:
+                feature_vector = extract_feature(face_data, image_rgb, recognition_model)
+                face_dict[person].append(feature_vector)
+            else:
+                print("No face detected")
+            #end = time.time()
+            #print("Time for feature EXTRACTION: ", str(end-start), "\n")
 
 # Generate verification pairs to be used as test cases
 positive_pairs = []
@@ -71,9 +85,8 @@ for _ in range(num_of_neg_pairs):
     
     negative_pairs.append((f_vect_1, f_vect_2, False, p1, p2)) # Set classifier as false
 
-# Combine and shuffle
+# Combine positive and negative pairs
 all_pairs = positive_pairs + negative_pairs
-random.shuffle(all_pairs)
 
 y_true = [pair[2] for pair in all_pairs] # Create list consisting of the correct classifiers
 y_pred = []
