@@ -9,11 +9,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 
-#from functionality.detection import detect_face
 from feature_extraction import extract_feature
 from verification import compare_faces_euclidean
 from model_setup import init_detection_model, init_recognition_model
-#from deepface.models.facial_recognition import Facenet
+
 import os
 import time
 
