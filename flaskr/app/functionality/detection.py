@@ -88,3 +88,30 @@ def draw_face_rectangles(image, faces):
     #face_pil.show()  # Opens the image in the default viewer
 
     return base64_string  # Return image with marked faces in shape of base64 string
+
+##########################
+##########################
+##########################
+
+# Only used for running performance tests
+def detect_face_for_testing(image_array):
+    model_path = os.path.join(os.path.dirname(__file__), "face_detection_yunet_2023mar.onnx")
+
+    detector = cv2.FaceDetectorYN.create(
+        model_path,
+        "",
+        (320, 320),
+        0.9,
+        0.1,
+        10
+    )
+
+    h, w = image_array.shape[:2]
+    detector.setInputSize((w, h))
+
+    faces = detector.detect(image_array)[1]
+    image_rgb = cv2.cvtColor(image_array, cv2.COLOR_BGR2RGB)
+
+    if faces is not None:
+        return faces, None, image_rgb
+    return None, None, None
