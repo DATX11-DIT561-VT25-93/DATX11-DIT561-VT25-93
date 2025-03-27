@@ -1,6 +1,18 @@
 import cv2
 import numpy as np
+from deepface.models.facial_recognition import Facenet
+import os
 
+def init_facenet():
+    base_dir = os.path.abspath(os.path.dirname(__file__))
+    new_deepface_home = os.path.join(base_dir, "facenet_weights")
+    os.makedirs(new_deepface_home, exist_ok=True)
+    os.environ["DEEPFACE_HOME"] = new_deepface_home
+
+    rec_model = Facenet.load_facenet512d_model()
+    warmup_input = np.random.rand(1, 160, 160, 3)
+    rec_model.predict(warmup_input)
+    return rec_model
 
 def normalize_vector(vector):
     return vector / np.linalg.norm(vector) # L2 Normalizes a feature vector

@@ -39,9 +39,11 @@ def detect_face(base64_string):
 # Turns base64 image string into shape that our OpenCV face detector can handle
 def process_base64_image(base64_string):
     try:
+        image_data = base64_string
         # Remove metadata if present (e.g., 'data:image/jpeg;base64,')
-        image_data = base64_string.split(',')[1]
-
+        if ',' in base64_string:
+            image_data = base64_string.split(',')[1]
+        
         # Decode the Base64 string into bytes
         image_bytes = base64.b64decode(image_data)
 
@@ -82,7 +84,34 @@ def draw_face_rectangles(image, faces):
     base64_string = to_base64_image(image)
 
     # Displaying the image
-    #face_pil = Image.fromarray(image_rgb)
+    #face_pil = Image.fromarray(image)
     #face_pil.show()  # Opens the image in the default viewer
 
     return base64_string  # Return image with marked faces in shape of base64 string
+
+##########################
+##########################
+##########################
+
+# Only used for running performance tests
+def detect_face_for_testing(image_array):
+    model_path = os.path.join(os.path.dirname(__file__), "face_detection_yunet_2023mar.onnx")
+
+    detector = cv2.FaceDetectorYN.create(
+        model_path,
+        "",
+        (320, 320),
+        0.9,
+        0.1,
+        10
+    )
+
+    h, w = image_array.shape[:2]
+    detector.setInputSize((w, h))
+
+    faces = detector.detect(image_array)[1]
+    image_rgb = cv2.cvtColor(image_array, cv2.COLOR_BGR2RGB)
+
+    if faces is not None:
+        return faces, None, image_rgb
+    return None, None, None
