@@ -173,3 +173,7 @@ cython_debug/
 .venv/
 
 data/*
+
+# NPM
+node_modules
+package-lock.json
