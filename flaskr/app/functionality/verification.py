@@ -1,10 +1,10 @@
 import numpy as np
 
 
-def compare_faces_euclidean(vec1, vec2):
+def compare_faces_euclidean(vec1, vec2, threshold=0.8):
     distance = np.linalg.norm(vec1 - vec2)
     #print(distance)
-    if distance < 0.8:
+    if distance < threshold:
         return True
     return False
 
