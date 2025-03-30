@@ -20,7 +20,7 @@ rec_model = Facenet.load_facenet512d_model()
 # New code
 @face_auth_bp.route('/register/scan', methods=['POST', 'GET'])
 def register_scan():
-    return render_template('register-face-scan.html')
+    return render_template('register-face-scan.html', user_obj = session['user'])
 
 @face_auth_bp.route('/register', methods=['POST', 'GET'])
 def register():
