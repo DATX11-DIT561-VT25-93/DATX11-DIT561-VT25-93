@@ -177,3 +177,6 @@ data/*
 # NPM
 node_modules
 package-lock.json
+
+#Tailwind
+output.css
