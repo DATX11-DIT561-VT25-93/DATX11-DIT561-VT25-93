@@ -1,9 +1,12 @@
+import uuid
 from flask import Blueprint, render_template, jsonify, request, current_app, redirect, url_for, session
 from .functionality.detection import detect_face
 from .utils.dbUser import save_user_to_db, check_existing_user
+from .utils.dbRegisterUser import store_temp_imagedata, get_temp_image_data
 from .functionality.feature_extraction import extract_feature
 from.functionality.verification import compare_faces_euclidean
 from deepface.models.facial_recognition import Facenet
+
 import os
 
 
@@ -18,25 +21,79 @@ rec_model = Facenet.load_facenet512d_model()
 
 
 # New code
-@face_auth_bp.route('/register/scan', methods=['POST', 'GET'])
-def register_scan():
-    return render_template('register-face-scan.html', user_obj = session['user'])
-
 @face_auth_bp.route('/register', methods=['POST', 'GET'])
-def register():
+def pre_register():
     if request.method == 'POST':
-        data = request.json  # Receive { "username": "johndoe", "email": "john@example.com" }
+        data = request.json  # Receive { "username": "johndoe", "email": "john@example.com" ... etc }
+
+        # Check existing user (checks -> email, might need to update to also check phone number etc)
+        existing_user_check = check_existing_user(data['email'])
+                
+        if existing_user_check[1] != 200:  
+            print("Email already in use.")
+            return existing_user_check  
         
         session['user'] = {
             'username': data['username'],
             'email': data['email'],
             'address': data['address'],
             'phone': data['phone'],
-            'biometric_data': None  # Not set yet
+            'face_data_id': None  # Not set yet (set in pre_register_scan)
         }
 
         return jsonify({"message": "User registered", "next": "/register/scan"})
     return render_template('register.html')
+
+@face_auth_bp.route('/register/scan', methods=['POST', 'GET'])
+def pre_register_scan():
+    if 'user' not in session:
+        # Redirect to registration start if no session exists
+        return redirect(url_for('face_auth.pre_register'))
+        
+    if request.method == 'POST':
+        try:
+            data = request.json # Retrieve image data
+            temp_id = str(uuid.uuid4())
+            store_temp_imagedata(temp_id, data['webcam_data'])
+
+            session_user = session['user']
+            session_user['face_data_id'] = temp_id
+            session['user'] = session_user
+            session.modified = True
+            return jsonify({"message": "User face scan registered", "next": "/register/summary"})
+        except Exception as e:
+            return jsonify({"error": str(e)}), 400
+    
+    return render_template('register-face-scan.html', user_obj=session['user'])
+
+@face_auth_bp.route('/register/summary', methods=['POST', 'GET'])
+def register():
+    if request.method == 'POST':
+        try:
+            session_user = session['user']
+            image_data_id = session_user['face_data_id']
+            image_data = get_temp_image_data(image_data_id)
+
+            face_data, new_image_data, image_rgb = detect_face(image_data)
+            if face_data is not None:
+                feature_vector = extract_feature(face_data, image_rgb, rec_model)
+                save_user_to_db(session_user['email'], feature_vector)
+
+        except Exception as e:
+            return jsonify({"error": str(e)}), 400
+        
+    return render_template('register-summary.html', user_obj=session['user'])
+
+# Getters
+@face_auth_bp.route('/get-face-image/<image_id>', methods=['GET'])
+def get_face_image(image_id):
+    try:
+        result = get_temp_image_data(image_id)
+        if result:
+            return jsonify({'image_data': result})
+        return jsonify({'error': 'Image not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 
@@ -83,7 +140,7 @@ def register_old():
 
 
 @face_auth_bp.route('/login-face-detection', methods=['POST', 'GET'])
-def login():
+def login_old():
 
     if request.method == 'POST':
         data = request.get_json()

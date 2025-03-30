@@ -1,4 +1,3 @@
-
 import numpy as np
 import base64
 from flask import jsonify, request, current_app
@@ -84,3 +83,4 @@ def check_existing_user(email):
             return jsonify({"error": "Email already taken"}), 409
         
         return jsonify({"success": "Email not in use"}), 200  
+    
