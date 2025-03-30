@@ -16,8 +16,34 @@ os.environ["DEEPFACE_HOME"] = new_deepface_home
 
 rec_model = Facenet.load_facenet512d_model()
 
-@face_auth_bp.route('/register-face-detection', methods=['POST', 'GET']) 
+
+# New code
+@face_auth_bp.route('/register/scan', methods=['POST', 'GET'])
+def register_scan():
+    return render_template('register-face-scan.html')
+
+@face_auth_bp.route('/register', methods=['POST', 'GET'])
 def register():
+    if request.method == 'POST':
+        data = request.json  # Receive { "username": "johndoe", "email": "john@example.com" }
+        
+        session['user'] = {
+            'username': data['username'],
+            'email': data['email'],
+            'address': data['address'],
+            'phone': data['phone'],
+            'biometric_data': None  # Not set yet
+        }
+
+        return jsonify({"message": "User registered", "next": "/register/scan"})
+    return render_template('register.html')
+
+
+
+# Old code below?
+
+@face_auth_bp.route('/register-face-detection', methods=['POST', 'GET']) 
+def register_old():
     if request.method == 'POST':
         data = request.get_json()
         

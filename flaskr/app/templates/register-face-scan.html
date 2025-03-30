@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioAuth - Home</title>
+    <link href="../static/css/output.css" rel="stylesheet">
+</head>
+
+
+<body class="w-screen h-screen bg-[#EFEFEF]">
+    <main class="flex flex-row w-full h-full px-36 py-16 space-x-36">
+        <!-- Info Section -->
+        <section class="w-[38%]">
+            <div class="flex h-full flex-col justify-center items-center">
+                <a href="/" class="flex flex-row h-fit items-center w-fit space-x-2">
+                    <img src="../static/images/logoBioAuth.png" alt="BioAuth-logo" class="w-10 object-cover">
+                    <p class="font-bold text-2xl">BioAuth</p>
+                </a>
+                <div class="relative flex items-center w-full my-2">
+                    <button class="cursor-pointer absolute" onclick="window.location.href='/register'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50" fill="none">
+                            <rect width="50" height="50" rx="25" fill="white" class="hover:shadow-2xl" />
+                            <path d="M15 24.5H35M15 24.5L23.5714 16M15 24.5L23.5714 33" stroke="#0A0A0A"
+                                stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <div class="w-full flex justify-center">
+                        <p class="text-4xl font-semibold text-[#0A0A0A]">
+                            Create an Account
+                        </p>
+                    </div>
+                </div>
+                <!-- Actual User Info -->
+                <div class="flex flex-col w-full">
+                    <!-- Grid with user info -->
+                    <p class="font-semibold text-2xl mt-8">Your details</p>
+                    <div class="grid grid-cols-4 space-x-2 w-full text-[#0A0A0A] mt-2">
+                        <div class="flex flex-col">
+                            <p class="font-semibold">Username</p>
+                            <p class="opacity-75">Actual Username</p>
+                        </div>
+                        <div class="flex flex-col">
+                            <p class="font-semibold">Email</p>
+                            <p class="opacity-75">Actual Email</p>
+                        </div>
+                        <div class="flex flex-col">
+                            <p class="font-semibold">Address</p>
+                            <p class="opacity-75">Actual Address</p>
+                        </div>
+                        <div class="flex flex-col">
+                            <p class="font-semibold">Phone Number</p>
+                            <p class="opacity-75">Actual Phone Number</p>
+                        </div>
+                    </div>
+                    <div class="my-2 w-full h-1 rounded-full bg-[#0A0A0A] opacity-20"></div>
+                    <!-- Instructions for face scan -->
+                    <div class="flex flex-col text-center justify-center items-center w-full mt-4 space-y-4">
+                        <div class="w-[75%]">
+                            <p class="font-semibold text-xl">1. Click 'Allow' Webcam</p>
+                            <p class="opacity-75">When the browser asks to use your web camera click allow</p>
+                        </div>
+                        <div class="w-[75%]">
+                            <p class="font-semibold text-xl">2. Fit your face into the frame</p>
+                            <p class="opacity-75">To guarantee a good face scan, you need to fit your face into the frame as good as you can. Make sure  that you are in a light environment </p>
+                        </div>
+                        <div class="w-[75%]">
+                            <p class="font-semibold text-xl">3. Take your picture</p>
+                            <p class="opacity-75">When you are ready, take your picture! Don’t worry, you will be able to retake it again </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Webcam section -->
+        <section class="flex w-[62%] justify-center items-center">
+            <div class=" bg-[#DFDFDF] rounded-4xl overflow-hidden h-full max-h-[1000px] w-full relative">
+                <div>
+                    <div class="h-[100px] bg-gradient-to-b from-black/50">
+                        <p class="text-white font-semibold text-lg text-center pt-8">Fit Your Face Into the Frame and
+                            Look Directly Into the Camera</p>
+                    </div>
+                    <div
+                        class="h-[100px] bg-gradient-to-t from-black/50 absolute bottom-0 w-full z-0 flex justify-center items-center">
+                        <button id="capture-btn"
+                            class="bg-[#0A0A0A] transition duration-300 px-12 py-3 rounded-full hover:scale-105 cursor-pointer flex flex-row space-x-2 items-center z-10">
+                            <p class="font-semibold text-white">Take Picture</p>
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29"
+                                    fill="none">
+                                    <path
+                                        d="M3.625 21.75V10.875C3.625 10.234 3.87961 9.61935 4.33283 9.16614C4.78604 8.71293 5.40073 8.45831 6.04167 8.45831H7.16542C7.56318 8.45837 7.95481 8.36025 8.30556 8.17265C8.65631 7.98505 8.95532 7.71378 9.17608 7.3829L10.1573 5.90873C10.378 5.57785 10.677 5.30657 11.0278 5.11898C11.3785 4.93138 11.7702 4.83325 12.1679 4.83331H16.8321C17.2298 4.83325 17.6215 4.93138 17.9722 5.11898C18.323 5.30657 18.622 5.57785 18.8428 5.90873L19.8239 7.3829C20.0447 7.71378 20.3437 7.98505 20.6944 8.17265C21.0452 8.36025 21.4368 8.45837 21.8346 8.45831H22.9583C23.5993 8.45831 24.214 8.71293 24.6672 9.16614C25.1204 9.61935 25.375 10.234 25.375 10.875V21.75C25.375 22.3909 25.1204 23.0056 24.6672 23.4588C24.214 23.912 23.5993 24.1666 22.9583 24.1666H6.04167C5.40073 24.1666 4.78604 23.912 4.33283 23.4588C3.87961 23.0056 3.625 22.3909 3.625 21.75Z"
+                                        stroke="white" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path
+                                        d="M14.5 19.3333C16.502 19.3333 18.125 17.7103 18.125 15.7083C18.125 13.7063 16.502 12.0833 14.5 12.0833C12.498 12.0833 10.875 13.7063 10.875 15.7083C10.875 17.7103 12.498 19.3333 14.5 19.3333Z"
+                                        stroke="white" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </button>
+                    </div>
+                    <!-- Face Frame -->
+                    <div class="flex justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="310" height="410" viewBox="0 0 310 410"
+                            fill="none">
+                            <ellipse cx="155" cy="205" rx="150" ry="200" stroke="white" stroke-width="10"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="50 50" />
+                        </svg>
+                    </div>
+                    <!-- Webcam box -->
+                    <div id="webcam-container" class="flex w-full h-full">
+                        <video id="webcam" autoplay playsinline></video>
+                        <canvas id="canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    <script src="../static/js/facescan.js"></script>
+</body>
+
+</html>
