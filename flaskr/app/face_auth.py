@@ -26,7 +26,7 @@ def pre_register():
     if request.method == 'POST':
         data = request.json  # Receive { "username": "johndoe", "email": "john@example.com" ... etc }
 
-        # Check existing user (checks -> email, might need to update to also check phone number etc)
+        # Check existing user (checks -> email, might need to update to also check phone number? etc)
         existing_user_check = check_existing_user(data['email'])
                 
         if existing_user_check[1] != 200:  
@@ -38,7 +38,8 @@ def pre_register():
             'email': data['email'],
             'address': data['address'],
             'phone': data['phone'],
-            'face_data_id': None  # Not set yet (set in pre_register_scan)
+            'face_data_id': None,  # Not set yet (set in pre_register_scan),
+            'status_logged_in': False 
         }
 
         return jsonify({"message": "User registered", "next": "/register/scan"})
@@ -46,9 +47,13 @@ def pre_register():
 
 @face_auth_bp.route('/register/scan', methods=['POST', 'GET'])
 def pre_register_scan():
+    session_user = session['user']
     if 'user' not in session:
         # Redirect to registration start if no session exists
-        return redirect(url_for('face_auth.pre_register'))
+        return redirect(url_for('face_auth_bp.pre_register'))
+    
+    if session_user['status_logged_in']: # Prevents the user from registering 'again' and getting errors bcs of it
+        return redirect(url_for('face_auth_bp.account'))
         
     if request.method == 'POST':
         try:
@@ -68,37 +73,60 @@ def pre_register_scan():
 
 @face_auth_bp.route('/register/summary', methods=['POST', 'GET'])
 def register():
+    session_user = session['user']
+    if 'user' not in session:
+    # Redirect to registration start if no session exists
+        return redirect(url_for('face_auth_bp.pre_register'))
+    if session_user['status_logged_in']: # Prevents the user from registering 'again' and getting errors bcs of it
+        return redirect(url_for('face_auth_bp.account'))
+    
     if request.method == 'POST':
         try:
-            session_user = session['user']
             image_data_id = session_user['face_data_id']
             image_data = get_temp_image_data(image_data_id)
-
             face_data, new_image_data, image_rgb = detect_face(image_data)
+            
             if face_data is not None:
                 feature_vector = extract_feature(face_data, image_rgb, rec_model)
                 save_user_to_db(session_user['email'], feature_vector)
-
+                session_user['status_logged_in'] = True
+                session['user'] = session_user
+                session.modified = True
+                return jsonify({"message": "Success, user registered", "next": "/account"})
         except Exception as e:
             return jsonify({"error": str(e)}), 400
         
     return render_template('register-summary.html', user_obj=session['user'])
 
-# Getters
-@face_auth_bp.route('/get-face-image/<image_id>', methods=['GET'])
-def get_face_image(image_id):
+@face_auth_bp.route('/get-face-image', methods=['POST'])
+def get_face_image():
     try:
-        result = get_temp_image_data(image_id)
-        if result:
-            return jsonify({'image_data': result})
-        return jsonify({'error': 'Image not found'}), 404
+        data = request.json
+        image_id = data.get('imageId')
+        
+        image_data = get_temp_image_data(image_id)
+        if not image_data:
+            return jsonify({'error': 'Image not found or decryption failed'}), 404
+
+        face_data, new_image_data, image_rgb = detect_face(image_data)
+        
+        if face_data is None:
+            return jsonify({
+                'image_data': image_data,
+                'warning': 'No face detected in image'
+            })
+        
+        return jsonify({
+            'image_data': f'data:image/jpeg;base64,{new_image_data}',
+            'face_detected': True
+        })
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 
 
-# Old code below?
-
+# Old code below, saved to show difference on meeting
 @face_auth_bp.route('/register-face-detection', methods=['POST', 'GET']) 
 def register_old():
     if request.method == 'POST':

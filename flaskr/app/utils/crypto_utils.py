@@ -27,9 +27,13 @@ def encrypt_aes_gcm(plaintext: str, key: bytes):
     }
 
 def decrypt_aes_gcm(ciphertext: str, key: bytes, iv: str, auth_tag: str):
-    cipher = Cipher(algorithms.AES(key), modes.GCM(bytes.fromhex(iv), bytes.fromhex(auth_tag)), backend=default_backend())
+    iv_bytes = base64.b64decode(iv)
+    auth_tag_bytes = base64.b64decode(auth_tag)
+    ciphertext_bytes = base64.b64decode(ciphertext)
+
+    cipher = Cipher(algorithms.AES(key), modes.GCM(iv_bytes, auth_tag_bytes), backend=default_backend())
     decryptor = cipher.decryptor()
 
-    decrypted_text = decryptor.update(bytes.fromhex(ciphertext)) + decryptor.finalize()
+    decrypted_text = decryptor.update(ciphertext_bytes) + decryptor.finalize()
 
     return decrypted_text.decode()
