@@ -27,6 +27,7 @@ def register():
         try:
             image_data = data['image'] # Webcam image in shape of base64 string        
             email = data['email']
+            username = data['username']
 
             print("Webcam frame received from " + str(email))
             
@@ -43,7 +44,7 @@ def register():
 
                 else:
                     print("user saved")
-                    save_user_to_db(email, feature_vector) # Adds new user to database
+                    save_user_to_db(email, feature_vector, username) # Adds new user to database
                     session['user'] = email
                     return jsonify({'message': 'Successful registration', 'new_image_data': new_image_data, "redirect": url_for('face_auth_bp.account')})
       
