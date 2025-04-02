@@ -8,11 +8,157 @@
     <link href="../static/css/output.css" rel="stylesheet">
 </head>
 
-<body class="bg-[#EFEFEF] w-screen h-screen">
-<div class="">
-    
-</div>
-</body>
+<body class="bg-[#EFEFEF] w-screen h-screen px-[8vw] space-x-[4vw] flex flex-row">
+    <section class="w-[38%] h-full flex grow">
+        <div class="flex flex-col justify-center items-center w-full pt-[5vh]">
+            <a href="/" class="flex flex-row items-center w-fit space-x-2">
+                <img src="../static/images/logoBioAuth.png" alt="BioAuth-logo" class="w-[2.5vw] object-cover">
+                <p class="font-bold text-[2vw]">BioAuth</p>
+            </a>
+            <div class="relative flex items-center w-full my-2">
+                <button class="cursor-pointer absolute" onclick="window.location.href='/'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 50 50" fill="none">
+                        <rect width="50" height="50" rx="25" fill="white" class="hover:shadow-2xl" />
+                        <path d="M15 24.5H35M15 24.5L23.5714 16M15 24.5L23.5714 33" stroke="#0A0A0A" stroke-width="3"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <div class="w-full flex justify-center">
+                    <p class="text-[2vw] font-semibold text-[#0A0A0A]">
+                        Welcome Back
+                    </p>
+                </div>
+            </div>
+            <p class="text-[1.25vw] opacity-75">Enter your username or email to continue</p>
+            <div class="flex flex-col w-full justify-center mt-[1vw]">
+                <form>
+                    <input class="w-full text-[1vw] rounded-2xl bg-white px-[1.25vw] py-[1.25vw]" id="email" type="text"
+                        required placeholder="username or email">
+                    <button id=".startButton" type="submit"
+                        class="bg-[#0A0A0A] mx-auto mt-[5vw] transition duration-300 px-[3vw] py-[0.75vw] rounded-full hover:scale-105 cursor-pointer flex flex-row space-x-[0.5vw] items-center">
+                        <p class="font-semibold text-white text-[1.25vw]">Continue</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1.5vw" height="1.75vw" viewBox="0 0 24 21"
+                            fill="none">
+                            <path d="M22 10.5L2 10.5M22 10.5L13.4286 19M22 10.5L13.4286 2" stroke="white"
+                                stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+    </section>
+    <section class="w-[64%] flex items-center">
+        <div
+            class="h-[80%] bg-linear-to-br from-zinc-900 from-10% via-zinc-300 via-80% to-zinc-200 to-90% w-full rounded-[5vw]">
+            <video id="webcam" autoplay playsinline class="w-full h-full object-cover"></video>
+            <canvas id="canvas" class="w-full h-full object-cover" style="display: none"></canvas>
+        </div>
 
+    </section>
+    <script>
+        const webcam = document.getElementById('webcam');
+        const canvas = document.getElementById('canvas');
+        const emailInput = document.getElementById('email');
+        const form = document.querySelector('form');
+        let stream = null;
+    
+        // Function to start webcam
+        async function startWebcam() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                webcam.srcObject = stream;
+                webcam.style.display = 'block'; // Show the webcam
+                // Ensure the video maintains its styling
+                webcam.classList.add('w-full', 'h-full', 'object-cover');
+            } catch (error) {
+                console.error('Error accessing webcam:', error);
+                alert('Unable to access webcam. Please ensure you have granted camera permissions.');
+            }
+        }
+    
+        // Function to stop webcam
+        function stopWebcam() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                webcam.srcObject = null;
+                webcam.style.display = 'none';
+            }
+        }
+    
+        async function captureAndSend() {
+            const email = emailInput.value.trim();
+    
+            if (!email) {
+                alert('Please enter your email address');
+                return;
+            }
+    
+            // Start webcam when continue is pressed
+            await startWebcam();
+    
+            // Wait for video to be ready
+            await new Promise((resolve) => {
+                webcam.onloadedmetadata = () => {
+                    resolve();
+                };
+            });
+    
+            // Setup canvas
+            const context = canvas.getContext('2d');
+            canvas.width = webcam.videoWidth;
+            canvas.height = webcam.videoHeight;
+            
+            // Draw current video frame to canvas
+            context.drawImage(webcam, 0, 0, canvas.width, canvas.height);
+            
+            // Get base64 image data
+            const imageData = canvas.toDataURL('image/jpeg');
+    
+            try {
+                const response = await fetch('/login-fr', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        image: imageData,
+                        email: email
+                    })
+                });
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+                    console.log('Login successful:', data.message);
+                    
+                    if (data.redirect) {
+                        stopWebcam(); // Stop webcam before redirect
+                        window.location.href = data.redirect;
+                    }
+                } else {
+                    throw new Error(data.error || 'Login failed');
+                }
+    
+            } catch (error) {
+                console.error('Error:', error);
+                alert(error.message || 'An error occurred during login');
+                stopWebcam(); // Stop webcam on error
+            }
+        }
+    
+        // Initially hide the webcam
+        webcam.style.display = 'none';
+    
+        // Prevent default form submission and handle with our custom function
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await captureAndSend();
+        });
+    
+        // Clean up webcam when leaving page
+        window.addEventListener('beforeunload', () => {
+            stopWebcam();
+        });
+    </script>
+</body>
 
 </html>

@@ -1,7 +1,9 @@
+import json
 import uuid
 from flask import Blueprint, render_template, jsonify, request, current_app, redirect, url_for, session
+import numpy as np
 from .functionality.detection import detect_face
-from .utils.dbUser import save_user_to_db, check_existing_user
+from .utils.dbUser import get_user_from_db, save_user_to_db, check_existing_user
 from .utils.dbRegisterUser import store_temp_imagedata, get_temp_image_data
 from .functionality.feature_extraction import extract_feature
 from.functionality.verification import compare_faces_euclidean
@@ -166,9 +168,8 @@ def register_old():
     return render_template('register-face-detection.html')
 
 
-
-@face_auth_bp.route('/login-face-detection', methods=['POST', 'GET'])
-def login_old():
+@face_auth_bp.route('/login-fr', methods=['POST', 'GET'])
+def login():
 
     if request.method == 'POST':
         data = request.get_json()
@@ -185,24 +186,35 @@ def login_old():
             face_data, new_image_data, image_rgb = detect_face(image_data) # Get array containing face data and image with marked faces in shape of base64 string
             
             if face_data is not None:
-                # Check for existing user
-                existing_user_check = check_existing_user(email)
-                print("apapa")
+                response = get_user_from_db(email)  
                 
-                if existing_user_check[1] == 409:  
-                    pass
-                else: 
-                    return existing_user_check  
-                
-                session['user'] = email
-                return jsonify({'message': 'Successful login', 'new_image_data': new_image_data, "redirect": url_for('face_auth_bp.account')})
+                if response[1] == 200:  
+                    user_data = response[0].get_json()  
+                    stored_email = user_data.get("email")  
+
+                    stored_face_features = user_data.get("face_features")
+                    print("apapa2 " + stored_face_features)
+                    # Compare webcam face features with stored face features
+                    stored_face_features = np.array(json.loads(stored_face_features), dtype=np.float32)
+                    webcam_feature_vector = extract_feature(face_data, image_rgb, rec_model)
+                    
+                    if(not compare_faces_euclidean(webcam_feature_vector, stored_face_features)):
+                        return jsonify({"error": f"Face comparison returned false: {str(e)}"}), 400
+                    
+                    session['user'] = stored_email  # Store session data
+                    
+                    return jsonify({
+                        'message': 'Successful login',
+                        'new_image_data': new_image_data,
+                        "redirect": url_for('face_auth_bp.account')
+                    })
 
         except Exception as e:
-            return jsonify({"error": f"Invalid image data: {str(e)}"}), 400
+            return jsonify({"error": f"Invalid image data: {str(e)}"}), 400 # TODO: remove str(e) for security
 
         return jsonify({'message': 'No face detected'})
 
-    return render_template('login-face-detection.html')
+    return render_template('login.html')
 
 
 
