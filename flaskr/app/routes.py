@@ -6,7 +6,7 @@ password_auth_bp = Blueprint('password_auth_bp', __name__)
 
 @password_auth_bp.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('index2.html')
 
 @password_auth_bp.route('/planets')
 def get_planets():
@@ -79,17 +79,17 @@ def login():
         session['user'] = username  # Store user in session  (this way we can retrive user information like username and display it)
         
         # Redirect to account page (success)
-        return redirect(url_for('password_auth_bp.account'))
+        return redirect(url_for('face_auth_bp.account'))
 
-    return render_template('login.html')
+    return render_template('login-face-detection.html')
 
 @password_auth_bp.route('/logout')
 def logout():
     session.pop('user', None)  # Remove user from session
-    return redirect(url_for('password_auth_bp.login'))
+    return redirect(url_for('face_auth_bp.login'))
 
 @password_auth_bp.route('/account')
 def account():
     if 'user' not in session:
-        return redirect(url_for('password_auth_bp.login'))
+        return redirect(url_for('face_auth_bp.login'))
     return render_template('account.html', email=session['user'])
