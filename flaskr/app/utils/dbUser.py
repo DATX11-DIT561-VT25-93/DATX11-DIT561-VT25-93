@@ -48,7 +48,7 @@ def get_user_from_db(email):
     with current_app.app_context():
         supabase = current_app.supabase
 
-        response = supabase.table('Users').select("face_features", "iv", "auth_tag").eq("email", email).execute()
+        response = supabase.table('Users').select("face_features", "iv", "auth_tag", "username").eq("email", email).execute()
         
         if not response.data:
             return jsonify({"error": "User not found"}), 404
@@ -57,6 +57,7 @@ def get_user_from_db(email):
         ciphertext = user_data["face_features"]
         iv = user_data["iv"]
         auth_tag = user_data["auth_tag"]
+        username = user_data["username"]
         
         # Decrypt face data
         try:
@@ -66,7 +67,8 @@ def get_user_from_db(email):
         
         return jsonify({
             "email": email,
-            "face_features": decrypted_face_data
+            "face_features": decrypted_face_data,
+            "username": username
         }), 200
     
 

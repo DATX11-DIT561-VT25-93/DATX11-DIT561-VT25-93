@@ -91,5 +91,6 @@ def logout():
 @password_auth_bp.route('/account')
 def account():
     if 'user' not in session:
-        return redirect(url_for('face_auth_bp.login'))
-    return render_template('account.html', email=session['user'])
+        return redirect(url_for('face_auth_bp.login_fr'))
+    
+    return render_template('account.html', user_obj=session['user'])

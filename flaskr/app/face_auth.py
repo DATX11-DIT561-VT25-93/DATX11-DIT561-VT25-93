@@ -150,6 +150,7 @@ def login_fr():
                 if response[1] == 200:  
                     user_data = response[0].get_json()  
                     stored_email = user_data.get("email")  
+                    stored_username = user_data.get("username")
                     stored_face_features = user_data.get("face_features")
                     
                     # Compare webcam face features with stored face features
@@ -159,12 +160,17 @@ def login_fr():
                     if(not compare_faces_euclidean(webcam_feature_vector, stored_face_features)):
                         return jsonify({"error": f"Face comparison returned false: {str(e)}"}), 400
                     
-                    session['user'] = stored_email  # Store session data
-                    
+                    session['user'] = {
+                        'username': stored_username,
+                        'email': stored_email,
+                        'status_logged_in': True 
+                    }  # Store session data
+                    session.modified = True
+
                     return jsonify({
                         'message': 'Successful login',
                         'new_image_data': new_image_data,
-                        "redirect": url_for('face_auth_bp.account')
+                        "redirect": "/account"
                     })
 
         except Exception as e:
@@ -173,12 +179,6 @@ def login_fr():
         return jsonify({'message': 'No face detected'})
 
     return render_template('login.html')
-
-@face_auth_bp.route('/account')
-def account():
-    if 'user' not in session:
-        return redirect(url_for('face_auth_bp.login'))
-    return render_template('account.html', username=session['user'])
 
 # Old code below, saved to show difference on meeting
 @face_auth_bp.route('/register-face-detection', methods=['POST', 'GET']) 
