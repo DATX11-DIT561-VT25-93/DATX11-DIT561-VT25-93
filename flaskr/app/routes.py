@@ -6,7 +6,7 @@ password_auth_bp = Blueprint('password_auth_bp', __name__)
 
 @password_auth_bp.route('/')
 def home():
-    return render_template('index2.html')
+    return render_template('index.html')
 
 @password_auth_bp.route('/planets')
 def get_planets():
