@@ -169,7 +169,7 @@ def register_old():
 
 
 @face_auth_bp.route('/login-fr', methods=['POST', 'GET'])
-def login():
+def login_fr():
 
     if request.method == 'POST':
         data = request.get_json()
@@ -193,28 +193,6 @@ def login():
                     stored_email = user_data.get("email")  
                     stored_face_features = user_data.get("face_features")
                     
-                    # Compare webcam face features with stored face features
-                    stored_face_features = np.array(json.loads(stored_face_features), dtype=np.float32)
-                    webcam_feature_vector = extract_feature(face_data, image_rgb, rec_model)
-                    
-                    if(not compare_faces_euclidean(webcam_feature_vector, stored_face_features)):
-                        return jsonify({"error": f"Face comparison returned false: {str(e)}"}), 400
-                    
-                    session['user'] = stored_email  # Store session data
-                    
-                    return jsonify({
-                        'message': 'Successful login',
-                        'new_image_data': new_image_data,
-                        "redirect": url_for('face_auth_bp.account')
-                    })
-                response = get_user_from_db(email)  
-                
-                if response[1] == 200:  
-                    user_data = response[0].get_json()  
-                    stored_email = user_data.get("email")  
-
-                    stored_face_features = user_data.get("face_features")
-                    print("apapa2 " + stored_face_features)
                     # Compare webcam face features with stored face features
                     stored_face_features = np.array(json.loads(stored_face_features), dtype=np.float32)
                     webcam_feature_vector = extract_feature(face_data, image_rgb, rec_model)
