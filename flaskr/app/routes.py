@@ -86,7 +86,7 @@ def login():
 @password_auth_bp.route('/logout')
 def logout():
     session.pop('user', None)  # Remove user from session
-    return redirect(url_for('face_auth_bp.login'))
+    return redirect(url_for('face_auth_bp.login_fr'))
 
 @password_auth_bp.route('/account')
 def account():
