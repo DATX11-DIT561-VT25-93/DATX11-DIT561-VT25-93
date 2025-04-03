@@ -90,7 +90,7 @@ def logout():
 
 @password_auth_bp.route('/account')
 def account():
-    if 'user' not in session:
+    if 'user' not in session or not session['user']['status_logged_in']:
         return redirect(url_for('face_auth_bp.login_fr'))
     
     return render_template('account.html', user_obj=session['user'])

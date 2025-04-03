@@ -1,12 +1,14 @@
+from datetime import datetime, timezone, timedelta
 import json
 import uuid
 from flask import Blueprint, render_template, jsonify, request, current_app, redirect, url_for, session
 import numpy as np
+
 from .functionality.detection import detect_face
 from .utils.dbUser import get_user_from_db, save_user_to_db, check_existing_user
 from .utils.dbRegisterUser import store_temp_imagedata, get_temp_image_data
 from .functionality.feature_extraction import extract_feature
-from.functionality.verification import compare_faces_euclidean
+from .functionality.verification import compare_faces_euclidean
 from deepface.models.facial_recognition import Facenet
 
 import os
@@ -28,7 +30,7 @@ def pre_register():
     if request.method == 'POST':
         data = request.json  # Receive { "username": "johndoe", "email": "john@example.com" ... etc }
 
-        # Check existing user (checks -> email, might need to update to also check phone number? etc)
+        # Check existing user
         existing_user_check = check_existing_user(data['email'])
                 
         if existing_user_check[1] != 200:  
@@ -38,11 +40,11 @@ def pre_register():
         session['user'] = {
             'username': data['username'],
             'email': data['email'],
-            'address': data['address'],
-            'phone': data['phone'],
             'face_data_id': None,  # Not set yet (set in pre_register_scan),
             'status_logged_in': False 
         }
+        session['registration_start_time'] = datetime.now(timezone.utc).timestamp()
+        session.modified = True
 
         return jsonify({"message": "User registered", "next": "/register/scan"})
     return render_template('register.html')
@@ -127,6 +129,36 @@ def get_face_image():
         return jsonify({'error': str(e)}), 500
     
 
+@face_auth_bp.route('/check-session-status', methods=['GET'])
+def check_session_status():
+    if 'registration_start_time' in session and 'user' in session:
+        start_time = session.get('registration_start_time')
+        current_time = datetime.now(timezone.utc).timestamp()
+        elapsed_time = current_time - start_time
+        
+        if elapsed_time > (5 * 60):  # 1 minute timeout
+            # Clear session
+            session.pop('user', None)
+            session.pop('registration_start_time', None)
+            return jsonify({'expired': True})
+    
+    return jsonify({'expired': False})
+
+@face_auth_bp.before_request
+def check_registration_timeout():
+    if request.path.startswith('/register') and request.path != '/register':  # Don't check on initial register page
+        if 'registration_start_time' not in session or 'user' not in session:
+            return redirect(url_for('face_auth_bp.pre_register'))
+        
+        start_time = session.get('registration_start_time')
+        current_time = datetime.now(timezone.utc).timestamp()
+        elapsed_time = current_time - start_time
+        
+        if elapsed_time > (1 * 60):  # 1 minute timeout
+            session.pop('user', None)
+            session.pop('registration_start_time', None)
+            return redirect(url_for('face_auth_bp.pre_register'))
+
 @face_auth_bp.route('/login-fr', methods=['POST', 'GET'])
 def login_fr():
 
@@ -160,6 +192,10 @@ def login_fr():
                     if(not compare_faces_euclidean(webcam_feature_vector, stored_face_features)):
                         return jsonify({"error": f"Face comparison returned false: {str(e)}"}), 400
                     
+                    # Store logged in user in session
+                    if 'user' in session:
+                        session.pop('user', None)
+
                     session['user'] = {
                         'username': stored_username,
                         'email': stored_email,

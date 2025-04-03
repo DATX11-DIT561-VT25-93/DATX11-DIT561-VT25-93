@@ -4,31 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioAuth - Home</title>
+    <title>BioAuth - Register</title>
     <link href="../static/css/output.css" rel="stylesheet">
-    
+
 </head>
 
 
 <body class="w-screen h-screen bg-[#EFEFEF]">
-    <main class="flex flex-row w-full h-full px-36 py-16 space-x-36">
+    <main class="flex flex-col lg:flex-row w-full h-full px-36 py-16 space-x-36">
         <!-- Info Section -->
-        <section class="w-[38%]">
+        <section class="w-[80%] lg:w-[38%]">
             <div class="flex h-full flex-col justify-center items-center">
                 <a href="/" class="flex flex-row h-fit items-center w-fit space-x-2">
-                    <img src="../static/images/logoBioAuth.png" alt="BioAuth-logo" class="w-10 object-cover">
-                    <p class="font-bold text-2xl">BioAuth</p>
+                    <img src="../static/images/logoBioAuth.png" alt="BioAuth-logo"
+                        class="w-6 md:w-10 lg:w-6 2xl:w-10 object-cover">
+                    <p class="font-bold text-base md:text-lg lg:text-base 2xl:text-2xl">BioAuth</p>
                 </a>
-                <div class="relative flex items-center w-full my-2">
+                <div class="relative flex items-center w-full">
                     <button class="cursor-pointer absolute" onclick="window.location.href='/register'">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50" fill="none">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="w-[25px] sm:w-[30px] md:w-[35px] xl:w-[30px] 2xl:w-[50px]" viewBox="0 0 50 50"
+                            fill="none">
                             <rect width="50" height="50" rx="25" fill="white" class="hover:shadow-2xl" />
                             <path d="M15 24.5H35M15 24.5L23.5714 16M15 24.5L23.5714 33" stroke="#0A0A0A"
                                 stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </button>
                     <div class="w-full flex justify-center">
-                        <p class="text-4xl font-semibold text-[#0A0A0A]">
+                        <p class="text-lg lg:text-lg 2xl:text-4xl font-semibold text-[#0A0A0A]">
                             Create an Account
                         </p>
                     </div>
@@ -36,40 +39,34 @@
                 <!-- Actual User Info -->
                 <div class="flex flex-col w-full">
                     <!-- Grid with user info -->
-                    <p class="font-semibold text-2xl mt-8">Your details</p>
-                    <div class="grid grid-cols-4 space-x-2 w-full text-[#0A0A0A] mt-2">
-                        <div class="flex flex-col">
-                            <p class="font-semibold">Username</p>
-                            <p class="opacity-75">{{ user_obj['username'] }}</p>
+                    <p class="font-semibold text-lg lg:text-lg 2xl:text-2xl mt-6">Your details</p>
+                    <div class="grid lg:grid-cols-2 space-x-2 w-full text-[#0A0A0A] mt-2">
+                        <div class="flex flex-col text-xs md:text-sm xl:text-xs 2xl:text-base">
+                            <p class="font-semibold ">Username</p>
+                            <p class="opacity-75 line-clamp-3">{{ user_obj['username'] }}</p>
                         </div>
-                        <div class="flex flex-col">
+                        <div class="flex flex-col text-xs md:text-sm xl:text-xs 2xl:text-base">
                             <p class="font-semibold">Email</p>
                             <p class="opacity-75">{{ user_obj['email'] }}</p>
-                        </div>
-                        <div class="flex flex-col">
-                            <p class="font-semibold">Address</p>
-                            <p class="opacity-75">{{ user_obj['address'] }}</p>
-                        </div>
-                        <div class="flex flex-col">
-                            <p class="font-semibold">Phone Number</p>
-                            <p class="opacity-75">{{ user_obj['phone'] }}</p>
                         </div>
                     </div>
                     <div class="my-2 w-full h-1 rounded-full bg-[#0A0A0A] opacity-20"></div>
                     <!-- Instructions for face scan -->
                     <div class="flex flex-col text-center justify-center items-center w-full mt-4 space-y-4">
-                        <div class="w-[75%]">
-                            <p class="font-semibold text-xl">1. Click 'Allow' Webcam</p>
+                        <div class="w-full 2xl:w-[75%]">
+                            <p class="font-semibold text-lg lg:text-lg 2xl:text-2xl">1. Click 'Allow' Webcam</p>
                             <p class="opacity-75">When the browser asks to use your web camera click allow</p>
                         </div>
-                        <div class="w-[75%]">
-                            <p class="font-semibold text-xl">2. Fit your face into the frame</p>
-                            <p class="opacity-75">To guarantee a good face scan, you need to fit your face into the
+                        <div class="w-full 2xl:w-[75%]">
+                            <p class="font-semibold text-lg lg:text-lg 2xl:text-2xl">2. Fit your face into the frame</p>
+                            <p class="opacity-75 text-sm md:text-sm xl:text-sm 2xl:text-base">To guarantee a good face
+                                scan, you need to fit your face into the
                                 frame as good as you can. Make sure that you are in a light environment </p>
                         </div>
-                        <div class="w-[75%]">
-                            <p class="font-semibold text-xl">3. Take your picture</p>
-                            <p class="opacity-75">When you are ready, take your picture! Don’t worry, you will be able
+                        <div class="w-full 2xl:w-[75%]">
+                            <p class="font-semibold text-lg lg:text-lg 2xl:text-2xl">3. Take your picture</p>
+                            <p class="opacity-75 text-sm md:text-sm xl:text-sm 2xl:text-base">When you are ready, take
+                                your picture! Don’t worry, you will be able
                                 to retake it again </p>
                         </div>
                     </div>
@@ -77,7 +74,7 @@
             </div>
         </section>
         <!-- Webcam section -->
-        <section class="flex w-[62%] justify-center items-center">
+        <section class="flex w-[80%] lg:w-[62%] justify-center items-center">
             <div class=" bg-[#DFDFDF] rounded-4xl overflow-hidden h-full max-h-[1000px] w-full relative">
                 <!-- Webcam box -->
                 <div id="webcam-container" class="flex w-full h-full absolute z-0">
@@ -113,24 +110,28 @@
                             <button id="continue-btn" style="display: none"
                                 class="bg-[#0A0A0A] transition duration-300 px-12 py-3 rounded-full hover:scale-105 cursor-pointer flex flex-row space-x-2 items-center">
                                 <p class="font-semibold text-white">Continue</p>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="21" viewBox="0 0 24 21" fill="none">
-                                    <path d="M22 10.5L2 10.5M22 10.5L13.4286 19M22 10.5L13.4286 2" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="21" viewBox="0 0 24 21"
+                                    fill="none">
+                                    <path d="M22 10.5L2 10.5M22 10.5L13.4286 19M22 10.5L13.4286 2" stroke="white"
+                                        stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
                             </button>
 
                             <button id="retake-btn" style="display: none"
                                 class="bg-[#EFEFEF] transition duration-300 px-12 py-3 rounded-full hover:scale-105 cursor-pointer flex flex-row space-x-2 items-center">
                                 <p class="font-semibold text-[#0A0A0A]">Retake</p>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29" fill="none">
-                                    <path d="M24.167 6.04167H20.542L18.1253 3.625H10.8753L8.45866 6.04167H4.83366C4.19272 6.04167 3.57803 6.29628 3.12482 6.74949C2.6716 7.2027 2.41699 7.81739 2.41699 8.45833V22.9583C2.41699 23.5993 2.6716 24.214 3.12482 24.6672C3.57803 25.1204 4.19272 25.375 4.83366 25.375H24.167C24.8079 25.375 25.4226 25.1204 25.8758 24.6672C26.329 24.214 26.5837 23.5993 26.5837 22.9583V8.45833C26.5837 7.81739 26.329 7.2027 25.8758 6.74949C25.4226 6.29628 24.8079 6.04167 24.167 6.04167ZM14.5003 21.75C13.1953 21.75 11.9145 21.3271 10.8753 20.5417L12.6153 18.8017C13.1832 19.1521 13.8357 19.3333 14.5003 19.3333C15.4617 19.3333 16.3838 18.9514 17.0636 18.2716C17.7434 17.5918 18.1253 16.6697 18.1253 15.7083C18.1253 14.7469 17.7434 13.8249 17.0636 13.1451C16.3838 12.4653 15.4617 12.0833 14.5003 12.0833C12.9778 12.0833 11.6003 13.05 11.0928 14.5H13.292L9.66699 18.125L6.04199 14.5H8.57949C8.73759 13.7222 9.04749 12.9831 9.49148 12.3252C9.93547 11.6672 10.5048 11.1033 11.167 10.6656C11.8291 10.2279 12.5711 9.92504 13.3504 9.77437C14.1297 9.6237 14.9311 9.62816 15.7087 9.7875C17.177 10.0856 18.4821 10.9187 19.3707 12.1251C20.2594 13.3314 20.6681 14.8248 20.5175 16.3155C20.3669 17.8062 19.6678 19.1878 18.5559 20.192C17.444 21.1962 15.9986 21.7515 14.5003 21.75Z" fill="#0A0A0A"/>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29"
+                                    fill="none">
+                                    <path
+                                        d="M24.167 6.04167H20.542L18.1253 3.625H10.8753L8.45866 6.04167H4.83366C4.19272 6.04167 3.57803 6.29628 3.12482 6.74949C2.6716 7.2027 2.41699 7.81739 2.41699 8.45833V22.9583C2.41699 23.5993 2.6716 24.214 3.12482 24.6672C3.57803 25.1204 4.19272 25.375 4.83366 25.375H24.167C24.8079 25.375 25.4226 25.1204 25.8758 24.6672C26.329 24.214 26.5837 23.5993 26.5837 22.9583V8.45833C26.5837 7.81739 26.329 7.2027 25.8758 6.74949C25.4226 6.29628 24.8079 6.04167 24.167 6.04167ZM14.5003 21.75C13.1953 21.75 11.9145 21.3271 10.8753 20.5417L12.6153 18.8017C13.1832 19.1521 13.8357 19.3333 14.5003 19.3333C15.4617 19.3333 16.3838 18.9514 17.0636 18.2716C17.7434 17.5918 18.1253 16.6697 18.1253 15.7083C18.1253 14.7469 17.7434 13.8249 17.0636 13.1451C16.3838 12.4653 15.4617 12.0833 14.5003 12.0833C12.9778 12.0833 11.6003 13.05 11.0928 14.5H13.292L9.66699 18.125L6.04199 14.5H8.57949C8.73759 13.7222 9.04749 12.9831 9.49148 12.3252C9.93547 11.6672 10.5048 11.1033 11.167 10.6656C11.8291 10.2279 12.5711 9.92504 13.3504 9.77437C14.1297 9.6237 14.9311 9.62816 15.7087 9.7875C17.177 10.0856 18.4821 10.9187 19.3707 12.1251C20.2594 13.3314 20.6681 14.8248 20.5175 16.3155C20.3669 17.8062 19.6678 19.1878 18.5559 20.192C17.444 21.1962 15.9986 21.7515 14.5003 21.75Z"
+                                        fill="#0A0A0A" />
                                 </svg>
                             </button>
                         </div>
                     </div>
                     <!-- Face Frame -->
                     <div class="flex justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="310" height="410" viewBox="0 0 310 410"
-                            fill="none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-[35vh]" viewBox="0 0 310 410" fill="none">
                             <ellipse cx="155" cy="205" rx="150" ry="200" stroke="white" stroke-width="10"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="50 50" />
                         </svg>
@@ -141,6 +142,46 @@
         </section>
     </main>
     <script src="../static/js/facescan.js"></script>
+    <script>let sessionCheckInterval;
+
+        function checkSessionStatus() {
+            fetch('/check-session-status')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.expired) {
+                        clearInterval(sessionCheckInterval);
+                        alert('Registration session expired. Please start over.');
+                        window.location.href = '/register';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking session status:', error);
+                });
+        }
+
+        // Check session status every 5 seconds
+        document.addEventListener('DOMContentLoaded', function () {
+            sessionCheckInterval = setInterval(checkSessionStatus, 5000);
+        });
+
+        // Clear interval when leaving the page
+        window.addEventListener('beforeunload', function () {
+            clearInterval(sessionCheckInterval);
+        });
+
+        // Add event listeners for user activity
+        let userActivityTimeout;
+        const resetUserActivityTimer = () => {
+            clearTimeout(userActivityTimeout);
+            userActivityTimeout = setTimeout(() => {
+                checkSessionStatus();
+            }, 60000); // Check after 1 minute of inactivity
+        };
+
+        // Reset timer on user activity
+        ['mousemove', 'keypress', 'click', 'touchstart'].forEach(event => {
+            document.addEventListener(event, resetUserActivityTimer);
+        });</script>
 </body>
 
 </html>

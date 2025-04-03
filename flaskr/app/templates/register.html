@@ -4,102 +4,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioAuth - Home</title>
+    <title>BioAuth - Register</title>
     <link href="../static/css/output.css" rel="stylesheet">
-    
+
 </head>
 
 
 <body class="w-screen h-screen bg-[#EFEFEF]">
-    <main class="flex flex-row w-full h-full px-36 py-16 space-x-36">
+    <main class="flex flex-row w-full h-full px-36 py-16 lg:space-x-20 xl:space-x-36 justify-center">
         <!-- Form Section -->
-        <section class="w-[38%]">
+        <section class="w-[100%] sm:w-[80%] md:w-[80%] lg:w-[80%] xl:w-[38%]">
             <div class="flex h-full flex-col justify-center items-center">
                 <a href="/" class="flex flex-row h-fit items-center w-fit space-x-2">
-                    <img src="../static/images/logoBioAuth.png" alt="BioAuth-logo" class="w-10 object-cover">
-                    <p class="font-bold text-2xl">BioAuth</p>
+                    <img src="../static/images/logoBioAuth.png" alt="BioAuth-logo" class="w-6 md:w-10 lg:w-6 2xl:w-10 object-cover">
+                    <p class="font-bold text-base md:text-lg lg:text-base 2xl:text-2xl">BioAuth</p>
                 </a>
                 <div class="relative flex items-center w-full my-2">
                     <button class="cursor-pointer absolute" onclick="window.location.href='/'">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50" fill="none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-[25px] sm:w-[30px] md:w-[35px] xl:w-[30px] 2xl:w-[50px]" viewBox="0 0 50 50" fill="none">
                             <rect width="50" height="50" rx="25" fill="white" class="hover:shadow-2xl" />
                             <path d="M15 24.5H35M15 24.5L23.5714 16M15 24.5L23.5714 33" stroke="#0A0A0A"
                                 stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </button>
                     <div class="w-full flex justify-center">
-                        <p class="text-4xl font-semibold text-[#0A0A0A]">
+                        <p class="text-lg lg:text-lg 2xl:text-2xl font-semibold text-[#0A0A0A]">
                             Create an Account
                         </p>
                     </div>
                 </div>
                 <!-- Actual Form -->
                 <form id="register-form" class="w-full">
-                    <div class="mt-16 max-md:mt-10">
+                    <div class="mt-4">
                         <label for="username"
-                            class="block self-start text-base font-semibold text-neutral-950">Username</label>
+                            class="block self-start font-semibold text-neutral-950 text-sm md:text-base xl:text-sm 2xl:text-base">Username</label>
                         <input type="text" id="username" placeholder="Username" required
-                            class="w-full px-4 py-3.5 mt-2.5 text-base font-semibold text-black bg-white rounded-lg max-md:pr-5 max-md:max-w-full" />
+                            class="w-full px-4 py-2 md:py-3.5 lg:py-3 2xl:py-3.5 text-sm md:text-base xl:text-sm 2xl:text-base font-semibold text-black bg-white rounded-lg max-md:pr-5 max-md:max-w-full" />
                     </div>
 
-                    <div class="mt-11 max-md:mt-10">
+                    <div class="mt-4">
                         <label for="email"
-                            class="block self-start text-base font-semibold text-neutral-950">Email</label>
+                            class="block self-start font-semibold text-neutral-950 text-sm md:text-base xl:text-sm 2xl:text-base">Email</label>
                         <input type="email" id="email" placeholder="Email" required
-                            class="w-full px-4 py-3.5 mt-2.5 text-base font-semibold text-black bg-white rounded-lg max-md:pr-5 max-md:max-w-full" />
+                            class="w-full px-4 py-2 md:py-3.5 lg:py-3 2xl:py-3.5  text-sm md:text-base xl:text-sm 2xl:text-base font-semibold text-black bg-white rounded-lg max-md:pr-5 max-md:max-w-full" />
                     </div>
-
-                    <div class="flex flex-wrap gap-10 mt-12 text-base font-semibold max-md:mt-10 max-md:max-w-full">
-                        <div class="flex flex-col flex-1 grow shrink-0 whitespace-nowrap basis-0 w-fit">
-                            <label for="address" class="block self-start text-neutral-950">Address</label>
-                            <input type="text" id="address" placeholder="Address" required
-                                class="px-4 py-3.5 mt-2.5 text-black bg-white rounded-lg max-md:pr-5 w-full" />
-                        </div>
-
-                        <div class="flex flex-col flex-1 grow shrink-0 basis-0 w-fit">
-                            <label for="phone" class="block self-start text-neutral-950">Phone number</label>
-                            <input type="tel" id="phone" placeholder="Phone" required
-                                class="px-4 py-3.5 mt-2.5 max-w-full text-black whitespace-nowrap bg-white rounded-lg  max-md:pr-5" />
-                        </div>
-                    </div>
-
                     <!-- Next Step Button -->
                     <button
-                        class="flex flex-col justify-center items-center cursor-pointer px-20 hover:shadow-2xl transition duration-300 ease-in-out py-2.5 mt-24 bg-[#0A0A0A] rounded-[2000px] w-full max-md:px-5 max-md:mt-10 max-md:max-w-full">
+                        class="flex flex-col mt-6 justify-center items-center cursor-pointer px-20 hover:shadow-xl transition duration-300 ease-in-out py-2 bg-[#0A0A0A] rounded-[2000px] w-full">
                         <div class="flex flex-col w-24">
-                            <span class="text-xl font-semibold text-center text-white">Next Step</span>
+                            <p class="text-sm md:text-base xl:text-sm 2xl:text-lg font-semibold text-center text-white">Next Step</p>
                             <div class="flex gap-2 self-center mt-1 w-11">
-                                <span class="flex shrink-0 w-2.5 h-2.5 bg-white rounded-[2000px]"></span>
-                                <span class="flex shrink-0 w-2.5 h-2.5 bg-white rounded-[2000px] opacity-50"></span>
-                                <span class="flex shrink-0 w-2.5 h-2.5 bg-white rounded-[2000px] opacity-50"></span>
+                                <span class="flex shrink-0 w-1.5 h-1.5 lg:w-2 lg:h-2 2xl:w-2.5 2xl:h-2.5 bg-white rounded-[2000px]"></span>
+                                <span class="flex shrink-0 w-1.5 h-1.5 lg:w-2 lg:h-2 2xl:w-2.5 2xl:h-2.5 bg-white rounded-[2000px] opacity-50"></span>
+                                <span class="flex shrink-0 w-1.5 h-1.5 lg:w-2 lg:h-2 2xl:w-2.5 2xl:h-2.5 bg-white rounded-[2000px] opacity-50"></span>
                             </div>
                         </div>
                     </button>
+                    <p class="mt-2 text-sm 2xl:text-base text-center">Already have an account? <a href="/login"
+                        class="underline text-sm 2xl:text-base">Log in</a></p>
                 </form>
-                <p class="mt-2">Already have an account? <a href="/login" class="underline">Log in</a></p>
             </div>
         </section>
         <!-- Filler Image Section / Art section -->
-        <section class="flex w-[62%] justify-center items-center">
+        <section class="hidden w-[62%] justify-center items-center
+                    sm:hidden md:hidden xl:flex">
             <div class=" bg-[#DFDFDF] rounded-4xl overflow-hidden h-full max-h-[1000px] ">
                 <img src="../static/images/registerFillerBG.png" alt="filler-art" class="w-full h-full object-cover">
             </div>
         </section>
-        
+
     </main>
 
     <script>
-        document.getElementById('register-form').addEventListener('submit', async function(event) {
+        document.getElementById('register-form').addEventListener('submit', async function (event) {
             event.preventDefault(); // Prevent default form submission
-            
+
             // Collect form data
             const formData = {
                 username: document.getElementById('username').value,
                 email: document.getElementById('email').value,
-                address: document.getElementById('address').value,
-                phone: document.getElementById('phone').value,
             };
-    
+
             try {
                 // Send data to Flask backend
                 const response = await fetch('/register', {
@@ -107,9 +92,9 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData)
                 });
-    
+
                 const result = await response.json();
-                
+
                 if (response.ok) {
                     // Redirect to the next step (face scan)
                     window.location.href = result.next;
@@ -122,7 +107,7 @@
             }
         });
     </script>
-    
+
 </body>
 
 </html>
