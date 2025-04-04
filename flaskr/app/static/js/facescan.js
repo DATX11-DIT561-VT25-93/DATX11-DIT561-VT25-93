@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const video = document.getElementById("webcam");
     const canvas = document.getElementById("canvas");
     const context = canvas.getContext("2d");
+    context.scale(-1, 1);
+    context.translate(-canvas.width, 0);
     const captureButton = document.getElementById("capture-btn");
     const continueButton = document.getElementById("continue-btn");
     const retakeButton = document.getElementById("retake-btn");
