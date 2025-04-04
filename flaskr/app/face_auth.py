@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, jsonify, request, current_app, red
 import numpy as np
 
 from .functionality.detection import detect_face
-from .utils.dbUser import check_existing_username, get_user_from_db, save_user_to_db, check_existing_email
+from .utils.dbUser import check_existing_email_or_username, check_existing_username, get_user_from_db, save_user_to_db, check_existing_email
 from .utils.dbRegisterUser import store_temp_imagedata, get_temp_image_data
 from .functionality.feature_extraction import extract_feature
 from .functionality.verification import compare_faces_euclidean
@@ -44,7 +44,7 @@ def pre_register():
         session['user'] = {
             'username': data['username'],
             'email': data['email'],
-            'face_data_id': str(uuid.uuid4()),  # Not set yet (set in pre_register_scan),
+            'face_data_id': str(uuid.uuid4()),
             'status_logged_in': False 
         }
         session['registration_start_time'] = datetime.now(timezone.utc).timestamp()
@@ -165,13 +165,14 @@ def login_fr():
 
     if request.method == 'POST':
         data = request.get_json()
+
+        email_username = data['email_username']
         
         if 'image' not in data or 'email_username' not in data:
             return jsonify({'error': 'Missing image or username'}), 400
 
         try:
             image_data = data['image'] # Webcam image in shape of base64 string        
-            email_username = data['email_username']
 
             print("Webcam frame received from " + str(email_username))
             
@@ -202,6 +203,7 @@ def login_fr():
                         'email': stored_email,
                         'status_logged_in': True 
                     }  # Store session data
+                    session['registration_start_time'] = datetime.now(timezone.utc).timestamp()
                     session.modified = True
 
                     return jsonify({
@@ -216,6 +218,24 @@ def login_fr():
         return jsonify({'message': 'No face detected'})
 
     return render_template('login.html')
+
+@face_auth_bp.route('/check-credentials', methods=['POST'])
+def check_credentials():
+    data = request.get_json()
+    email_username = data.get('email_username')
+    
+    if not email_username:
+        return jsonify({'error': 'Email or username is required'}), 400
+        
+    try:
+        # Check if user exists in database
+        if( not check_existing_email_or_username(email_username) ):
+            return jsonify({'error': 'No account found with this email or username'}), 404 
+            
+        return jsonify({'message': 'Valid credentials'}), 200
+        
+    except Exception as e:
+        return jsonify({'error': 'Error checking credentials'}), 500
 
 # Old code below, saved to show difference on meeting
 @face_auth_bp.route('/register-face-detection', methods=['POST', 'GET']) 

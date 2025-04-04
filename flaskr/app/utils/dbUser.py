@@ -102,5 +102,21 @@ def check_existing_username(username):
         if existing_user.data:  
             return jsonify({"error": "Username already taken"}), 409
         
-        return jsonify({"success": "Username not in use"}), 200   
+        return jsonify({"success": "Username not in use"}), 200  
+
+def check_existing_email_or_username(email_username):
+    if not email_username:
+        return jsonify({"error": "Username is null"}), 400 
+    
+    with current_app.app_context():
+        supabase = current_app.supabase
+
+        existing_user = supabase.table('Users').select("id").or_(f"email.eq.{email_username},username.eq.{email_username}").execute()
+        
+        if existing_user.data:  
+            return True
+        
+        return False
+    
+
     
