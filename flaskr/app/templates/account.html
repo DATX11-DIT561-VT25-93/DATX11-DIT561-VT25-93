@@ -69,9 +69,50 @@
             <p class="text-[1.1vw] font-medium col-start-1"> Username </p>
             <p class="text-[1.1vw] font-medium col-start-2"> Email </p>
 
-            <p class="text-[0.7vw] text-stone-500 col-start-1 pt-[1vw]">{{ user_obj['username'] }}</p>
-            <p class="text-[0.7vw] text-stone-700 col-start-2 pt-[1vw]">{{ user_obj['email'] }}</p>
-            <button class="h-[2vw] w-[10vw] bg-blue-500 text-center col-start-4 rounded-[0.5vw] text-[0.9vw] text-white" onclick="accountPopup()">Account Settings</button>
+            <p class="text-[0.7vw] text-stone-500 col-start-1 pt-[1vw]"> {{ user_obj['username'] }} </p>
+            <p class="text-[0.7vw] text-stone-700 col-start-2 pt-[1vw]"> {{ user_obj['email'] }} </p>
+            
+            <details class="open">
+                <!-- Button to be visible -->
+                <summary
+                    class="w-[11vw] h-[2vw] flex justify-center items-center bg-blue-300 rounded-2xl block px-6 py-4 text-[1vw] hover:bg-blue-500 hover:duration-300 hover:text-white cursor-pointer">
+                    <p class="text-white"> Account Settings </p>
+                   <!-- BUTTON -->
+                </summary>
+    
+                   <!-- Content will be hidden until the user clicks on the account settings button. -->
+                <div class="grid grid-cols-4 bg-white rounded-2xl w-[50%] h-[40%] my-auto mx-auto absolute inset-0 text-gray-600 p-4 py-8">
+                    <span onclick="document.querySelector('details').removeAttribute('open')" class="bg-gray-400 rounded-full flex items-center justify-center text-3xl font-bold uppercase absolute -right-4 -top-4 w-10 h-10 text-white hover:bg-blue-200 hover:duration-200 cursor-pointer"> X </span>
+                    <p class="row-start-1 col-span-4 text-[2.25vw] font-medium inline-block align-top flex justify-center items-center mb-8"> Account Settings </p>
+                    
+                    <p class="text-[1.5vw] font-medium row-start-2 col-span-1"> Username </p>
+                    <p class="text-[1.5vw] font-medium row-start-3 col-span-1"> Email </p>
+
+                    <div class="row-start-2 col-start-2 col-span-3 outline mb-[2vw] rounded-[1vw] p-[0.6vw]">
+                        <p class="text-[1vw]"> {{ user_obj['username'] }} </p>
+                    </div>
+
+                    <div class="row-start-3 col-start-2 col-span-3 outline mb-[2vw] rounded-[1vw] p-[0.6vw]">
+                        <p class="text-[1vw]"> {{ user_obj['email'] }} </p>
+                    </div>
+                
+                <!-- Button to be visible -->
+                <summary
+                class="row-start-4 w-[11vw] h-[2vw] flex justify-center items-center bg-red-300 rounded-2xl block px-6 py-4 text-[1vw] hover:bg-red-500 hover:duration-300 hover:text-white cursor-pointer">
+                <p class="text-white"> Delete Account </p>
+                <!-- BUTTON -->
+                </summary>
+
+                <!-- Button to be visible -->
+                <summary
+                class="row-start-4 col-start-4 [11vw] h-[2vw] flex justify-center items-center bg-green-300 rounded-2xl block px-6 py-4 text-[1vw] hover:bg-green-500 hover:duration-300 hover:text-white cursor-pointer">
+                <p class="text-white"> Update Account </p>
+                <!-- BUTTON -->
+                </summary>
+
+                </div>
+
+            </details> 
 
         </div>
 
@@ -87,42 +128,13 @@
 
          <div class="">
             <button class="btn btn-secondary h-[3.2vw] bg-transparent border-transparent hover:border-transparent text-black font-semibold" onclick="window.location.href='/logout'">Logout</button>
-            <details class="open">
-                <!-- Button to be visible -->
-                <summary
-                    class="bg-blue-300 rounded-2xl block px-6 py-4 text-xl hover:bg-blue-500 hover:duration-300 hover:text-white cursor-pointer">
-                   <!-- BUTTON -->
-                </summary>
-    
-                   <!-- Content will be hidden until the user clicks on the summary button. -->
-                <div class="bg-white rounded-2xl w-[50%] h-[40%] my-auto mx-auto absolute inset-0 text-gray-600 p-4 py-8">
-                    <!-- POPUP CONTENT WILL GO HERE -->
-                </div>
-            </details>       
+                  
         </div>
 
         <!-- hidden popup div, will be visable when button is pressed -->
         <div>
 
         </div>
-
-
-
-        <!-- knasigt test -->
-
-        <details class="open">
-            <!-- Button to be visible -->
-            <summary
-                class="bg-blue-300 rounded-2xl block px-6 py-4 text-xl hover:bg-blue-500 hover:duration-300 hover:text-white cursor-pointer">
-               <!-- BUTTON -->
-            </summary>
-
-               <!-- Content will be hidden until the user clicks on the summary button. -->
-            <div class="bg-white rounded-2xl w-[50%] h-[40%] my-auto mx-auto absolute inset-0 text-gray-600 p-4 py-8">
-                <!-- POPUP CONTENT WILL GO HERE -->
-            </div>
-        </details>
-
 
     </div>
     
