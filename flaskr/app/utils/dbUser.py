@@ -118,5 +118,3 @@ def check_existing_email_or_username(email_username):
         
         return False
     
-
-    

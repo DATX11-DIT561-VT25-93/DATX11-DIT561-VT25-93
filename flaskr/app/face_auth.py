@@ -23,6 +23,9 @@ os.environ["DEEPFACE_HOME"] = new_deepface_home
 
 rec_model = Facenet.load_facenet512d_model()
 
+@face_auth_bp.route('/account')
+def account():
+    return render_template("account.html", user_obj=session['user'] )
 
 # New code
 @face_auth_bp.route('/register', methods=['POST', 'GET'])
@@ -186,6 +189,7 @@ def login_fr():
                     stored_email = user_data.get("email")  
                     stored_username = user_data.get("username")
                     stored_face_features = user_data.get("face_features")
+                    stored_user_id=user_data.get("id")
                     
                     # Compare webcam face features with stored face features
                     stored_face_features = np.array(json.loads(stored_face_features), dtype=np.float32)
@@ -201,7 +205,8 @@ def login_fr():
                     session['user'] = {
                         'username': stored_username,
                         'email': stored_email,
-                        'status_logged_in': True 
+                        'status_logged_in': True, 
+                        'id': stored_user_id
                     }  # Store session data
                     session['registration_start_time'] = datetime.now(timezone.utc).timestamp()
                     session.modified = True
@@ -276,3 +281,117 @@ def register_old():
         return jsonify({'message': 'No face detected'})
 
     return render_template('register-face-detection.html')
+
+
+@face_auth_bp.route('/update_username', methods=['POST', 'GET'])
+def update_username():
+    if request.method == 'POST':
+
+        try:
+            
+            supabase = current_app.supabase
+
+            user_in_session = session['user']
+            #user_id = user_in_session['id']
+            old_username = user_in_session['username']
+            new_username = request.form['username']
+            old_email = user_in_session['email']
+
+            existing_username_check = check_existing_username(new_username)
+
+            if existing_username_check[1] != 200:  
+                return render_template("account.html", user_obj=session['user'])
+
+            updated_user = (
+                supabase.table("Users")
+                .update({"username": new_username})
+                .eq("username", old_username)
+                .execute()
+            )
+
+            session['user'] = {
+                            'username': new_username,
+                            'email': old_email,
+                            'status_logged_in': True, 
+                            #'id': user_id
+                        }  # Store session data
+            
+            return redirect(url_for('face_auth_bp.account')) 
+
+        except Exception as e:
+            return jsonify({"Error": str(e)}), 500
+        
+    return render_template('account.html')
+
+
+@face_auth_bp.route('/update_email', methods=['POST', 'GET'])
+def update_email():
+    
+    try:
+
+        supabase = current_app.supabase
+
+        user_in_session = session['user']
+       # user_id = user_in_session['id']
+        old_username = user_in_session['username']
+        old_email = user_in_session['email']
+        new_email = request.form['email']
+
+        existing_email_check = check_existing_email(new_email)
+
+        if existing_email_check[1] != 200:  
+            return render_template("account.html", user_obj=session['user'])
+        
+        updated_user = (
+            supabase.table("Users")
+            .update({"email": new_email})
+            .eq("email", old_email)
+            .execute()
+        )
+
+        session['user'] = {
+                        'username': old_username,
+                        'email': new_email,
+                        'status_logged_in': True, 
+                        #'id': user_id
+                    }  # Store session data
+        
+        return redirect(url_for('face_auth_bp.account')) 
+    
+    except Exception as e:
+        return jsonify({"Error": str(e)}), 500
+    
+
+
+@face_auth_bp.route('/delete-user', methods=['POST', 'GET'])
+def delete_user():
+    
+    try:
+
+        user_in_session = session['user']
+        print(session)
+        username = user_in_session['username']
+        #print(username)
+        #username = session['username']
+        # username = request.form.get('username')
+
+        if not username:
+            return jsonify({"Error": "Username Not Provided."}), 400
+
+        supabase = current_app.supabase
+
+
+        # Delete The User 
+        deleted_user = (
+            supabase.table("Users")
+            .delete()
+            .eq("username", username)
+            .execute()
+        )
+
+        
+    
+    except Exception as e:
+        return jsonify({"Error": str(e)}), 500
+        
+
