@@ -2,7 +2,8 @@ from flask import Blueprint, render_template, jsonify, request, current_app, red
 from .functionality.detection import detect_face
 from .utils.dbUser import save_user_to_db, check_existing_user, get_user_from_db
 from .functionality.feature_extraction import extract_feature, init_facenet
-from.functionality.verification import compare_faces_euclidean
+from .functionality.verification import compare_faces_euclidean
+from .functionality.anti_spoof import load_antispoof_model
 import numpy as np
 import json
 
@@ -10,6 +11,7 @@ import json
 face_auth_bp = Blueprint('face_auth_bp', __name__)
 
 rec_model = init_facenet()
+antispoof_sess, antispoof_input = load_antispoof_model()
 
 @face_auth_bp.route('/register-face-detection', methods=['POST', 'GET']) 
 def register():
@@ -28,7 +30,7 @@ def register():
             face_data, new_image_data, image_rgb = detect_face(image_data) # Get array containing face data and image with marked faces in shape of base64 string
            
             if face_data is not None:
-                feature_vector = extract_feature(face_data, image_rgb, rec_model)
+                feature_vector = extract_feature(face_data, image_rgb, rec_model, antispoof_sess, antispoof_input)
                 # Check for existing user
                 existing_user_check = check_existing_user(email)
                 
@@ -78,7 +80,7 @@ def login():
                     
                     # Compare webcam face features with stored face features
                     stored_face_features = np.array(json.loads(stored_face_features), dtype=np.float32)
-                    webcam_feature_vector = extract_feature(face_data, image_rgb, rec_model)
+                    webcam_feature_vector = extract_feature(face_data, image_rgb, rec_model, antispoof_sess, antispoof_input)
                     
                     if(not compare_faces_euclidean(webcam_feature_vector, stored_face_features)):
                         return jsonify({"error": f"Face comparison returned false: {str(e)}"}), 400
