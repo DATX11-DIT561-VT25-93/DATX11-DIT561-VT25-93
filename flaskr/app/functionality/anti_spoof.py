@@ -17,7 +17,7 @@ def is_real_face(face_crop, session, input_name):
 
     result = session.run(None, {input_name: input_blob})[0]
     prob = softmax(result[0])[0]
-    print(prob)
+    #print(prob)
     return prob > 0.98
 
 def softmax(logits, decimals=3):

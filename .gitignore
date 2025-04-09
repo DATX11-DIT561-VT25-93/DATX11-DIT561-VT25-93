@@ -176,3 +176,4 @@ data/*
 
 **/test_images*/
 **/gt_db/
+*.jpg
