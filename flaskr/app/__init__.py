@@ -19,6 +19,11 @@ def create_app():
     from app.face_auth import face_auth_bp
     app.register_blueprint(face_auth_bp)
 
+    
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template('404.html'), 404
+
 
     return app
 
