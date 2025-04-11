@@ -1,10 +1,13 @@
-from flask import Flask
+import datetime
+from flask import Flask, render_template
 from config import Config
 from supabase import create_client
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
+    app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=30)
 
     # Initialize Supabase
     app.supabase = create_client(app.config['SUPABASE_URL'], app.config['SUPABASE_KEY'])
@@ -16,4 +19,11 @@ def create_app():
     from app.face_auth import face_auth_bp
     app.register_blueprint(face_auth_bp)
 
+    
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template('404.html'), 404
+
+
     return app
+

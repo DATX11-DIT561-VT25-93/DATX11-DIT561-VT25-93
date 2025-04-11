@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioAuth - Register</title>
+    <link href="../static/css/output.css" rel="stylesheet">
+
+</head>
+
+<!-- Background -->
+<div class="absolute w-screen h-screen -z-10 bg-[#EFEFEF]">
+    <svg width="fill" height="fill" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" class="">
+        <g filter="url(#filter0_f_41_37)">
+            <ellipse cx="1227" cy="713.5" rx="447" ry="409.5" fill="#8A76FF" fill-opacity="0.47"></ellipse>
+        </g>
+        <g filter="url(#filter1_f_41_37)">
+            <circle cx="1472" cy="382" r="325" fill="#76FFE4" fill-opacity="0.4"></circle>
+        </g>
+        <g filter="url(#filter2_f_41_37)">
+            <circle cx="620" cy="769" r="325" fill="#C3E4FF" fill-opacity="0.7"></circle>
+        </g>
+        <g filter="url(#filter3_f_41_37)">
+            <circle cx="455" cy="282" r="325" fill="#F7DCFF" fill-opacity="0.7"></circle>
+        </g>
+        <defs>
+            <filter id="filter0_f_41_37" x="478.2" y="2.20001" width="1497.6" height="1422.6"
+                filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+                <feGaussianBlur stdDeviation="150.9" result="effect1_foregroundBlur_41_37"></feGaussianBlur>
+            </filter>
+            <filter id="filter1_f_41_37" x="845.2" y="-244.8" width="1253.6" height="1253.6"
+                filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+                <feGaussianBlur stdDeviation="150.9" result="effect1_foregroundBlur_41_37"></feGaussianBlur>
+            </filter>
+            <filter id="filter2_f_41_37" x="-6.79999" y="142.2" width="1253.6" height="1253.6"
+                filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+                <feGaussianBlur stdDeviation="150.9" result="effect1_foregroundBlur_41_37"></feGaussianBlur>
+            </filter>
+            <filter id="filter3_f_41_37" x="-171.8" y="-344.8" width="1253.6" height="1253.6"
+                filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+                <feGaussianBlur stdDeviation="150.9" result="effect1_foregroundBlur_41_37"></feGaussianBlur>
+            </filter>
+        </defs>
+    </svg>
+</div>
+
+
+<body class="w-screen h-screen bg-[#EFEFEF] flex justify-center items-center">
+    <main
+        class="flex flex-col p-8 2xl:p-32 justify-center items-center w-1/2 bg-[#EFEFEF]/50 backdrop-blur-md border-2 border-white rounded-4xl">
+        <a href="/" class="flex flex-row h-fit items-center w-fit space-x-2">
+            <img src="../static/images/logoBioAuth.png" alt="BioAuth-logo"
+                class="w-6 md:w-10 lg:w-6 2xl:w-10 object-cover">
+            <p class="font-bold text-base md:text-lg lg:text-base 2xl:text-2xl">BioAuth</p>
+        </a>
+        <div class=" flex items-center w-full my-2">
+            <button class="cursor-pointer absolute" onclick="window.location.href='/register/scan'">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="w-[25px] sm:w-[30px] md:w-[35px] xl:w-[30px] 2xl:w-[50px]" viewBox="0 0 50 50" fill="none">
+                    <rect width="50" height="50" rx="25" fill="white" class="hover:shadow-2xl" />
+                    <path d="M15 24.5H35M15 24.5L23.5714 16M15 24.5L23.5714 33" stroke="#0A0A0A" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+            <div class="w-full flex justify-center">
+                <p class="text-lg lg:text-xl xl:text-2xl 2xl:text-2xl font-semibold text-[#0A0A0A]">
+                    Create an Account
+                </p>
+            </div>
+        </div>
+        <!-- Actual User Info -->
+        <div class="flex flex-col w-full">
+            <!-- Your Details -->
+            <p class="font-semibold text-lg lg:text-xl xl:text-lg 2xl:text-xl text-center mt-8 mb-2">Verify Your details
+            </p>
+            <!-- Face Image -->
+            <div class="relative flex flex-col justify-center items-center">
+                <img id="facePreview" class="w-1/3 h-1/3 rounded-3xl -scale-x-100" alt="face image">
+                <div id="loadingState" class="absolute flex items-center w-full h-full justify-center hidden">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-4 border-white"></div>
+                </div>
+            </div>
+            <div id="errorMessage" class="hidden text-red-500 text-sm mt-2 text-center"></div>
+            <!-- Grid with user info -->
+            <div class="flex flex-col space-x-2 self-center w-full text-[#0A0A0A] mt-2 text-center">
+                <div class="flex flex-col text-xs md:text-sm xl:text-xs 2xl:text-base">
+                    <p class="font-semibold">Username</p>
+                    <p class="opacity-75">{{ user_obj['username'] }}</p>
+                </div>
+                <div class="flex flex-col text-xs md:text-sm xl:text-xs 2xl:text-base">
+                    <p class="font-semibold">Email</p>
+                    <p class="opacity-75">{{ user_obj['email'] }}</p>
+                </div>
+            </div>
+            <div id="errorMessage" class="hidden text-red-500 text-sm"></div>
+            <div id="loadingState" class="hidden">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                <p class="text-sm text-gray-600">Processing registration...</p>
+            </div>
+            <button onclick="submitRegistration()" id="submitBtn"
+                class="bg-[#0A0A0A] transition self-center duration-300 px-8 2xl:px-12 mt-8 py-2 2xl:py-3 rounded-full hover:scale-105 cursor-pointer flex flex-row space-x-2 items-center w-fit disabled:cursor-not-allowed disabled:hover:scale-100">
+                <p class="font-semibold text-sm md:text-base xl:text-sm 2xl:text-lg text-white ">Finalize</p>
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 md:w-10 lg:w-6 2xl:w-10" viewBox="0 0 29 29"
+                    fill="none">
+                    <path
+                        d="M11.5398 21.75L4.65234 14.8625L6.37422 13.1406L11.5398 18.3062L22.6263 7.21979L24.3482 8.94166L11.5398 21.75Z"
+                        fill="white" />
+                </svg>
+            </button>
+    </main>
+
+    <script>
+        async function submitRegistration() {
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingElement = document.getElementById('loadingState');
+            const errorElement = document.getElementById('errorMessage');
+
+            try {
+                // Disable button
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50');
+
+                // Show loading state
+                loadingElement.classList.remove('hidden');
+                errorElement.classList.add('hidden'); // Hide any previous errors
+
+                const response = await fetch('/register/summary', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Registration failed');
+                }
+
+                // Registration successful
+                window.location.href = '/account';
+
+            } catch (error) {
+                console.error('Registration error:', error);
+                errorElement.textContent = error.message;
+                errorElement.classList.remove('hidden');
+
+                // Re-enable button on error
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50');
+            } finally {
+                loadingElement.classList.add('hidden');
+            }
+        }
+
+        let sessionCheckInterval;
+
+        function checkSessionStatus() {
+            fetch('/check-session-status')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.expired) {
+                        clearInterval(sessionCheckInterval);
+                        alert('Registration session expired. Please start over.');
+                        window.location.href = '/register';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking session status:', error);
+                });
+        }
+
+        // Check session status every 5 seconds
+        document.addEventListener('DOMContentLoaded', function () {
+            sessionCheckInterval = setInterval(checkSessionStatus, 5000);
+        });
+
+        // Clear interval when leaving the page
+        window.addEventListener('beforeunload', function () {
+            clearInterval(sessionCheckInterval);
+        });
+
+        // Add event listeners for user activity
+        let userActivityTimeout;
+        const resetUserActivityTimer = () => {
+            clearTimeout(userActivityTimeout);
+            userActivityTimeout = setTimeout(() => {
+                checkSessionStatus();
+            }, 60000); // Check after 1 minute of inactivity
+        };
+
+        // Reset timer on user activity
+        ['mousemove', 'keypress', 'click', 'touchstart'].forEach(event => {
+            document.addEventListener(event, resetUserActivityTimer);
+        });
+
+        document.addEventListener('DOMContentLoaded', async function () {
+            const facePreview = document.getElementById('facePreview');
+            const loadingElement = document.getElementById('loadingState');
+            const submitBtn = document.getElementById('submitBtn');
+            const errorElement = document.getElementById('errorMessage');
+
+            // Disable button initially
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50');
+
+            try {
+                // Show loading state
+                facePreview.classList.add('opacity-50');
+                if (loadingElement) loadingElement.classList.remove('hidden');
+
+                const imageId = '{{ user_obj.face_data_id }}';
+
+                const response = await fetch('/get-face-image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ imageId: imageId })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.warning) {
+                    // No face detected
+                    errorElement.textContent = data.warning;
+                    errorElement.classList.remove('hidden');
+                    // Keep button disabled
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('opacity-50');
+                    submitBtn.title = 'No face detected in image'; // Add tooltip
+                } else if (data.face_detected) {
+                    // Face detected successfully
+                    errorElement.classList.add('hidden');
+                    // Enable button
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('opacity-50');
+                    submitBtn.title = ''; // Remove tooltip
+                }
+
+                if (data.image_data) {
+                    facePreview.src = data.image_data;
+                    facePreview.classList.remove('opacity-50');
+                } else {
+                    throw new Error('No image data found');
+                }
+            } catch (error) {
+                console.error('Error fetching face image:', error);
+                errorElement.textContent = 'Failed to load face image';
+                errorElement.classList.remove('hidden');
+                facePreview.classList.add('hidden');
+                // Keep button disabled
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50');
+            } finally {
+                if (loadingElement) loadingElement.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+
+</html>

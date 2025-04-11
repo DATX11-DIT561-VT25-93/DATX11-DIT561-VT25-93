@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@tailwindcss/cli": "^4.0.17",
+    "tailwindcss": "^4.0.17"
+  },
+  "scripts": {
+    "start": "concurrently \"flask run\" \"npx tailwindcss -i ./app/static/css/input.css -o ./app/static/css/output.css --watch\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

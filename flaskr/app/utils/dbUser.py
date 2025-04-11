@@ -1,4 +1,3 @@
-
 import numpy as np
 import base64
 from flask import jsonify, request, current_app
@@ -11,14 +10,14 @@ load_dotenv()
 AES_KEY = bytes.fromhex(os.getenv("AESGCM_SECRET_KEY"))
 
 
-def save_user_to_db(email, face_data):
+def save_user_to_db(email, face_data, username):
     with current_app.app_context():
         supabase = current_app.supabase
 
-        existing_user = supabase.table('Users').select("id").eq("email", email).execute()
+        existing_user = supabase.table('Users').select("id").or_(f"email.eq.{email},username.eq.{username}").execute()
         
         if existing_user.data:
-            return jsonify({"error": "Username already taken"}), 409 
+            return jsonify({"error": "Username or email already taken"}), 409 
 
         # Convert face_data into a storable format
         if isinstance(face_data, np.ndarray):
@@ -33,6 +32,7 @@ def save_user_to_db(email, face_data):
         
         new_user = {
             "email": email,
+            "username": username,
             "face_features": encrypted_data["ciphertext"],  
             "iv": encrypted_data["iv"],  
             "auth_tag": encrypted_data["auth_tag"]  
@@ -45,11 +45,12 @@ def save_user_to_db(email, face_data):
         
         return jsonify({"success": "User was successfully registered"}), 200
 
-def get_user_from_db(email):
+def get_user_from_db(email_username):
     with current_app.app_context():
         supabase = current_app.supabase
 
-        response = supabase.table('Users').select("face_features", "iv", "auth_tag").eq("email", email).execute()
+        response = supabase.table('Users').select("face_features", "iv", "auth_tag", "username", "email").or_(
+    f"email.eq.{email_username},username.eq.{email_username}").execute()
         
         if not response.data:
             return jsonify({"error": "User not found"}), 404
@@ -58,6 +59,8 @@ def get_user_from_db(email):
         ciphertext = user_data["face_features"]
         iv = user_data["iv"]
         auth_tag = user_data["auth_tag"]
+        email = user_data["email"]
+        username = user_data["username"]
         
         # Decrypt face data
         try:
@@ -66,12 +69,14 @@ def get_user_from_db(email):
             return jsonify({"error": "Decryption failed", "details": str(e)}), 500
         
         return jsonify({
+            "email_username": email_username,
+            "face_features": decrypted_face_data,
             "email": email,
-            "face_features": decrypted_face_data
+            "username": username
         }), 200
     
 
-def check_existing_user(email):
+def check_existing_email(email):
     if not email:
         return jsonify({"error": "Email is null"}), 400  
     
@@ -83,4 +88,33 @@ def check_existing_user(email):
         if existing_user.data:  
             return jsonify({"error": "Email already taken"}), 409
         
-        return jsonify({"success": "Email not in use"}), 200  
+        return jsonify({"success": "Email not in use"}), 200
+
+def check_existing_username(username):
+    if not username:
+        return jsonify({"error": "Username is null"}), 400  
+    
+    with current_app.app_context():
+        supabase = current_app.supabase
+
+        existing_user = supabase.table('Users').select("id").eq("username", username).execute()
+        
+        if existing_user.data:  
+            return jsonify({"error": "Username already taken"}), 409
+        
+        return jsonify({"success": "Username not in use"}), 200  
+
+def check_existing_email_or_username(email_username):
+    if not email_username:
+        return jsonify({"error": "Username is null"}), 400 
+    
+    with current_app.app_context():
+        supabase = current_app.supabase
+
+        existing_user = supabase.table('Users').select("id").or_(f"email.eq.{email_username},username.eq.{email_username}").execute()
+        
+        if existing_user.data:  
+            return True
+        
+        return False
+    

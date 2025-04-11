@@ -4,18 +4,175 @@
     <title>BioAuth - {{username}}</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="d-flex flex-column align-items-center justify-content-center vh-100">
-    <div class="container">
-        <h1 class="text-center mb-4">Account Page</h1>
-        <p class="text-center">Email: {{ email }}</p>
+<body >
+    
+    <!-- Background -->
+    <div class="position-absolute vw-100 vh-100 start-0 top-0 z-1 flex items-center justify-center">
+        <svg width="fill" height="fill" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" class="">
+            <g filter="url(#filter0_f_41_37)">
+                <ellipse cx="1227" cy="713.5" rx="447" ry="409.5" fill="#8A76FF" fill-opacity="0.47"></ellipse>
+            </g>
+            <g filter="url(#filter1_f_41_37)">
+                <circle cx="1472" cy="382" r="325" fill="#76FFE4" fill-opacity="0.4"></circle>
+            </g>
+            <g filter="url(#filter2_f_41_37)">
+                <circle cx="620" cy="769" r="325" fill="#C3E4FF" fill-opacity="0.7"></circle>
+            </g>
+            <g filter="url(#filter3_f_41_37)">
+                <circle cx="455" cy="282" r="325" fill="#F7DCFF" fill-opacity="0.7"></circle>
+            </g>
+            <defs>
+                <filter id="filter0_f_41_37" x="478.2" y="2.20001" width="1497.6" height="1422.6"
+                    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                    <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                    <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+                    <feGaussianBlur stdDeviation="150.9" result="effect1_foregroundBlur_41_37"></feGaussianBlur>
+                </filter>
+                <filter id="filter1_f_41_37" x="845.2" y="-244.8" width="1253.6" height="1253.6"
+                    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                    <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                    <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+                    <feGaussianBlur stdDeviation="150.9" result="effect1_foregroundBlur_41_37"></feGaussianBlur>
+                </filter>
+                <filter id="filter2_f_41_37" x="-6.79999" y="142.2" width="1253.6" height="1253.6"
+                    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                    <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                    <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+                    <feGaussianBlur stdDeviation="150.9" result="effect1_foregroundBlur_41_37"></feGaussianBlur>
+                </filter>
+                <filter id="filter3_f_41_37" x="-171.8" y="-344.8" width="1253.6" height="1253.6"
+                    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                    <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                    <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+                    <feGaussianBlur stdDeviation="150.9" result="effect1_foregroundBlur_41_37"></feGaussianBlur>
+                </filter>
+            </defs>
+        </svg>
+    </div>
+
+    <!-- BigWhiteBox -->
+    <div class="h-[40vw] w-[55%] pl-[7%] pr-[7%] rounded-[2vw] bg-white/70 z-10 grid grid-cols-1 content-center border-2 border-white ">
+
+        <!-- BioAuthLogo -->
+        <div class="grid grid-cols-9 content-center ">
+            <img class="w-[3.5vw]  col-start-4 " src="../static/images/logoBioAuth.png" alt="logo" >
+            <p class="col-start-5 text-[2.1vw] font-semibold">BioAuth</p>
+        </div>
+
+        <!-- UserCredentials -->
+        <p class="text-[1.5vw] font-semibold col-start-1 pt-[3vw]">Acount Details</p>
+
+         <div class="grid grid-cols-4 content-center pt-[1.5vw] pb-[3vw] pr-[1.3vw]">
+            <p class="text-[1.1vw] font-medium col-start-1"> Username </p>
+            <p class="text-[1.1vw] font-medium col-start-2"> Email </p>
+
+            <p class="text-[0.7vw] text-stone-500 col-start-1 pt-[1vw]"> {{ user_obj['username'] }} </p>
+            <p class="text-[0.7vw] text-stone-700 col-start-2 pt-[1vw]"> {{ user_obj['email'] }} </p>
+            
+            <details class="open">
+                <!-- Button to be visible -->
+                <summary 
+                    class="w-[11vw] h-[2vw] flex justify-center items-center bg-blue-300 rounded-2xl block px-6 py-4 text-[1vw] hover:bg-blue-500 hover:duration-300 hover:text-white cursor-pointer">
+                    <p class="text-white"> Account Settings </p>
+                   <!-- BUTTON -->
+                </summary>
+    
+                   <!-- Content will be hidden until the user clicks on the account settings button. -->
+                <div class="grid grid-cols-4 bg-white rounded-2xl w-[50%] h-[40%] my-auto mx-auto absolute inset-0 text-gray-600 p-4 py-8">
+                    
+                    <span onclick="document.querySelector('details').removeAttribute('open')" class="bg-gray-400 rounded-full flex items-center justify-center text-3xl font-bold uppercase absolute -right-4 -top-4 w-10 h-10 text-white hover:bg-blue-200 hover:duration-200 cursor-pointer"> X </span>
+                    <p class="row-start-1 col-span-4 text-[2.25vw] font-medium inline-block align-top flex justify-center items-center mb-8"> Account Settings </p>
+                    
+                    <p class="text-[1.5vw] font-medium row-start-2 col-span-1"> Username </p>
+                    <p class="text-[1.5vw] font-medium row-start-3 col-span-1"> Email </p>
+
+
+                    <!-- Form for Username -->
+                    <form method="POST" action="/update_username" id="UpdateUsernameForm" 
+                        class="h-[2.8vw] w-[40vw] row-start-2 col-start-2 col-span-3 outline focus:outline-none  p-[0.1vw] ">
+                        <input class=" outline-none"
+                            type="tel" 
+                            name="username" 
+                            placeholder="{{ user_obj['username'] }}"
+                            required
+                        >
+                    </form>
+
+                    <!-- Form for Email -->
+                    <form method="POST" action="/update_email" id="UpdateEmailForm" 
+                        class="row-start-3 col-start-2 col-span-3 outline mb-[2vw] rounded-[1vw] p-[0.6vw]">
+                        <input class=" outline-none"
+                            type="tel" 
+                            name="email" 
+                            placeholder="{{ user_obj['email'] }}"
+                            required
+                        >
+                    </form>
+
+                    <!-- Update Username Button -->
+                    <button 
+                        type="submit"
+                        form="UpdateUsernameForm"
+                        class="row-start-2 col-start-3 pl-4vw w-[11vw] h-[2vw] flex justify-center items-center  rounded-2xl block bg-green-300 px-6 py-4 text-[1vw] hover:bg-green-500 hover:duration-300 hover:text-white cursor-pointer">
+                        <p>Update Username</p>
+                    </button>
+                    
+                    <!-- Update Email Button -->
+                    <button 
+                        type="submit"
+                        form="UpdateEmailForm"
+                        class="row-start-3 col-start-3 pl-4vw w-[11vw] h-[2vw] flex justify-center items-center rounded-2xl block bg-green-300 px-6 py-4 text-[1vw] hover:bg-green-500 hover:duration-300 hover:text-white cursor-pointer">
+                        <p>Update Email</p>
+                    </button>
+
+
+                    <!-- Deletebutton -->
+                    <button onclick="window.location.href='/delete-user'" class="row-start-4 col-start-1 [11vw] h-[2vw] flex justify-center items-center bg-red-300  rounded-2xl block px-6 py-4 text-[1vw] hover:bg-red-500 hover:duration-300 hover:text-white cursor-pointer">
+                        <p>Delete Account</p>
+                    </button>
+                </div>
+
+            </details> 
+
+        </div>
+
+        <!-- TimeLog -->
+         <div class="outline mb-[2vw] rounded-[1vw] p-[0.6vw]">
+            <p class="text-[1vw]">kommer finnas tidslogg här</p>
+            <p class="text-[1vw]">kommer finnas tidslogg här</p>
+            <p class="text-[1vw]">kommer finnas tidslogg här</p>
+            <p class="text-[1vw]">kommer finnas tidslogg här</p>
+            <p class="text-[1vw]">kommer finnas tidslogg här</p>
+
+         </div>
+
+         <div class="">
+            <button class="btn btn-secondary h-[3.2vw] bg-transparent border-transparent hover:border-transparent text-black font-semibold" onclick="window.location.href='/logout'">Logout</button>
+                  
+        </div>
+
+
+    </div>
+    
+    
+
+
+
+    <!--    
+
+    <div class="container" >
+        <h1 class="text-center mb-4">BioAuth</h1>
+        <p class="text-center"> Username: hejhopp </p>
+        <p class="text-center"> Email: hejhopp@bäst.nu </p>
+        <p class="text-center"> Password: ********** </p>
         <div class="text-center mt-3">
             <button class="btn btn-secondary" onclick="window.location.href='/logout'">Logout</button>
         </div>
     </div>
-
+    -->
 
 </body>
 </html>
