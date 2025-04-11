@@ -174,9 +174,13 @@ cython_debug/
 
 data/*
 
+
 # NPM
 node_modules
 package-lock.json
 
 #Tailwind
 output.css
+
+**/test_images*/
+**/gt_db/

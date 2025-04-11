@@ -3,12 +3,12 @@ import json
 import uuid
 from flask import Blueprint, render_template, jsonify, request, current_app, redirect, url_for, session
 import numpy as np
-
 from .functionality.detection import detect_face
 from .utils.dbUser import check_existing_email_or_username, check_existing_username, get_user_from_db, save_user_to_db, check_existing_email
 from .utils.dbRegisterUser import store_temp_imagedata, get_temp_image_data
 from .functionality.feature_extraction import extract_feature
 from .functionality.verification import compare_faces_euclidean
+from .functionality.anti_spoof import load_antispoof_model
 from deepface.models.facial_recognition import Facenet
 
 import os
@@ -16,10 +16,8 @@ import os
 
 face_auth_bp = Blueprint('face_auth_bp', __name__)
 
-base_dir = os.path.abspath(os.path.dirname(__file__))
-new_deepface_home = os.path.join(base_dir, "functionality", "facenet_weights")
-os.makedirs(new_deepface_home, exist_ok=True)
-os.environ["DEEPFACE_HOME"] = new_deepface_home
+rec_model = init_facenet()
+antispoof_sess, antispoof_input = load_antispoof_model()
 
 rec_model = Facenet.load_facenet512d_model()
 
@@ -95,12 +93,13 @@ def register():
             face_data, new_image_data, image_rgb = detect_face(image_data)
             
             if face_data is not None:
-                feature_vector = extract_feature(face_data, image_rgb, rec_model)
+                feature_vector = extract_feature(face_data, image_rgb, rec_model, antispoof_sess, antispoof_input)
                 save_user_to_db(session_user['email'], feature_vector, session_user['username'])
                 session_user['status_logged_in'] = True
                 session['user'] = session_user
                 session.modified = True
                 return jsonify({"message": "Success, user registered", "next": "/account"})
+
         except Exception as e:
             return jsonify({"error": str(e)}), 400
         
@@ -193,7 +192,7 @@ def login_fr():
                     
                     # Compare webcam face features with stored face features
                     stored_face_features = np.array(json.loads(stored_face_features), dtype=np.float32)
-                    webcam_feature_vector = extract_feature(face_data, image_rgb, rec_model)
+                    webcam_feature_vector = extract_feature(face_data, image_rgb, rec_model, antispoof_sess, antispoof_input)
                     
                     if(not compare_faces_euclidean(webcam_feature_vector, stored_face_features)):
                         return jsonify({"error": f"Face comparison returned false: {str(e)}"}), 400

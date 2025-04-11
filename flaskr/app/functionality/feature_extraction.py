@@ -1,7 +1,10 @@
 import cv2
 import numpy as np
 from deepface.models.facial_recognition import Facenet
+import onnxruntime as ort
+from .anti_spoof import is_real_face
 import os
+
 
 def init_facenet():
     base_dir = os.path.abspath(os.path.dirname(__file__))
@@ -27,6 +30,15 @@ def bounding_box_area(face):
     x, y, w, h = map(int, face[:4])
     return w * h
 
+def crop_face_with_padding(image, x, y, w, h, padding=30):
+    height, width = image.shape[:2]
+    x1 = max(0, x - padding)
+    y1 = max(0, y - padding)
+    x2 = min(width, x + w + padding)
+    y2 = min(height, y + h + padding)
+    return image[y1:y2, x1:x2]
+
+
 def is_face_aligned(face):
     x1, y1 = face[4:6]  # Left eye
     x2, y2 = face[6:8]  # Right eye
@@ -47,7 +59,7 @@ def is_face_aligned(face):
 
     return eye_height_diff_ratio < 0.12 and mouth_corner_height_diff_ratio < 0.09 and nose_offset_ratio < 0.1
 
-def extract_feature(faces, image_rgb, model):
+def extract_feature(faces, image_rgb, model, antispoof_sess, input_name):
     closest_face = max(faces, key=bounding_box_area)
     
     if not is_face_aligned(closest_face) or bounding_box_area(closest_face) < 8000:
@@ -60,6 +72,12 @@ def extract_feature(faces, image_rgb, model):
 
     x, y, w, h = map(int, closest_face[:4])
     face_crop = image_rgb[y:y+h, x:x+w]
+
+    if not is_real_face(crop_face_with_padding(image_rgb, x, y, w, h, padding=30), antispoof_sess, input_name):
+        print("Spoof detected. Skipping feature extraction.\n")
+        return None
+
+    print("Real face confirmed.\n")
 
     face_preprocessed = preprocess_face(face_crop)
     feature_vector = model.predict(face_preprocessed)[0]
