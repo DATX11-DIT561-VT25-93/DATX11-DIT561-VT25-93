@@ -6,7 +6,7 @@ import numpy as np
 from .functionality.detection import detect_face
 from .utils.dbUser import check_existing_email_or_username, check_existing_username, get_user_from_db, save_user_to_db, check_existing_email
 from .utils.dbRegisterUser import store_temp_imagedata, get_temp_image_data
-from .functionality.feature_extraction import extract_feature
+from .functionality.feature_extraction import extract_feature, init_facenet
 from .functionality.verification import compare_faces_euclidean
 from .functionality.anti_spoof import load_antispoof_model
 from deepface.models.facial_recognition import Facenet
