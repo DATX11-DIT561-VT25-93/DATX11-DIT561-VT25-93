@@ -90,9 +90,9 @@ def extract_feature(faces, image_rgb, model, antispoof_sess, input_name):
 ###################################
 
 # Only used for running anti-spoofing tests
-def predict_spoof(face_data, image_rgb, antispoof_sess, antispoof_input):
+def predict_spoof(face_data, image_rgb, antispoof_sess, antispoof_input, threshold):
     closest_face = max(face_data, key=bounding_box_area)
     x, y, w, h = map(int, closest_face[:4])
     padded_face_crop = crop_face_with_padding(image_rgb, x, y, w, h, padding=30)
 
-    return is_real_face(padded_face_crop, antispoof_sess, antispoof_input)
+    return is_real_face(padded_face_crop, antispoof_sess, antispoof_input, threshold)
