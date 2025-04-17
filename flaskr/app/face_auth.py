@@ -355,7 +355,7 @@ def update_username():
             existing_username_check = check_existing_username(new_username)
 
             if existing_username_check[1] != 200:  
-                return render_template("account.html", user_obj=session['user'])
+                return redirect(url_for('face_auth_bp.account'))
 
             updated_user = (
                 supabase.table("Users")
@@ -379,7 +379,7 @@ def update_username():
         except Exception as e:
             return jsonify({"Error": str(e)}), 500
         
-    return render_template('account.html')
+    return redirect(url_for('face_auth_bp.account'))
 
 
 @face_auth_bp.route('/update_email', methods=['POST', 'GET'])
@@ -449,6 +449,10 @@ def delete_user():
             .execute()
         )
 
+        return redirect('/')
+
+
+        
         
     
     except Exception as e:
