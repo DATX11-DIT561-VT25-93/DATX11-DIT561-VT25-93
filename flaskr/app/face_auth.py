@@ -99,6 +99,23 @@ def register():
                 session_user['status_logged_in'] = True
                 session['user'] = session_user
                 session.modified = True
+
+                response = get_user_from_db(session_user['email'])
+
+                user_data = response[0].get_json()  
+                stored_email = user_data.get("email")  
+                stored_username = user_data.get("username")
+                stored_user_id=user_data.get("id")
+
+                session['user'] = {
+                    'username': stored_username,
+                    'email': stored_email,
+                    'status_logged_in': True, 
+                    'id': stored_user_id
+                }  # Store session data
+                session.modified = True
+
+
                 log_event('register')
                 return jsonify({"message": "Success, user registered", "next": "/account"})
 
@@ -440,11 +457,12 @@ def account():
         return jsonify({'error': str(e)}), 500
 
 
-def log_event(event, user_id=None):
+def log_event(event):
     try:
         supabase = current_app.supabase
-        user_in_session = session['user']
-        user_id = user_in_session['id']
+
+        user_in_session = session.get('user', {})
+        user_id = user_in_session.get('id')
 
         user_agent_string = request.headers.get('User-Agent', 'Unknown')
         user_agent = parse(user_agent_string)
