@@ -10,6 +10,7 @@ from .functionality.feature_extraction import extract_feature, init_facenet
 from .functionality.verification import compare_faces_euclidean
 from .functionality.anti_spoof import load_antispoof_model
 from deepface.models.facial_recognition import Facenet
+from user_agents import parse
 
 import os
 
@@ -98,6 +99,7 @@ def register():
                 session_user['status_logged_in'] = True
                 session['user'] = session_user
                 session.modified = True
+                log_event('register')
                 return jsonify({"message": "Success, user registered", "next": "/account"})
 
         except Exception as e:
@@ -209,6 +211,7 @@ def login_fr():
                     }  # Store session data
                     session['registration_start_time'] = datetime.now(timezone.utc).timestamp()
                     session.modified = True
+                    log_event('login')
 
                     return jsonify({
                         'message': 'Successful login',
@@ -291,7 +294,7 @@ def update_username():
             supabase = current_app.supabase
 
             user_in_session = session['user']
-            #user_id = user_in_session['id']
+            user_id = user_in_session['id']
             old_username = user_in_session['username']
             new_username = request.form['username']
             old_email = user_in_session['email']
@@ -308,12 +311,15 @@ def update_username():
                 .execute()
             )
 
+            log_event('updated username')
+
             session['user'] = {
                             'username': new_username,
                             'email': old_email,
                             'status_logged_in': True, 
-                            #'id': user_id
+                            'id': user_id
                         }  # Store session data
+            
             
             return redirect(url_for('face_auth_bp.account')) 
 
@@ -331,7 +337,7 @@ def update_email():
         supabase = current_app.supabase
 
         user_in_session = session['user']
-       # user_id = user_in_session['id']
+        user_id = user_in_session['id']
         old_username = user_in_session['username']
         old_email = user_in_session['email']
         new_email = request.form['email']
@@ -348,11 +354,13 @@ def update_email():
             .execute()
         )
 
+        log_event('updated email')
+
         session['user'] = {
                         'username': old_username,
                         'email': new_email,
                         'status_logged_in': True, 
-                        #'id': user_id
+                        'id': user_id
                     }  # Store session data
         
         return redirect(url_for('face_auth_bp.account')) 
@@ -394,3 +402,70 @@ def delete_user():
         return jsonify({"Error": str(e)}), 500
         
 
+face_auth_bp.route('/account')
+def account():
+    if 'user' not in session or not session['user']['status_logged_in']:
+        return redirect(url_for('face_auth_bp.login_fr'))
+
+    try:
+        supabase = current_app.supabase
+        user_in_session = session.get('user', {})
+        user_id = user_in_session.get('id')
+
+        if not user_id:
+            return redirect(url_for('face_auth_bp.login_fr'))
+
+        # Fetch logs from Supabase
+        response = (
+            supabase.table("timelog")
+            .select("*")
+            .eq("id", user_id)
+            .order("timestamp", desc=True)  # Order by timestamp descending
+            .execute()
+        )
+
+        logs_raw = response.data
+
+        # Format the logs for display (optional cleanup / renaming)
+        logs = []
+        for log in logs_raw:
+            logs.append({
+                'event_type': log.get('event'),
+                'timestamp': datetime.fromisoformat(log.get('timestamp')),
+                'device_info': log.get('device'),
+            })
+        return render_template('account.html', user_obj=session['user'], logs=logs)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+def log_event(event, user_id=None):
+    try:
+        supabase = current_app.supabase
+        user_in_session = session['user']
+        user_id = user_in_session['id']
+
+        user_agent_string = request.headers.get('User-Agent', 'Unknown')
+        user_agent = parse(user_agent_string)
+
+        if user_agent.is_mobile:
+            device_type = 'mobile'
+        elif user_agent.is_tablet:
+            device_type = 'tablet'
+        elif user_agent.is_pc:
+            device_type = 'desktop'
+        elif user_agent.is_bot:
+            device_type = 'bot'
+        else:
+            device_type = 'unknown'
+
+
+        supabase.table("timelog").insert({
+            "id": user_id,
+            "event": event,
+            "device": device_type
+        }).execute()
+        
+    except Exception as e:
+        print(f"[LOGGING ERROR]: {e}")

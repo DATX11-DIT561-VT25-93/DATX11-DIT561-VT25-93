@@ -63,7 +63,7 @@
         </div>
 
         <!-- UserCredentials -->
-        <p class="text-[1.5vw] font-semibold col-start-1 pt-[3vw]">Acount Details</p>
+        <p class="text-[1.5vw] font-semibold col-start-1 pt-[3vw]">Account Details</p>
 
          <div class="grid grid-cols-4 content-center pt-[1.5vw] pb-[3vw] pr-[1.3vw]">
             <p class="text-[1.1vw] font-medium col-start-1"> Username </p>
@@ -139,8 +139,42 @@
 
         </div>
 
-        <!-- TimeLog -->
-         <div class="outline mb-[2vw] rounded-[1vw] p-[0.6vw]">
+        
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50 text-left text-gray-600 text-sm uppercase tracking-wider">
+                    <tr>
+                        <th class="px-4 py-2">Event</th>
+                        <th class="px-4 py-2">Timestamp</th>
+                        <th class="px-4 py-2">Device</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 bg-white text-sm text-gray-800">
+                    {% for log in logs %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-2">
+                            <span class="px-2 py-1 rounded-full text-white text-xs font-semibold
+                                {% if log.event_type == 'login' %}
+                                    bg-blue-500
+                                {% else %}
+                                    bg-green-500
+                                {% endif %}
+                            ">
+                                {{ log.event.capitalize() }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-2">{{ log.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td class="px-4 py-2 text-gray-600">{{ log.device }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+
+        <!-- TimeLog
+        <div class="outline mb-[2vw] rounded-[1vw] p-[0.6vw]">
             <p class="text-[1vw]">kommer finnas tidslogg här</p>
             <p class="text-[1vw]">kommer finnas tidslogg här</p>
             <p class="text-[1vw]">kommer finnas tidslogg här</p>
@@ -148,6 +182,7 @@
             <p class="text-[1vw]">kommer finnas tidslogg här</p>
 
          </div>
+         -->
 
          <div class="">
             <button class="btn btn-secondary h-[3.2vw] bg-transparent border-transparent hover:border-transparent text-black font-semibold" onclick="window.location.href='/logout'">Logout</button>

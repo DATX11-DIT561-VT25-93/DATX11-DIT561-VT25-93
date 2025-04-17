@@ -49,7 +49,7 @@ def get_user_from_db(email_username):
     with current_app.app_context():
         supabase = current_app.supabase
 
-        response = supabase.table('Users').select("face_features", "iv", "auth_tag", "username", "email").or_(
+        response = supabase.table('Users').select("face_features", "iv", "auth_tag", "username", "email", "id").or_(
     f"email.eq.{email_username},username.eq.{email_username}").execute()
         
         if not response.data:
@@ -59,6 +59,7 @@ def get_user_from_db(email_username):
         ciphertext = user_data["face_features"]
         iv = user_data["iv"]
         auth_tag = user_data["auth_tag"]
+        id = user_data["id"]
         email = user_data["email"]
         username = user_data["username"]
         
@@ -71,6 +72,7 @@ def get_user_from_db(email_username):
         return jsonify({
             "email_username": email_username,
             "face_features": decrypted_face_data,
+            "id": id,
             "email": email,
             "username": username
         }), 200
