@@ -113,5 +113,5 @@ def detect_face_for_testing(image_array):
     image_rgb = cv2.cvtColor(image_array, cv2.COLOR_BGR2RGB)
 
     if faces is not None:
-        return faces, None, image_rgb
-    return None, None, None
+        return faces, image_rgb
+    return None, None
