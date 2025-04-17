@@ -22,9 +22,45 @@ antispoof_sess, antispoof_input = load_antispoof_model()
 
 rec_model = Facenet.load_facenet512d_model()
 
+
 @face_auth_bp.route('/account')
 def account():
-    return render_template("account.html", user_obj=session['user'] )
+    if 'user' not in session or not session['user']['status_logged_in']:
+        return redirect(url_for('face_auth_bp.login_fr'))
+
+    try:
+        supabase = current_app.supabase
+        user_in_session = session.get('user', {})
+        user_id = user_in_session.get('id')
+
+        if not user_id:
+            return redirect(url_for('face_auth_bp.login_fr'))
+
+        # Fetch logs from Supabase
+        response = (
+            supabase.table("timelog")
+            .select("*")
+            .eq("id", user_id)
+            .order("created_at", desc=True)  # Order by timestamp ascending
+            .execute()
+        )
+
+        logs_raw = response.data
+
+        # Format the logs for display (optional cleanup / renaming)
+        logs = []
+
+        for log in logs_raw:
+            logs.append({
+                'event': log.get('event'),
+                'created_at': datetime.fromisoformat(log.get('created_at')).strftime('%Y-%m-%d %H:%M:%S'),
+                'device': log.get('device'),
+            })
+
+        return render_template('account.html', user_obj=session['user'], logs=logs)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # New code
 @face_auth_bp.route('/register', methods=['POST', 'GET'])
@@ -417,44 +453,7 @@ def delete_user():
     
     except Exception as e:
         return jsonify({"Error": str(e)}), 500
-        
 
-face_auth_bp.route('/account')
-def account():
-    if 'user' not in session or not session['user']['status_logged_in']:
-        return redirect(url_for('face_auth_bp.login_fr'))
-
-    try:
-        supabase = current_app.supabase
-        user_in_session = session.get('user', {})
-        user_id = user_in_session.get('id')
-
-        if not user_id:
-            return redirect(url_for('face_auth_bp.login_fr'))
-
-        # Fetch logs from Supabase
-        response = (
-            supabase.table("timelog")
-            .select("*")
-            .eq("id", user_id)
-            .order("timestamp", desc=True)  # Order by timestamp descending
-            .execute()
-        )
-
-        logs_raw = response.data
-
-        # Format the logs for display (optional cleanup / renaming)
-        logs = []
-        for log in logs_raw:
-            logs.append({
-                'event_type': log.get('event'),
-                'timestamp': datetime.fromisoformat(log.get('timestamp')),
-                'device_info': log.get('device'),
-            })
-        return render_template('account.html', user_obj=session['user'], logs=logs)
-
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
 
 
 def log_event(event):
