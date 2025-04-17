@@ -92,8 +92,8 @@
 
                     <!-- Form for Username -->
                     <form method="POST" action="/update_username" id="UpdateUsernameForm" 
-                        class="h-[2.8vw] w-[40vw] row-start-2 col-start-2 col-span-3 outline focus:outline-none  p-[0.1vw] ">
-                        <input class=" outline-none"
+                        class="h-[2.8vw] w-[40vw] row-start-2 col-start-2 col-span-2 outline mb-[2vw] rounded-[1vw] p-[0.6vw]">
+                        <input class="outline-none " 
                             type="tel" 
                             name="username" 
                             placeholder="{{ user_obj['username'] }}"
@@ -103,7 +103,7 @@
 
                     <!-- Form for Email -->
                     <form method="POST" action="/update_email" id="UpdateEmailForm" 
-                        class="row-start-3 col-start-2 col-span-3 outline mb-[2vw] rounded-[1vw] p-[0.6vw]">
+                        class="h-[2.8vw] w-[40vw] row-start-3 col-start-2 col-span-2 outline mb-[2vw] rounded-[1vw] p-[0.6vw]">
                         <input class=" outline-none"
                             type="tel" 
                             name="email" 
@@ -116,7 +116,7 @@
                     <button 
                         type="submit"
                         form="UpdateUsernameForm"
-                        class="row-start-2 col-start-3 pl-4vw w-[11vw] h-[2vw] flex justify-center items-center  rounded-2xl block bg-green-300 px-6 py-4 text-[1vw] hover:bg-green-500 hover:duration-300 hover:text-white cursor-pointer">
+                        class="row-start-2 col-start-4 pl-4vw w-[11vw] h-[2vw] flex justify-center items-center  rounded-2xl block bg-green-300 px-6 py-4 text-[1vw] hover:bg-green-500 hover:duration-300 hover:text-white cursor-pointer">
                         <p>Update Username</p>
                     </button>
                     
@@ -124,7 +124,7 @@
                     <button 
                         type="submit"
                         form="UpdateEmailForm"
-                        class="row-start-3 col-start-3 pl-4vw w-[11vw] h-[2vw] flex justify-center items-center rounded-2xl block bg-green-300 px-6 py-4 text-[1vw] hover:bg-green-500 hover:duration-300 hover:text-white cursor-pointer">
+                        class="row-start-3 col-start-4 pl-4vw w-[11vw] h-[2vw] flex justify-center items-center rounded-2xl block bg-green-300 px-6 py-4 text-[1vw] hover:bg-green-500 hover:duration-300 hover:text-white cursor-pointer">
                         <p>Update Email</p>
                     </button>
 
@@ -141,24 +141,24 @@
         
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50 text-left text-gray-600 text-sm uppercase tracking-wider">
+                <thead class="bg-gray-50 text-left text-gray-600 tracking-wider">
                     <tr>
-                        <th class="px-4 py-2">Event</th>
-                        <th class="px-4 py-2">Timestamp</th>
-                        <th class="px-4 py-2">Device</th>
+                        <th class="px-[1vw] py-[1vw] text-[1.5vw] font-medium">Event</th>
+                        <th class="px-[1vw] py-[1vw] text-[1.5vw] font-medium">Timestamp</th>
+                        <th class="px-[1vw] py-[1vw] text-[1.5vw] font-medium">Device</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 bg-white text-sm text-gray-800">
                     {% if logs %}
                         {% for log in logs %}
                             <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-2">{{ log.event }}</td>
-                                <td class="px-4 py-2">{{ log.created_at }}</td>
-                                <td class="px-4 py-2">{{ log.device }}</td>
+                                <td class="px-[1vw] py-[1vw] text-[0.8vw]">{{ log.event }}</td>
+                                <td class="px-[1vw] py-[1vw] text-[0.8vw]">{{ log.created_at }}</td>
+                                <td class="px-[1vw] py-[1vw] text-[0.8vw]">{{ log.device }}</td>
                             </tr>
                         {% endfor %}
                     {% else %}
-                        <tr><td colspan="3" class="px-4 py-2 text-center">No logs available</td></tr>
+                        <tr><td colspan="3" class="px-[1vw] py-[1vw] text-center">No logs available</td></tr>
                     {% endif %}    
                 </tbody>
             </table>
