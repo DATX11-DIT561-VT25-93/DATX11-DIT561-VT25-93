@@ -19,6 +19,9 @@ def create_app():
     from app.face_auth import face_auth_bp
     app.register_blueprint(face_auth_bp)
 
+    from app.bp_OTP import OTP_bp
+    app.register_blueprint(OTP_bp)
+
     
     @app.errorhandler(404)
     def page_not_found(e):

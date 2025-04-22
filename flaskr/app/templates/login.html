@@ -44,6 +44,7 @@
                         </svg>
                     </button>
                 </form>
+                <p id="otp-tooltip" class="hidden text-[1.25vw] mt-1 text-center opacity-75">Trouble with face authentication? <span class="underline"><a href="/login-otp">try OTP</a></span> </p>
             </div>
     </section>
     <section class="w-[64%] flex items-center">
@@ -58,6 +59,7 @@
         const canvas = document.getElementById('canvas');
         const emailUsernameInput = document.getElementById('email_username');
         const form = document.querySelector('form');
+        const otpTooltip = document.getElementById('otp-tooltip');
         let stream = null;
 
         // Configuration
@@ -228,6 +230,8 @@
                 }
 
                 // If we get here, all attempts failed
+                otpTooltip.classList.remove("hidden")
+                console.log("apapappapa")
                 throw new Error(`Failed to verify after ${MAX_ATTEMPTS} attempts. Please try again.`);
 
             } catch (error) {
@@ -235,9 +239,10 @@
                 alert(error.message || 'An error occurred during login');
                 stopWebcam();
             } finally {
-                // Reset button state
+                // Reset button state & OTP tooltip
                 submitButton.disabled = false;
                 submitButton.innerHTML = originalButtonText;
+                //otpTooltip.innerHTML = `<p id="otp-tooltip" class="hidden text-[1.25vw] text-center opacity-75">Trouble with face authentication? <span class="underline"><a href="/login-otp">try OTP</a></span> </p>`;
             }
         }
 
