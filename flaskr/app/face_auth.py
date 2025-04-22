@@ -128,32 +128,32 @@ def register():
             image_data_id = session_user['face_data_id']
             image_data = get_temp_image_data(image_data_id)
             face_data, new_image_data, image_rgb = detect_face(image_data)
-            
             if face_data is not None:
                 feature_vector = extract_feature(face_data, image_rgb, rec_model, antispoof_sess, antispoof_input)
-                save_user_to_db(session_user['email'], feature_vector, session_user['username'])
-                session_user['status_logged_in'] = True
-                session['user'] = session_user
-                session.modified = True
+                if feature_vector is not None:
+                    save_user_to_db(session_user['email'], feature_vector, session_user['username'])
+                    session_user['status_logged_in'] = True
+                    session['user'] = session_user
+                    session.modified = True
 
-                response = get_user_from_db(session_user['email'])
+                    response = get_user_from_db(session_user['email'])
 
-                user_data = response[0].get_json()  
-                stored_email = user_data.get("email")  
-                stored_username = user_data.get("username")
-                stored_user_id=user_data.get("id")
+                    user_data = response[0].get_json()  
+                    stored_email = user_data.get("email")  
+                    stored_username = user_data.get("username")
+                    stored_user_id=user_data.get("id")
 
-                session['user'] = {
-                    'username': stored_username,
-                    'email': stored_email,
-                    'status_logged_in': True, 
-                    'id': stored_user_id
-                }  # Store session data
-                session.modified = True
+                    session['user'] = {
+                        'username': stored_username,
+                        'email': stored_email,
+                        'status_logged_in': True, 
+                        'id': stored_user_id
+                    }  # Store session data
+                    session.modified = True
 
 
-                log_event('register')
-                return jsonify({"message": "Success, user registered", "next": "/account"})
+                    log_event('register')
+                    return jsonify({"message": "Success, user registered", "next": "/account"})
 
         except Exception as e:
             return jsonify({"error": str(e)}), 400
