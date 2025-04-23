@@ -429,17 +429,21 @@ def delete_user():
     try:
 
         user_in_session = session['user']
-        print(session)
         username = user_in_session['username']
-        #print(username)
-        #username = session['username']
-        # username = request.form.get('username')
+        user_id = user_in_session['id']
 
         if not username:
             return jsonify({"Error": "Username Not Provided."}), 400
 
         supabase = current_app.supabase
 
+        # Delete the user's timelog
+        deleted_timelog = (
+            supabase.table("timelog")
+            .delete()
+            .eq("id", user_id)
+            .execute()
+        )
 
         # Delete The User 
         deleted_user = (
@@ -452,9 +456,6 @@ def delete_user():
         return redirect('/')
 
 
-        
-        
-    
     except Exception as e:
         return jsonify({"Error": str(e)}), 500
 
