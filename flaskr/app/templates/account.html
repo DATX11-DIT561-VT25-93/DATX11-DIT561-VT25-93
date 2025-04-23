@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    
 </head>
 
 <body >
@@ -54,7 +55,7 @@
     </div>
 
     <!-- BigWhiteBox -->
-    <div class="h-[40vw] w-[55%] pl-[7%] pr-[7%] rounded-[2vw] bg-white/70 z-10 grid grid-cols-1 content-center border-2 border-white ">
+    <div  id="main-content" class="h-[40vw] w-[55%] pl-[7%] pr-[7%] rounded-[2vw] bg-white/70 z-10 grid grid-cols-1 content-center border-2 border-white ">
 
         <!-- BioAuthLogo -->
         <div class="grid grid-cols-9 content-center ">
@@ -65,83 +66,27 @@
         <!-- UserCredentials -->
         <p class="text-[1.5vw] font-semibold col-start-1 pt-[3vw]">Account Details</p>
 
-         <div class="grid grid-cols-4 content-center pt-[1.5vw] pb-[3vw] pr-[1.3vw]">
+        <div class="grid grid-cols-4 content-center pt-[1.5vw] pb-[3vw] pr-[1.3vw]">
             <p class="text-[1.1vw] font-medium col-start-1"> Username </p>
             <p class="text-[1.1vw] font-medium col-start-2"> Email </p>
 
             <p class="text-[0.7vw] text-stone-500 col-start-1 pt-[1vw]"> {{ user_obj['username'] }} </p>
             <p class="text-[0.7vw] text-stone-700 col-start-2 pt-[1vw]"> {{ user_obj['email'] }} </p>
             
-
-            <details class="open">
+            <details id="popupToggle" class="open">
                 <!-- Button to be visible -->
                 <summary 
-                    class="w-[12vw] h-[3vw] flex justify-center items-center bg-blue-300 rounded-[1vw] block px-[2vw] py-[1vw] text-[1vw] hover:bg-blue-500 hover:duration-300 hover:text-white cursor-pointer">
+                    class="w-[12vw] h-[3vw] flex justify-center items-center rounded-full block px-[2vw] py-[1vw] text-[1vw] hover:duration-300 hover:text-white cursor-pointer
+                    bg-gradient-to-r from-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-700">
                     <p class="text-white"> Account Settings </p>
                    <!-- BUTTON -->
                 </summary>
-    
-                   <!-- Content will be hidden until the user clicks on the account settings button. -->
-                <div class="grid grid-cols-4 bg-white rounded-2xl w-[50%] h-[40%] my-auto mx-auto absolute inset-0 text-gray-600 p-4 py-8 z-50">
-                    
-                    <span onclick="document.querySelector('details').removeAttribute('open')" class="bg-gray-400 rounded-full flex items-center justify-center text-3xl font-bold uppercase absolute -right-4 -top-4 w-10 h-10 text-white hover:bg-blue-200 hover:duration-200 cursor-pointer"> X </span>
-                    <p class="row-start-1 col-span-4 text-[2.25vw] font-medium inline-block align-top flex justify-center items-center mb-8"> Account Settings </p>
-                    
-                    <p class="text-[1.5vw] font-medium row-start-2 col-span-1"> Username </p>
-                    <p class="text-[1.5vw] font-medium row-start-3 col-span-1"> Email </p>
-
-
-                    <!-- Form for Username -->
-                    <form method="POST" action="/update_username" id="UpdateUsernameForm" 
-                        class="h-[2.8vw] max-w-[21vw] w-full row-start-2 col-start-2 col-span-2 outline mb-[2vw] rounded-[1vw] p-[0.6vw]">
-                        <input class="w-full outline-none text-left text-sm pl-[0.5vw]" 
-                            type="tel" 
-                            name="username" 
-                            placeholder="{{ user_obj['username'] }}"
-                            required
-                        >
-                    </form>
-
-                    <!-- Form for Email -->
-                    <form method="POST" action="/update_email" id="UpdateEmailForm" 
-                        class="h-[2.8vw] max-w-[21vw] w-full row-start-3 col-start-2 col-span-2 outline mb-[2vw] rounded-[1vw] p-[0.6vw]">
-                        <input class="w-full outline-none text-left text-sm pl-[0.5vw]"
-                            type="tel" 
-                            name="email" 
-                            placeholder="{{ user_obj['email'] }}"
-                            required
-                        >
-                    </form>
-
-                    <!-- Update Username Button -->
-                    <button 
-                        type="submit"
-                        form="UpdateUsernameForm"
-                        class="row-start-2 col-start-4 pl-4vw w-[11vw] h-[2vw] flex justify-center items-center  rounded-2xl block bg-green-300 px-6 py-4 text-[1vw] hover:bg-green-500 hover:duration-300 hover:text-white cursor-pointer">
-                        <p>Update Username</p>
-                    </button>
-                    
-                    <!-- Update Email Button -->
-                    <button 
-                        type="submit"
-                        form="UpdateEmailForm"
-                        class="row-start-3 col-start-4 pl-4vw w-[11vw] h-[2vw] flex justify-center items-center rounded-2xl block bg-green-300 px-6 py-4 text-[1vw] hover:bg-green-500 hover:duration-300 hover:text-white cursor-pointer">
-                        <p>Update Email</p>
-                    </button>
-
-
-                    <!-- Deletebutton -->
-                    <button onclick="window.location.href='/delete-user'" class="row-start-4 col-start-4 w-[11vw] h-[2vw] flex justify-center items-center bg-red-300  rounded-2xl block px-6 py-4 text-[1vw] hover:bg-red-500 hover:duration-300 hover:text-white cursor-pointer">
-                        <p>Delete Account</p>
-                    </button>
-                </div>
-
             </details> 
 
         </div>
-        
 
-        <div class="max-h-[32vh] overflow-y-auto">
+        <!-- Timelog Table -->
+        <div class="h-[20vh] overflow-y-auto">
             <table class="min-w-full table-fixed border-collapse">
               <thead class="bg-white sticky top-0 z-10 shadow-sm">
                 <tr class="text-gray-600 text-left text-[1.2vw]">
@@ -166,20 +111,113 @@
                 {% endif %}
               </tbody>
             </table>
-          </div>
-
-         <div class="flex justify-start pl-[1vw] mt-[0.8vw]">
-            <button class="[2.5vw] w-[10vw] bg-transparent border-transparent hover:border-transparent text-black font-semibold text-[1.5vw]" 
-                onclick="window.location.href='/logout'">
-                Logout
-            </button>
-                  
         </div>
 
+        
 
+        <!-- Logut Button -->
+        <button 
+            type="submit"
+            form="UpdateEmailForm"
+            class=" -left-[-0.3vw] -bottom-[-0.3vw]  pl-4vw w-[11vw] h-[2vw] flex justify-center items-center rounded-full block px-6 py-4 text-[1vw]  hover:duration-300  cursor-pointer text-white hover:text-white
+            bg-gradient-to-r from-black to-black hover:from-gray-900 hover:to-gray-800 "
+            onclick="window.location.href='/logout'">
+            <p>Log Out</p>
+        </button>   
+
+         
     </div>
     
+    <!-- Content will be hidden until the user clicks on the account settings button. -->
+    <div id="visiblePermanent" class="hidden grid grid-cols-4 bg-white rounded-[1vw] w-[50%] h-[40%] my-auto mx-auto absolute inset-0 text-gray-600 p-4 py-8 z-50">
+                    
+        <span onclick="document.querySelector('details').removeAttribute('open')" class="bg-gray-600 text-white text-[0.7vw] font-bold 
+         flex items-center justify-center w-[1.6vw] h-[1.6vw] rounded-[1vw] absolute -right-[-0.3vw] -top-[-0.3vw] hover:bg-gray-800 duration-200 cursor-pointer"> 
+         <svg xmlns="http://www.w3.org/2000/svg" width="0.8vw" fill="currentColor" class="inline flex justify-center items-center w-[0.6vw] height-[0.6vw] -right-[1vw] -top-[1vw]" viewBox="0 0 320.591 320.591">
+            <path
+              d="M30.391 318.583a30.37 30.37 0 0 1-21.56-7.288c-11.774-11.844-11.774-30.973 0-42.817L266.643 10.665c12.246-11.459 31.462-10.822 42.921 1.424 10.362 11.074 10.966 28.095 1.414 39.875L51.647 311.295a30.366 30.366 0 0 1-21.256 7.288z"
+              data-original="#000000" />
+            <path
+              d="M287.9 318.583a30.37 30.37 0 0 1-21.257-8.806L8.83 51.963C-2.078 39.225-.595 20.055 12.143 9.146c11.369-9.736 28.136-9.736 39.504 0l259.331 257.813c12.243 11.462 12.876 30.679 1.414 42.922-.456.487-.927.958-1.414 1.414a30.368 30.368 0 0 1-23.078 7.288z"
+              data-original="#000000" />
+          </svg>
+        </span>
+
+
+
+        <p  class="row-start-1 col-span-4 text-[2.25vw] font-medium inline-block align-top flex justify-center items-center mb-8"> Account Settings </p>
+        
+        <p class="text-[1.5vw] font-medium row-start-2 col-span-1"> Username </p>
+        <p class="text-[1.5vw] font-medium row-start-3 col-span-1"> Email </p>
+
+        <!-- Form for Username -->
+        <form method="POST" action="/update_username" id="UpdateUsernameForm" 
+            class="h-[2.8vw] max-w-[21vw] w-full row-start-2 col-start-2 col-span-2 outline mb-[2vw] rounded-full p-[0.6vw]">
+            <input class="w-full outline-none text-left text-sm pl-[0.5vw]" 
+                type="tel" 
+                name="username" 
+                placeholder="{{ user_obj['username'] }}"
+                required
+            >
+        </form>
+
+        <!-- Form for Email -->
+        <form method="POST" action="/update_email" id="UpdateEmailForm" 
+            class="h-[2.8vw] max-w-[21vw] w-full row-start-3 col-start-2 col-span-2 outline mb-[2vw] rounded-full p-[0.6vw]">
+            <input class="w-full outline-none text-left text-sm pl-[0.5vw]"
+                type="tel" 
+                name="email" 
+                placeholder="{{ user_obj['email'] }}"
+                required
+            >
+        </form>
+
+        <!-- Update Username Button -->
+        <button 
+            type="submit"
+            form="UpdateUsernameForm"
+            class="row-start-2 col-start-4 pl-4vw w-[11vw] h-[2vw] flex justify-center items-center rounded-full block px-6 py-4 text-[1vw] 
+            hover:duration-300 hover:text-white cursor-pointer bg-gradient-to-r from-green-300 to-green-400 hover:from-green-500 hover:to-green-600 ">
+            <p>Update Username</p>
+        </button>
+        
+        <!-- Update Email Button -->
+        <button 
+            type="submit"
+            form="UpdateEmailForm"
+            class="row-start-3 col-start-4 pl-4vw w-[11vw] h-[2vw] flex justify-center items-center rounded-full block px-6 py-4 text-[1vw]  hover:duration-300 hover:text-white cursor-pointer hover:text-white
+            bg-gradient-to-r from-green-300 to-green-400 hover:from-green-500 hover:to-green-600">
+            <p>Update Email</p>
+        </button>
+
+
+        <!-- Deletebutton -->
+        <button onclick="window.location.href='/delete-user'" class="row-start-4 col-start-4 w-[11vw] h-[2vw] flex justify-center items-center rounded-full block px-6 py-4 text-[1vw] cursor-pointer hover:text-white
+        bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-700">
+            <p>Delete Account</p>
+        </button>
+    </div>
+
+    <script>
+
+        const popupToggle = document.getElementById('popupToggle');
+        const popup = document.getElementById('visiblePermanent');
+        const main = document.getElementById('main-content');
+
+        popupToggle.addEventListener('toggle', () => {
+        if (popupToggle.open) {
+            popup.classList.remove('hidden');
+            main.classList.add('blur-[2px]');
+        } else {
+            popup.classList.add('hidden');
+        main.classList.remove('blur-[2px]');
+        }
+        });
+
+    </script>
+
     
 
 </body>
+
 </html>

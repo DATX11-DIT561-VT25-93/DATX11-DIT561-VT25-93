@@ -137,7 +137,6 @@ def register():
                     session_user['status_logged_in'] = True
                     session['user'] = session_user
                     session.modified = True
-
                     response = get_user_from_db(session_user['email'])
 
                     user_data = response[0].get_json()  
@@ -155,7 +154,7 @@ def register():
 
 
                     log_event('register')
-                    return jsonify({"message": "Success, user registered", "next": "/account"})
+                return jsonify({"message": "Success, user registered", "next": "/account"})
 
         except Exception as e:
             return jsonify({"error": str(e)}), 400
