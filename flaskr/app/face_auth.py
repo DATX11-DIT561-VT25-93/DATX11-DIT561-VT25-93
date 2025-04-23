@@ -129,8 +129,10 @@ def register():
             image_data = get_temp_image_data(image_data_id)
             face_data, new_image_data, image_rgb = detect_face(image_data)
             if face_data is not None:
+                print("Hello")
                 feature_vector = extract_feature(face_data, image_rgb, rec_model, antispoof_sess, antispoof_input)
                 if feature_vector is not None:
+                    print("Hello2")
                     save_user_to_db(session_user['email'], feature_vector, session_user['username'])
                     session_user['status_logged_in'] = True
                     session['user'] = session_user
@@ -248,29 +250,31 @@ def login_fr():
                     # Compare webcam face features with stored face features
                     stored_face_features = np.array(json.loads(stored_face_features), dtype=np.float32)
                     webcam_feature_vector = extract_feature(face_data, image_rgb, rec_model, antispoof_sess, antispoof_input)
-                    
-                    if(not compare_faces_euclidean(webcam_feature_vector, stored_face_features)):
-                        return jsonify({"error": f"Face comparison returned false: {str(e)}"}), 400
-                    
-                    # Store logged in user in session
-                    if 'user' in session:
-                        session.pop('user', None)
+                    print("Hello")
+                    if webcam_feature_vector is not None:
+                        print("Hello2")
+                        if(not compare_faces_euclidean(webcam_feature_vector, stored_face_features)):
+                            return jsonify({"error": f"Face comparison returned false: {str(e)}"}), 400
+                        
+                        # Store logged in user in session
+                        if 'user' in session:
+                            session.pop('user', None)
 
-                    session['user'] = {
-                        'username': stored_username,
-                        'email': stored_email,
-                        'status_logged_in': True, 
-                        'id': stored_user_id
-                    }  # Store session data
-                    session['registration_start_time'] = datetime.now(timezone.utc).timestamp()
-                    session.modified = True
-                    log_event('login')
+                        session['user'] = {
+                            'username': stored_username,
+                            'email': stored_email,
+                            'status_logged_in': True, 
+                            'id': stored_user_id
+                        }  # Store session data
+                        session['registration_start_time'] = datetime.now(timezone.utc).timestamp()
+                        session.modified = True
+                        log_event('login')
 
-                    return jsonify({
-                        'message': 'Successful login',
-                        'new_image_data': new_image_data,
-                        "redirect": "/account"
-                    })
+                        return jsonify({
+                            'message': 'Successful login',
+                            'new_image_data': new_image_data,
+                            "redirect": "/account"
+                        })
 
         except Exception as e:
             return jsonify({"error": f"Invalid image data: {str(e)}"}), 400 # TODO: remove str(e) for security
