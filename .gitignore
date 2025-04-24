@@ -177,5 +177,6 @@ data/*
 **/test_images*/
 **/gt_db/
 *.jpg
+*.png
 
 node_modules
