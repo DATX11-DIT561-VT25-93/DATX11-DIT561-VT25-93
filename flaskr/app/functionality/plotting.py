@@ -51,7 +51,7 @@ def plot_ROC(y_true, y_pred_li, thresholds):
     # Annotate first, middle and last point with the corresponding threshold value
     for i in [0, (len(fpr_list) // 2) - 1, len(fpr_list) - 1]:  
         plt.text(fpr_list[i], tpr_list[i], str(round(thresholds[i], 2)), 
-                fontsize=16, ha='right', va='bottom', color='red')
+                fontsize=18, ha='right', va='bottom', color='red')
 
     # Labels and legend
     plt.xlabel('False Positive Rate (FPR)')
