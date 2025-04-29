@@ -59,25 +59,24 @@
 
         <!-- BioAuthLogo -->
         <div class="grid grid-cols-9 content-center ">
-            <img class="w-[3.5vw]  col-start-4 " src="../static/images/logoBioAuth.png" alt="logo" >
-            <p class="col-start-5 text-[2.1vw] font-semibold">BioAuth</p>
+            <img class="w-[3.5vw]  col-start-4 mt-[2vw] " src="../static/images/logoBioAuth.png" alt="logo" >
+            <p class="col-start-5 text-[2.1vw] mt-[2vw] font-semibold">BioAuth</p>
         </div>
 
         <!-- UserCredentials -->
-        <p class="text-[1.5vw] font-semibold col-start-1 pt-[3vw]">Account Details</p>
+        <p class="text-[1.7vw] font-semibold col-start-1 pt-[3vw]">Account Details</p>
 
         <div class="grid grid-cols-4 content-center pt-[1.5vw] pb-[3vw] pr-[1.3vw]">
-            <p class="text-[1.1vw] font-medium col-start-1"> Username </p>
-            <p class="text-[1.1vw] font-medium col-start-2"> Email </p>
+            <p class="text-[1.2vw] font-medium col-start-1"> Username </p>
+            <p class="text-[1.2vw] font-medium col-start-2"> Email </p>
 
-            <p class="text-[0.7vw] text-stone-500 col-start-1 pt-[1vw]"> {{ user_obj['username'] }} </p>
-            <p class="text-[0.7vw] text-stone-700 col-start-2 pt-[1vw]"> {{ user_obj['email'] }} </p>
+            <p class="text-[1vw] text-stone-500 col-start-1 pt-[1vw]"> {{ user_obj['username'] }} </p>
+            <p class="text-[1vw] text-stone-700 col-start-2 pt-[1vw]"> {{ user_obj['email'] }} </p>
             
             <details id="popupToggle" class="open">
                 <!-- Button to be visible -->
                 <summary 
-                    class="w-[12vw] h-[3vw] flex justify-center items-center rounded-full block px-[2vw] py-[1vw] text-[1vw] hover:duration-300 hover:text-white cursor-pointer
-                    bg-gradient-to-r from-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-700">
+                    class="w-[12vw] h-[3vw] ms-[9vw] flex justify-center items-center rounded-full block px-[2vw] py-[1vw] text-[1vw] font-semibold bg-blue-500 hover:scale-105 hover:duration-300 hover:text-white cursor-pointer">
                     <p class="text-white"> Account Settings </p>
                    <!-- BUTTON -->
                 </summary>
@@ -86,8 +85,8 @@
         </div>
 
         <!-- Timelog Table -->
-        <div class="h-[20vh] overflow-y-auto">
-            <table class="min-w-full table-fixed border-collapse">
+        <div class="h-[25vh] overflow-y-auto rounded-[1vw] bg-white shadow-md">
+            <table class="min-w-full table-fixed border-collapse rounded-[1vw]">
               <thead class="bg-white sticky top-0 z-10 shadow-sm">
                 <tr class="text-gray-600 text-left text-[1.2vw]">
                   <th class="px-[1vw] py-[1vw] w-1/3">Event</th>
@@ -119,8 +118,9 @@
         <button 
             type="submit"
             form="UpdateEmailForm"
-            class=" -left-[-0.3vw] -bottom-[-0.3vw]  pl-4vw w-[11vw] h-[2vw] flex justify-center items-center rounded-full block px-6 py-4 text-[1vw]  hover:duration-300  cursor-pointer text-white hover:text-white
-            bg-gradient-to-r from-black to-black hover:from-gray-900 hover:to-gray-800 "
+            class=" -left-[-0.3vw] -bottom-[-0.3vw]  pl-4vw w-[10vw] h-[3vw] mt-[1vw] flex justify-center items-center rounded-full block px-[2vw] py-[1.4vw] text-[1vw] font-semibold bg-[#0A0A0A] hover:duration-300 cursor-pointer text-white hover:text-white
+            hover:scale-105"
+
             onclick="window.location.href='/logout'">
             <p>Log Out</p>
         </button>   
@@ -153,7 +153,7 @@
         <!-- Form for Username -->
         <form method="POST" action="/update_username" id="UpdateUsernameForm" 
             class="h-[2.8vw] max-w-[21vw] w-full row-start-2 col-start-2 col-span-2 outline mb-[2vw] rounded-full p-[0.6vw]">
-            <input class="w-full outline-none text-left text-sm pl-[0.5vw]" 
+            <input class="w-full outline-none text-left text-sm pl-[0.5vw] my-[0.1vw]" 
                 type="tel" 
                 name="username" 
                 placeholder="{{ user_obj['username'] }}"
@@ -164,7 +164,7 @@
         <!-- Form for Email -->
         <form method="POST" action="/update_email" id="UpdateEmailForm" 
             class="h-[2.8vw] max-w-[21vw] w-full row-start-3 col-start-2 col-span-2 outline mb-[2vw] rounded-full p-[0.6vw]">
-            <input class="w-full outline-none text-left text-sm pl-[0.5vw]"
+            <input class="w-full outline-none text-left text-sm pl-[0.5vw] my-[0.1vw]"
                 type="tel" 
                 name="email" 
                 placeholder="{{ user_obj['email'] }}"
@@ -176,26 +176,40 @@
         <button 
             type="submit"
             form="UpdateUsernameForm"
-            class="row-start-2 col-start-4 pl-4vw w-[11vw] h-[2vw] flex justify-center items-center rounded-full block px-6 py-4 text-[1vw] 
-            hover:duration-300 hover:text-white cursor-pointer bg-gradient-to-r from-green-300 to-green-400 hover:from-green-500 hover:to-green-600 ">
-            <p>Update Username</p>
+            id="updateUsernameBtn"
+            disabled
+            class="row-start-2 col-start-4 pl-4vw w-[12vw] h-[2vw] flex justify-center items-center rounded-full block px-[2vw] py-[1.4vw] text-[1vw] bg-gray-400 cursor-not-allowed">
+            <p class="text-white">Update Username</p>
         </button>
         
         <!-- Update Email Button -->
         <button 
             type="submit"
             form="UpdateEmailForm"
-            class="row-start-3 col-start-4 pl-4vw w-[11vw] h-[2vw] flex justify-center items-center rounded-full block px-6 py-4 text-[1vw]  hover:duration-300 hover:text-white cursor-pointer hover:text-white
-            bg-gradient-to-r from-green-300 to-green-400 hover:from-green-500 hover:to-green-600">
-            <p>Update Email</p>
+            id="updateEmailBtn"
+            disabled
+            class="row-start-3 col-start-4 pl-4vw w-[12vw] h-[2vw] flex justify-center items-center rounded-full block px-[2vw] py-[1.4vw] text-[1vw] bg-gray-400 cursor-not-allowed">
+            <p class="text-white">Update Email</p>
         </button>
 
 
         <!-- Deletebutton -->
-        <button onclick="window.location.href='/delete-user'" class="row-start-4 col-start-4 w-[11vw] h-[2vw] flex justify-center items-center rounded-full block px-6 py-4 text-[1vw] cursor-pointer hover:text-white
-        bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-700">
-            <p>Delete Account</p>
+        <button 
+            onclick="confirmDelete()" 
+            class="row-start-4 col-start-4 pl-4vw w-[12vw] h-[2vw] flex justify-center items-center rounded-full block px-[2vw] py-[1.4vw] text-[1vw] bg-rose-500 hover:scale-105 hover:duration-300 hover:text-white cursor-pointer">
+            
+            <!--row-start-4 col-start-4 w-[11vw] h-[2vw] flex justify-center items-center rounded-full block px-6 py-4 text-[1vw] cursor-pointer hover:text-white
+            bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-700">-->
+            <p class="text-white">Delete Account</p>
         </button>
+
+        <script>
+            function confirmDelete() {
+                if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                    window.location.href = '/delete-user';
+                }
+            }
+            </script>
     </div>
 
     <script>
@@ -216,6 +230,36 @@
 
     </script>
 
+    <script>
+        const usernameInput = document.querySelector('#UpdateUsernameForm input[name="username"]');
+        const emailInput = document.querySelector('#UpdateEmailForm input[name="email"]');
+        const updateUsernameBtn = document.getElementById('updateUsernameBtn');
+        const updateEmailBtn = document.getElementById('updateEmailBtn');
+
+        usernameInput.addEventListener('input', function() {
+            if (usernameInput.value.trim() !== '') {
+                updateUsernameBtn.disabled = false;
+                updateUsernameBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                updateUsernameBtn.classList.add('bg-blue-500', 'hover:scale-105', 'hover:duration-300');
+            } else {
+                updateUsernameBtn.disabled = true;
+                updateUsernameBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                updateUsernameBtn.classList.remove('bg-blue-500', 'hover:scale-105', 'hover:duration-300');
+            }
+        });
+
+        emailInput.addEventListener('input', function() {
+            if (emailInput.value.trim() !== '') {
+                updateEmailBtn.disabled = false;
+                updateEmailBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                updateEmailBtn.classList.add('bg-blue-500', 'hover:scale-105', 'hover:duration-300');
+            } else {
+                updateEmailBtn.disabled = true;
+                updateEmailBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                updateEmailBtn.classList.remove('bg-blue-500', 'hover:scale-105', 'hover:duration-300');
+            }
+        });
+    </script>
     
 
 </body>
