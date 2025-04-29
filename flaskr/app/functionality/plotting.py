@@ -1,7 +1,10 @@
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import os
 
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
+SAVE_PATH = 'plots_FAS/'
 
 # Global font
 mpl.rcParams['font.family'] = 'Times New Roman'
@@ -9,7 +12,7 @@ mpl.rcParams['font.family'] = 'Times New Roman'
 # Global font size
 mpl.rcParams['font.size'] = 18
 
-def plot_conf_mat(y_true, y_pred):
+def plot_conf_mat(y_true, y_pred, threshold, test_n, save_path=SAVE_PATH):
     conf_mat = confusion_matrix(y_true, y_pred)
 
     # Plotting the confusion matrix
@@ -19,6 +22,11 @@ def plot_conf_mat(y_true, y_pred):
     # Labels
     plt.xlabel("Predicted Value")
     plt.ylabel("True Value")
+
+    
+    if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        plt.savefig(f'{save_path}FAS_CM_threshold{threshold}_test{test_n}.png', bbox_inches='tight')
 
     plt.show()
 
@@ -31,7 +39,7 @@ def get_tpr_and_fpr(y_true, y_pred):
 
     return tpr, fpr
 
-def plot_ROC(y_true, y_pred_li, thresholds):
+def plot_ROC(y_true, y_pred_li, thresholds, test_n, save_path=SAVE_PATH):
     tpr_list = []
     fpr_list = []
 
@@ -58,4 +66,8 @@ def plot_ROC(y_true, y_pred_li, thresholds):
     plt.ylabel('True Positive Rate (TPR)')
     plt.legend()
 
+    if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        plt.savefig(f'{save_path}FAS_ROC_test{test_n}.png', bbox_inches='tight')
+    
     plt.show()
