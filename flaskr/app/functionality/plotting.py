@@ -39,14 +39,19 @@ def get_tpr_and_fpr(y_true, y_pred):
 
     return tpr, fpr
 
-def plot_ROC(y_true, y_pred_li, thresholds, test_n, save_path=SAVE_PATH):
-    tpr_list = []
-    fpr_list = []
+def plot_ROC(y_true, y_pred_li, thresholds, test_n, save_path=SAVE_PATH, avg_rates=None):
+    if avg_rates is None:
+        tpr_list = []
+        fpr_list = []
 
-    for y_pred in y_pred_li:
-        tpr, fpr = get_tpr_and_fpr(y_true, y_pred)
-        tpr_list.append(tpr)
-        fpr_list.append(fpr)
+        for y_pred in y_pred_li:
+            tpr, fpr = get_tpr_and_fpr(y_true, y_pred)
+            tpr_list.append(tpr)
+            fpr_list.append(fpr)
+    else:
+        # Get average TPR and FPR for all tests
+        tpr_list = avg_rates[0]
+        fpr_list = avg_rates[1]
 
     plt.figure(figsize=(5.43, 4.65)) 
 
