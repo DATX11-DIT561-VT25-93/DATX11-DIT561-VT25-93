@@ -113,23 +113,20 @@
         </div>
 
         
-
         <!-- Logut Button -->
         <button 
             type="submit"
-            form="UpdateEmailForm"
             class=" -left-[-0.3vw] -bottom-[-0.3vw]  pl-4vw w-[10vw] h-[3vw] mt-[1vw] flex justify-center items-center rounded-full block px-[2vw] py-[1.4vw] text-[1vw] font-semibold bg-[#0A0A0A] hover:duration-300 cursor-pointer text-white hover:text-white
             hover:scale-105"
-
             onclick="window.location.href='/logout'">
             <p>Log Out</p>
         </button>   
-
          
+
     </div>
     
     <!-- Content will be hidden until the user clicks on the account settings button. -->
-    <div id="visiblePermanent" class="hidden grid grid-cols-4 bg-white rounded-[1vw] w-[50%] h-[40%] my-auto mx-auto absolute inset-0 text-gray-600 p-4 py-8 z-50">
+    <div id="visiblePermanent" class="hidden grid grid-cols-9 bg-white rounded-[1vw] w-[50%] h-[40%] my-auto mx-auto absolute inset-0 text-gray-600 p-4 py-8 z-50">
                     
         <span onclick="document.querySelector('details').removeAttribute('open')" class="bg-gray-600 text-white text-[0.7vw] font-bold 
          flex items-center justify-center w-[1.6vw] h-[1.6vw] rounded-[1vw] absolute -right-[-0.3vw] -top-[-0.3vw] hover:bg-gray-800 duration-200 cursor-pointer"> 
@@ -145,63 +142,91 @@
 
 
 
-        <p  class="row-start-1 col-span-4 text-[2.25vw] font-medium inline-block align-top flex justify-center items-center mb-8"> Account Settings </p>
+        <p  class="row-start-1 col-start-3 col-span-5 text-[2.25vw] font-medium inline-block align-top flex justify-center items-center mb-8"> Account Settings </p>
         
-        <p class="text-[1.5vw] font-medium row-start-2 col-span-1"> Username </p>
-        <p class="text-[1.5vw] font-medium row-start-3 col-span-1"> Email </p>
+        <p class="text-[1.5vw] font-medium row-start-2 px-[2vw]"> Username </p>
+        <p class="text-[1.5vw] font-medium row-start-3 px-[2vw]"> Email </p>
 
         <!-- Form for Username -->
         <form method="POST" action="/update_username" id="UpdateUsernameForm" 
-            class="h-[2.8vw] max-w-[21vw] w-full row-start-2 col-start-2 col-span-2 outline mb-[2vw] rounded-full p-[0.6vw]">
-            <input class="w-full outline-none text-left text-sm pl-[0.5vw] my-[0.1vw]" 
+            class="h-[3vw] max-w-[30vw] w-full row-start-2 col-start-3 col-span-6 outline mb-[2vw] rounded-full p-[0.6vw]">
+            <input class="w-full outline-none text-left text-sm pl-[0.5vw] my-[0.2vw]" 
                 type="tel" 
                 name="username" 
                 placeholder="{{ user_obj['username'] }}"
-                required
+                required readonly
             >
         </form>
 
         <!-- Form for Email -->
         <form method="POST" action="/update_email" id="UpdateEmailForm" 
-            class="h-[2.8vw] max-w-[21vw] w-full row-start-3 col-start-2 col-span-2 outline mb-[2vw] rounded-full p-[0.6vw]">
-            <input class="w-full outline-none text-left text-sm pl-[0.5vw] my-[0.1vw]"
+            class="h-[3vw] max-w-[30vw] w-full row-start-3 col-start-3 col-span-6 outline mb-[2vw] rounded-full p-[0.6vw]">
+            <input class="w-full outline-none text-left text-sm pl-[0.5vw] my-[0.2vw]"
                 type="tel" 
                 name="email" 
                 placeholder="{{ user_obj['email'] }}"
-                required
+                required readonly
             >
         </form>
 
-        <!-- Update Username Button -->
-        <button 
-            type="submit"
-            form="UpdateUsernameForm"
-            id="updateUsernameBtn"
-            disabled
-            class="row-start-2 col-start-4 pl-4vw w-[12vw] h-[2vw] flex justify-center items-center rounded-full block px-[2vw] py-[1.4vw] text-[1vw] bg-gray-400 cursor-not-allowed">
-            <p class="text-white">Update Username</p>
-        </button>
-        
-        <!-- Update Email Button -->
-        <button 
-            type="submit"
-            form="UpdateEmailForm"
-            id="updateEmailBtn"
-            disabled
-            class="row-start-3 col-start-4 pl-4vw w-[12vw] h-[2vw] flex justify-center items-center rounded-full block px-[2vw] py-[1.4vw] text-[1vw] bg-gray-400 cursor-not-allowed">
-            <p class="text-white">Update Email</p>
-        </button>
+
+        <!-- Update Username Buttons -->
+        <div class="row-start-2 col-start-9 flex items-center mb-[2vw]">
+            <button 
+                type="button" 
+                id="updateUsernameBtn" 
+                class="bg-blue-500 text-white w-[3vw] h-[3vw] flex items-center justify-center rounded-full hover:scale-110 duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                    stroke-linejoin="round" class="lucide lucide-pencil-icon w-[1vw] h-[1vw]">
+                    <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                    <path d="m15 5 4 4"/>
+                </svg>
+            </button>
+            <button 
+                type="submit" 
+                form="UpdateUsernameForm" 
+                id="saveUsernameBtn" 
+                class="hidden bg-blue-500 text-white w-[3vw] h-[3vw] flex items-center justify-center rounded-full hover:scale-110 duration-200"
+                disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-[1vw] h-[1vw]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Update Email Buttons -->
+        <div class="row-start-3 col-start-9 flex items-center mb-[2vw]">
+            <button 
+                type="button" 
+                id="updateEmailBtn"
+                class="bg-blue-500 text-white w-[3vw] h-[3vw] flex items-center justify-center rounded-full hover:scale-110 duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                    stroke-linejoin="round" class="lucide lucide-pencil-icon w-[1vw] h-[1vw]">
+                    <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                    <path d="m15 5 4 4"/>
+                </svg>
+            </button>
+            <button 
+                type="submit" 
+                form="UpdateEmailForm" 
+                id="saveEmailBtn" 
+                class="hidden bg-blue-500 text-white w-[3vw] h-[3vw] flex items-center justify-center rounded-full hover:scale-110 duration-200"
+                disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-[1vw] h-[1vw]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            </button>
+        </div>
 
 
         <!-- Deletebutton -->
-        <button 
-            onclick="confirmDelete()" 
-            class="row-start-4 col-start-4 pl-4vw w-[12vw] h-[2vw] flex justify-center items-center rounded-full block px-[2vw] py-[1.4vw] text-[1vw] bg-rose-500 hover:scale-105 hover:duration-300 hover:text-white cursor-pointer">
-            
-            <!--row-start-4 col-start-4 w-[11vw] h-[2vw] flex justify-center items-center rounded-full block px-6 py-4 text-[1vw] cursor-pointer hover:text-white
-            bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-700">-->
-            <p class="text-white">Delete Account</p>
-        </button>
+        <div class="row-start-4 col-start-1 col-end-10 flex justify-end pr-[2.2vw]">
+            <button 
+                onclick="confirmDelete()" 
+                class="w-[12vw] h-[3vw] flex justify-center items-center rounded-full block font-semibold px-[2vw] py-[1.4vw] text-[1vw] bg-rose-500 hover:scale-105 hover:duration-300 hover:text-white cursor-pointer text-white">
+                Delete Account
+            </button>
+        </div>
 
         <script>
             function confirmDelete() {
@@ -209,11 +234,10 @@
                     window.location.href = '/delete-user';
                 }
             }
-            </script>
+        </script>
     </div>
 
     <script>
-
         const popupToggle = document.getElementById('popupToggle');
         const popup = document.getElementById('visiblePermanent');
         const main = document.getElementById('main-content');
@@ -227,37 +251,57 @@
         main.classList.remove('blur-[2px]');
         }
         });
-
     </script>
-
+    
     <script>
-        const usernameInput = document.querySelector('#UpdateUsernameForm input[name="username"]');
-        const emailInput = document.querySelector('#UpdateEmailForm input[name="email"]');
-        const updateUsernameBtn = document.getElementById('updateUsernameBtn');
-        const updateEmailBtn = document.getElementById('updateEmailBtn');
-
-        usernameInput.addEventListener('input', function() {
-            if (usernameInput.value.trim() !== '') {
-                updateUsernameBtn.disabled = false;
-                updateUsernameBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-                updateUsernameBtn.classList.add('bg-blue-500', 'hover:scale-105', 'hover:duration-300');
-            } else {
-                updateUsernameBtn.disabled = true;
-                updateUsernameBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
-                updateUsernameBtn.classList.remove('bg-blue-500', 'hover:scale-105', 'hover:duration-300');
-            }
+        let usernameInput = document.querySelector('#UpdateUsernameForm input[name="username"]');
+        let emailInput = document.querySelector('#UpdateEmailForm input[name="email"]');
+        
+        let updateUsernameBtn = document.getElementById('updateUsernameBtn');
+        let updateEmailBtn = document.getElementById('updateEmailBtn');
+        let saveUsernameBtn = document.getElementById('saveUsernameBtn');
+        let saveEmailBtn = document.getElementById('saveEmailBtn');
+    
+        // Track original values
+        const originalUsername = usernameInput.placeholder;
+        const originalEmail = emailInput.placeholder;
+    
+        // Style the Save buttons initially as disabled
+        saveUsernameBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        saveEmailBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    
+        updateUsernameBtn.addEventListener('click', () => {
+            usernameInput.removeAttribute('readonly');
+            usernameInput.focus();
+            updateUsernameBtn.classList.add('hidden');
+            saveUsernameBtn.classList.remove('hidden');
+            saveUsernameBtn.disabled = true;
         });
-
-        emailInput.addEventListener('input', function() {
-            if (emailInput.value.trim() !== '') {
-                updateEmailBtn.disabled = false;
-                updateEmailBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-                updateEmailBtn.classList.add('bg-blue-500', 'hover:scale-105', 'hover:duration-300');
-            } else {
-                updateEmailBtn.disabled = true;
-                updateEmailBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
-                updateEmailBtn.classList.remove('bg-blue-500', 'hover:scale-105', 'hover:duration-300');
-            }
+    
+        updateEmailBtn.addEventListener('click', () => {
+            emailInput.removeAttribute('readonly');
+            emailInput.focus();
+            updateEmailBtn.classList.add('hidden');
+            saveEmailBtn.classList.remove('hidden');
+            saveEmailBtn.disabled = true;
+        });
+    
+        usernameInput.addEventListener('input', () => {
+            const changed = usernameInput.value.trim() !== '' && usernameInput.value !== originalUsername;
+            saveUsernameBtn.classList.toggle('opacity-50', !changed);
+            saveUsernameBtn.classList.toggle('cursor-not-allowed', !changed);
+            saveUsernameBtn.classList.toggle('bg-blue-500', changed);
+            saveUsernameBtn.classList.toggle('bg-gray-400', !changed);
+            saveUsernameBtn.disabled = !changed;
+        });
+    
+        emailInput.addEventListener('input', () => {
+            const changed = emailInput.value.trim() !== '' && emailInput.value !== originalEmail;
+            saveEmailBtn.classList.toggle('opacity-50', !changed);
+            saveEmailBtn.classList.toggle('cursor-not-allowed', !changed);
+            saveEmailBtn.classList.toggle('bg-blue-500', changed);
+            saveEmailBtn.classList.toggle('bg-gray-400', !changed);
+            saveEmailBtn.disabled = !changed;
         });
     </script>
     
