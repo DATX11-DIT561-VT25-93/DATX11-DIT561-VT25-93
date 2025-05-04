@@ -26,6 +26,8 @@ Before running the general performance tests and the anti-spoofing tests, you mu
    - `DATASET_PATH` - path to the dataset folder
    - `REF_IMG_INDEX` - **11** for the FEI dataset and **0** for the Georgia Tech and LFW datasets
 
+5. Run the notebook.
+
 #### Face Anti-Spoofing Testing - *test_anti-spoofing.ipynb*
 
 1. Download a suitable dataset. The [LCC Face Anti-Spoofing Dataset](https://www.kaggle.com/datasets/faber24/lcc-fasd) is readily available and has been used for testing in this project.
@@ -38,5 +40,7 @@ Before running the general performance tests and the anti-spoofing tests, you mu
    - `N_SPOOFED` - the number of spoofed images
    - `N_REAL` - the number of genuine images
    - `N_RUNS` - the desired number of test repetitions
+
+4. Run the notebook.
 
 
