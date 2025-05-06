@@ -10,9 +10,9 @@ from collections import defaultdict
 
 rec_model = init_facenet()
 
-for layer in rec_model.layers[:-20]:
+for layer in rec_model.layers[:-30]:
     layer.trainable = False
-for layer in rec_model.layers[-20:]:
+for layer in rec_model.layers[-30:]:
     layer.trainable = True
 rec_model.trainable = True
 
@@ -136,11 +136,10 @@ def semi_hard_triplet_miner(person_images, model, batch_size=32, margin=1):
         yield (np.array(anchors), np.array(positives), np.array(negatives))
 
 
-batch_size = 32
-steps_per_epoch = 100
 
 initial_weights = rec_model.get_weights()[0].copy()
 
+batch_size = 32
 steps_per_epoch = 100
 print_interval = 5  
 
@@ -180,3 +179,5 @@ for k, v in results.items():
 new_weights = rec_model.get_weights()[0]
 change = np.linalg.norm(initial_weights - new_weights)
 print(f"Weight change after training: {change:.6f}")
+
+rec_model.save_weights(os.path.join(base_dir, "facenet_finetuned_weights.h5"))
