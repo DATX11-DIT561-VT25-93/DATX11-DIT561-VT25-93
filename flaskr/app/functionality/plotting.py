@@ -4,7 +4,7 @@ import os
 
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
-SAVE_PATH = 'plots_FAS/'
+SAVE_PATH = 'plots_PERFORMANCE/'
 
 # Global font
 mpl.rcParams['font.family'] = 'Times New Roman'
@@ -26,8 +26,9 @@ def plot_conf_mat(y_true, y_pred, threshold, test_n, save_path=SAVE_PATH):
     
     if save_path:
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
-        plt.savefig(f'{save_path}FAS_CM_threshold{threshold}_test{test_n}.png', bbox_inches='tight')
+        plt.savefig(f'{save_path}PERF_CM_threshold{threshold}_test{test_n}.png', bbox_inches='tight')
 
+    print(f"Confusion Matrix for test {test_n} with threshold {threshold}:")
     plt.show()
 
 def get_tpr_and_fpr(y_true, y_pred):
@@ -73,6 +74,6 @@ def plot_ROC(y_true, y_pred_li, thresholds, test_n, save_path=SAVE_PATH, avg_rat
 
     if save_path:
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
-        plt.savefig(f'{save_path}FAS_ROC_test{test_n}.png', bbox_inches='tight')
+        plt.savefig(f'{save_path}PERF_ROC_test{test_n}.png', bbox_inches='tight')
     
     plt.show()

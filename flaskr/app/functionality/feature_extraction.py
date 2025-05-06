@@ -5,7 +5,6 @@ import onnxruntime as ort
 from anti_spoof import is_real_face
 import os
 
-
 def init_facenet():
     base_dir = os.path.abspath(os.path.dirname(__file__))
     new_deepface_home = os.path.join(base_dir, "facenet_weights")
@@ -59,25 +58,26 @@ def is_face_aligned(face):
 
     return eye_height_diff_ratio < 0.12 and mouth_corner_height_diff_ratio < 0.09 and nose_offset_ratio < 0.1
 
-def extract_feature(faces, image_rgb, model, antispoof_sess, input_name):
+def extract_feature(faces, image_rgb, model, detect_alignment=True, detect_spoof=True, antispoof_sess=None, input_name=None):
     closest_face = max(faces, key=bounding_box_area)
     
-    if not is_face_aligned(closest_face) or bounding_box_area(closest_face) < 8000:
-        print("Face is not positioned properly. Skipping feature extraction.\n")
-        return None
-    
-    print("Bounding box area", bounding_box_area(closest_face))
-
-    print("Face is positioned properly.\n")
+    if detect_alignment:
+        if not is_face_aligned(closest_face) or bounding_box_area(closest_face) < 8000:
+            print("Face is not positioned properly. Skipping feature extraction.\n")
+            return None
+        
+        print("Bounding box area", bounding_box_area(closest_face))
+        print("Face is positioned properly.\n")
 
     x, y, w, h = map(int, closest_face[:4])
     face_crop = image_rgb[y:y+h, x:x+w]
 
-    if not is_real_face(crop_face_with_padding(image_rgb, x, y, w, h, padding=30), antispoof_sess, input_name):
-        print("Spoof detected. Skipping feature extraction.\n")
-        return None
-
-    print("Real face confirmed.\n")
+    if detect_spoof:
+        if not is_real_face(crop_face_with_padding(image_rgb, x, y, w, h, padding=30), antispoof_sess, input_name):
+            print("Spoof detected. Skipping feature extraction.\n")
+            return None
+        else:
+            print("Real face confirmed.\n")
 
     face_preprocessed = preprocess_face(face_crop)
     feature_vector = model.predict(face_preprocessed)[0]
