@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from deepface.models.facial_recognition import Facenet
 import onnxruntime as ort
-from .anti_spoof import is_real_face
+from anti_spoof import is_real_face
 import os
 
 
@@ -85,3 +85,14 @@ def extract_feature(faces, image_rgb, model, antispoof_sess, input_name):
 
     return feature_vector
 
+###################################
+###################################
+###################################
+
+# Only used for running anti-spoofing tests
+def predict_spoof(face_data, image_rgb, antispoof_sess, antispoof_input, threshold):
+    closest_face = max(face_data, key=bounding_box_area)
+    x, y, w, h = map(int, closest_face[:4])
+    padded_face_crop = crop_face_with_padding(image_rgb, x, y, w, h, padding=30)
+
+    return is_real_face(padded_face_crop, antispoof_sess, antispoof_input, threshold)
