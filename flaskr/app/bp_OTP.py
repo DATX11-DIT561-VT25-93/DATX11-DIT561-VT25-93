@@ -30,9 +30,9 @@ def route_generate_otp():
     session_id =  str(uuid.uuid4())
     user_email = data.get('email')
 
-    if not user_email:
+    if not user_email or not check_existing_email_or_username(user_email):
         return jsonify({'error': 'Wrong email or account does not exist'}), 400
-
+    
     try:
         generate_otp(session_id, user_email)
 

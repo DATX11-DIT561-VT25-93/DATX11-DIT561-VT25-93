@@ -129,9 +129,8 @@
                 submitBtn.disabled = true;
                 submitBtn.classList.add('opacity-50');
 
-                // Show loading state
                 loadingElement.classList.remove('hidden');
-                errorElement.classList.add('hidden'); // Hide any previous errors
+                errorElement.classList.add('hidden'); 
 
                 const response = await fetch('/register/summary', {
                     method: 'POST',
@@ -154,7 +153,6 @@
                 errorElement.textContent = error.message;
                 errorElement.classList.remove('hidden');
 
-                // Re-enable button on error
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-50');
             } finally {
@@ -179,17 +177,14 @@
                 });
         }
 
-        // Check session status every 5 seconds
         document.addEventListener('DOMContentLoaded', function () {
             sessionCheckInterval = setInterval(checkSessionStatus, 5000);
         });
 
-        // Clear interval when leaving the page
         window.addEventListener('beforeunload', function () {
             clearInterval(sessionCheckInterval);
         });
 
-        // Add event listeners for user activity
         let userActivityTimeout;
         const resetUserActivityTimer = () => {
             clearTimeout(userActivityTimeout);

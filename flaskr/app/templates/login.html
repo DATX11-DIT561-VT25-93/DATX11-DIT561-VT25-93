@@ -49,9 +49,11 @@
     </section>
     <section class="w-[64%] flex items-center">
         <div
-            class="h-[80%] bg-linear-to-br from-zinc-900 from-10% via-zinc-300 via-80% to-zinc-200 to-90% w-full rounded-[5vw]">
-            <video id="webcam" autoplay playsinline class="w-full h-full object-cover -scale-x-100"></video>
-            <canvas id="canvas" class="w-full h-full object-cover" style="display: none"></canvas>
+            class="h-[80%] bg-linear-to-br from-zinc-900 from-10% via-zinc-300 via-80% to-zinc-200 to-90% w-full rounded-[5vw] overflow-hidden">
+            
+            <video id="webcam" autoplay playsinline class="w-full h-full object-cover -scale-x-100 z-20"></video>
+            <canvas id="canvas" class="w-full h-full object-cover z-20" style="display: none"></canvas>
+            <!-- <img src="../static/images/registerFillerBG.png" alt="filler-art" class="w-full h-full"> -->
         </div>
     </section>
     <script>
@@ -62,7 +64,6 @@
         const otpTooltip = document.getElementById('otp-tooltip');
         let stream = null;
 
-        // Configuration
         const MAX_ATTEMPTS = 5;  // Maximum number of attempts
         const DELAY_BETWEEN_ATTEMPTS = 500; // Delay between attempts in milliseconds
 
@@ -101,7 +102,6 @@
                     webcam.onloadedmetadata = () => resolve();
                 });
 
-                // Wait additional time for camera to adjust
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
             } catch (error) {
@@ -193,7 +193,7 @@
                 const credentialCheck = await checkCredentials(email_username);
                 if (!credentialCheck.valid) {
                     alert(credentialCheck.message);
-                    emailUsernameInput.value = ''; // Clear the input
+                    emailUsernameInput.value = ''; 
                     return;
                 }
 
@@ -239,23 +239,18 @@
                 alert(error.message || 'An error occurred during login');
                 stopWebcam();
             } finally {
-                // Reset button state & OTP tooltip
                 submitButton.disabled = false;
                 submitButton.innerHTML = originalButtonText;
-                //otpTooltip.innerHTML = `<p id="otp-tooltip" class="hidden text-[1.25vw] text-center opacity-75">Trouble with face authentication? <span class="underline"><a href="/login-otp">try OTP</a></span> </p>`;
             }
         }
 
-        // Initially hide the webcam
         webcam.style.display = 'none';
 
-        // Prevent default form submission and handle with our custom function
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             await captureAndSend();
         });
 
-        // Clean up webcam when leaving page
         window.addEventListener('beforeunload', () => {
             stopWebcam();
         });
