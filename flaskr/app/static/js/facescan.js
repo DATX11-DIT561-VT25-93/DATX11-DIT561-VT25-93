@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let pictureHasBeenTakenBool = false;
     let stream;
 
-    // Access the webcam
     async function startWebcam() {
         try {
             stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -21,58 +20,44 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Stop webcam
     function stopWebcam() {
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
         }
     }
 
-    // Capture a frame from the video
     function captureFrame() {
-        // Set canvas dimensions to match video dimensions
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-        
-        // Draw the current video frame onto the canvas
+
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         
-        // Convert to base64 for temporary storage
         imageData = canvas.toDataURL("image/png");
         pictureHasBeenTakenBool = true;
         
-        // Stop the webcam
         stopWebcam();
         
-        // Hide capture button and show continue/retake buttons
         captureButton.style.display = "none";
         continueButton.style.display = "flex";
         retakeButton.style.display = "flex";
         
-        // Keep the canvas visible and hide the video
         video.style.display = "none";
         canvas.style.display = "block";
     }
 
-    // Function to retake picture
     function retakePicture() {
-        // Restart webcam
         startWebcam();
         
-        // Show video and hide canvas
         video.style.display = "block";
         canvas.style.display = "none";
         
-        // Show capture button and hide continue/retake buttons
         captureButton.style.display = "flex";
         continueButton.style.display = "none";
         retakeButton.style.display = "none";
         
-        // Reset variables
         pictureHasBeenTakenBool = false;
         imageData = null;
         
-        // Clear the canvas
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
@@ -86,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = {
                 webcam_data: imageData
             };
-            // Send data to Flask backend
+            
             const response = await fetch('/register/scan', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -106,10 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Start webcam automatically on page load
     startWebcam();
     
-    // Event Listeners
     captureButton.addEventListener("click", captureFrame);
     retakeButton.addEventListener("click", retakePicture);
     continueButton.addEventListener("click", registerFaceScan);

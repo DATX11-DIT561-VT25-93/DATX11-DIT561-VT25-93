@@ -31,23 +31,20 @@
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext("2d");
 
-        // Set canvas size
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        // Resize event
         window.addEventListener("resize", () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            initParticles(); // Reset particles on resize
+            initParticles(); 
         });
 
-        // Particle class
         class Particle {
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 3 + 1; // Smaller size for better performance
+                this.size = Math.random() * 3 + 1; 
                 this.speedX = (Math.random() - 0.5) * 1.5;
                 this.speedY = (Math.random() - 0.5) * 1.5;
             }
@@ -56,26 +53,22 @@
                 this.x += this.speedX;
                 this.y += this.speedY;
 
-                // Bounce off edges
                 if (this.x <= 0 || this.x >= canvas.width) this.speedX *= -1;
                 if (this.y <= 0 || this.y >= canvas.height) this.speedY *= -1;
             }
 
             draw() {
-                ctx.save(); // Save canvas state before drawing
+                ctx.save(); 
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fillStyle = "rgba(180, 180, 242, 0.8)";
-                // ctx.shadowBlur = 0;
-                // ctx.shadowColor = "#E6E3F1";
                 ctx.fill();
-                ctx.restore(); // Restore state after drawing
+                ctx.restore(); 
             }
         }
 
-        // Create particles
         let particles = [];
-        const MAX_PARTICLES = Math.min(80, window.innerWidth / 15); // Adjust based on screen size
+        const MAX_PARTICLES = Math.min(80, window.innerWidth / 15); 
 
         function initParticles() {
             particles = [];
@@ -84,9 +77,8 @@
             }
         }
 
-        // Draw connections between nearby particles
         function drawConnections() {
-            const maxDistance = 100; // Reduce max distance to optimize
+            const maxDistance = 100; 
 
             for (let i = 0; i < particles.length; i++) {
                 for (let j = i + 1; j < particles.length; j++) {
@@ -95,22 +87,21 @@
                     let distance = Math.sqrt(dx * dx + dy * dy);
 
                     if (distance < maxDistance) {
-                        ctx.save(); // Save state before drawing
+                        ctx.save();
                         ctx.beginPath();
                         ctx.strokeStyle = `rgba(180, 180, 242, ${1 - distance / maxDistance})`;
                         ctx.lineWidth = 0.5;
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
                         ctx.stroke();
-                        ctx.restore(); // Restore state after drawing
+                        ctx.restore(); 
                     }
                 }
             }
         }
 
-        // Animation loop
         let lastTime = 0;
-        const fps = 30; // Lower FPS for better performance
+        const fps = 30; 
         const interval = 1000 / fps;
 
         function animate(timestamp) {
@@ -129,7 +120,6 @@
             requestAnimationFrame(animate);
         }
 
-        // Start animation
         initParticles();
         animate();
 

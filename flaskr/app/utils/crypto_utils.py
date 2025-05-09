@@ -14,7 +14,7 @@ def encrypt_aes_gcm(plaintext: str, key: bytes):
     if len(key) not in [16, 24, 32]:  
         raise ValueError("AES key must be 16, 24, or 32 bytes long")
     
-    iv = os.urandom(12)  # AES-GCM requires a 12-byte IV
+    iv = os.urandom(12) 
     cipher = Cipher(algorithms.AES(key), modes.GCM(iv), backend=default_backend())
     encryptor = cipher.encryptor()
     ciphertext = encryptor.update(plaintext.encode()) + encryptor.finalize()  

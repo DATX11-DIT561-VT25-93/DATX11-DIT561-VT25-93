@@ -66,7 +66,7 @@ def get_user_from_db(email_username):
         try:
             decrypted_face_data = decrypt_aes_gcm(ciphertext, AES_KEY, iv, auth_tag)
         except Exception as e:
-            return jsonify({"error": "Decryption failed", "details": str(e)}), 500
+            return jsonify({"error": "Decryption failed"}), 500
         
         return jsonify({
             "email_username": email_username,
