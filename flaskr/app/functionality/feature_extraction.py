@@ -58,7 +58,7 @@ def is_face_aligned(face):
 
     return eye_height_diff_ratio < 0.12 and mouth_corner_height_diff_ratio < 0.09 and nose_offset_ratio < 0.1
 
-def extract_feature(faces, image_rgb, model, detect_alignment=True, detect_spoof=True, antispoof_sess=None, input_name=None):
+def extract_feature(faces, image_rgb, model, detect_alignment=True, detect_spoof=False, antispoof_sess=None, input_name=None):
     closest_face = max(faces, key=bounding_box_area)
     
     if detect_alignment:
@@ -79,9 +79,13 @@ def extract_feature(faces, image_rgb, model, detect_alignment=True, detect_spoof
         else:
             print("Real face confirmed.\n")
 
-    face_preprocessed = preprocess_face(face_crop)
-    feature_vector = model.predict(face_preprocessed)[0]
-    feature_vector = normalize_vector(feature_vector)
+    try:
+        face_preprocessed = preprocess_face(face_crop)
+        feature_vector = model.predict(face_preprocessed)[0]
+        feature_vector = normalize_vector(feature_vector)
+    except Exception as e:
+        print(f"Error during feature extraction: {e}")
+        return None
 
     return feature_vector
 
