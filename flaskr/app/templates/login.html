@@ -134,7 +134,7 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    console.log('Login successful:', data.message);
+                    console.log(data.message);
                     if (data.redirect) {
                         stopWebcam();
                         window.location.href = data.redirect;
@@ -231,7 +231,6 @@
 
                 // If we get here, all attempts failed
                 otpTooltip.classList.remove("hidden")
-                console.log("apapappapa")
                 throw new Error(`Failed to verify after ${MAX_ATTEMPTS} attempts. Please try again.`);
 
             } catch (error) {

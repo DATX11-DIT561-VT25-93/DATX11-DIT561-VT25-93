@@ -59,7 +59,7 @@ def is_face_aligned(face):
 
     return eye_height_diff_ratio < 0.12 and mouth_corner_height_diff_ratio < 0.09 and nose_offset_ratio < 0.1
 
-def extract_feature(faces, image_rgb, model, antispoof_sess, input_name):
+def extract_feature(faces, image_rgb, model, antispoof_sess, input_name, skip_spoof=False):
     closest_face = max(faces, key=bounding_box_area)
     
     if not is_face_aligned(closest_face) or bounding_box_area(closest_face) < 8000:
@@ -73,9 +73,10 @@ def extract_feature(faces, image_rgb, model, antispoof_sess, input_name):
     x, y, w, h = map(int, closest_face[:4])
     face_crop = image_rgb[y:y+h, x:x+w]
 
-    if not is_real_face(crop_face_with_padding(image_rgb, x, y, w, h, padding=30), antispoof_sess, input_name):
-        print("Spoof detected. Skipping feature extraction.\n")
-        return None
+    if not skip_spoof:
+        if not is_real_face(crop_face_with_padding(image_rgb, x, y, w, h, padding=30), antispoof_sess, input_name):
+            print("Spoof detected. Skipping feature extraction.\n")
+            return None
 
     print("Real face confirmed.\n")
 
