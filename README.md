@@ -3,9 +3,82 @@
 #### *Bachelor's thesis*
 ## Project Overview
 Countless individuals rely on authentication systems to safeguard their personal and professional lives, from accessing secure accounts to protecting sensitive data. Yet, traditional password-based systems remain vulnerable to breaches, phishing attacks, and weak password practices, leaving users at risk.
-Addressing this critical security challenge, this project is set on developing a user-friendly face and eye recognition authentication system. 
+Addressing this critical security challenge, this project is set on developing a user-friendly face recognition authentication system. 
+
+
+## Running the Web Application
+This section outlines the essential steps to get the web application up and running, including setting up a Python virtual environment, installing prerequisites, configuring the .env file, and completing the initial setup.
+
+If you’ve already completed all the steps below (including the first-time setup) you can start the application by running the following command from within the `flaskr/` directory:
+```
+npm run start
+```
+### Before You Begin
+
+It is recommended to use a Python Virtual Environment (`.venv`) for package management.
+
+- If you are unfamiliar with virtual environments, you can create one by running:
+  ```
+  python venv_setup.py
+  ```
+- If you are familiar with virtual environments, use the following to install dependencies:
+  ```
+  pip install -r src/requirements.txt
+  ```
+
+### Prerequisites
+
+- Python (recommended version: `3.10`)
+- Node.js and npm (Node Package Manager)
+
+### Configuring the `.env` File
+
+Create a `.env` file inside the `/flaskr` directory (`/flaskr/.env`) with the following structure:
+
+```
+SUPABASE_URL=XXXXXXXXXXXXX
+SUPABASE_KEY=XXXXXXXXXXXXX
+SUPABASE_DATABASE_PASSWORD=XXXXXXXXXXXXX
+AESGCM_SECRET_KEY=XXXXXXXXXXXXX
+SENDER_PASSWORD=XXXXXXXXXXXXX
+SENDER_EMAIL=XXXXXXXXXXXXX
+```
+
+> **Note for supervisors/examiners**: Please contact us to receive the required credentials.
+
+Replace each `XXXXXXXXXXXXX` with the appropriate URL, key, email, or password.
 
 ---
+
+### First-Time Setup
+
+1. Open a terminal and navigate to the `/flaskr` folder:
+   ```
+   cd flaskr
+   ```
+2. Install the required Node.js packages:
+   ```
+   npm install
+   ```
+3. Start the application:
+   ```
+   npm run start
+   ```
+
+Once the server is running, open the link displayed in the terminal, typically:
+```
+http://127.0.0.1:5000/
+```
+
+> Note: The application may take a few seconds to initialize. Console messages will appear before the URL is available.
+
+---
+
+### Common Issues
+
+- **TensorFlow compatibility**: If using a Python version newer than `3.10`, you may encounter issues with TensorFlow. Downgrading to Python `3.10` is recommended. In some cases, manually installing `tensorflow==2.15.0` may resolve the issue.
+  
+- **Flask not recognized**: If you receive an error like `Flask is not recognized as an internal or external command`, ensure that your IDE is using the correct `.venv` interpreter. Try restarting your IDE after selecting the virtual environment.
 
 ## Running the Test Notebooks
 
