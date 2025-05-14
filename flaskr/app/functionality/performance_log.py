@@ -3,9 +3,10 @@ import cv2
 import time
 import numpy as np
 from feature_extraction import extract_feature, init_facenet
+from anti_spoof import load_antispoof_model
 from verification import compare_faces_euclidean
 
-DATASET_PATH = 'LFW_dataset' # The path to the dataset folder
+DATASET_PATH = 'GT_dataset' # The path to the dataset folder
 TUNED_WEIGHTS_PATH = "facenet_finetuned_weights.h5"
 USE_FINE_TUNED = True # Whether to use the fine-tuned weights or not
                    # True  -> Use fine-tuned weights
@@ -47,6 +48,8 @@ def evaluate_georgia_tech_faces(model):
     undetected_faces = 0
     misaligned_faces = 0
 
+    antispoof_sess, antispoof_input = load_antispoof_model()
+
     for person in sorted(os.listdir(dataset_path)):
         person_path = os.path.join(dataset_path, person)
 
@@ -58,7 +61,7 @@ def evaluate_georgia_tech_faces(model):
             undetected_faces += 1
             continue
 
-        emb = extract_feature(faces, rgb, model, True)
+        emb = extract_feature(faces, rgb, model, True, True, antispoof_sess, antispoof_input)
         if emb is None: 
             misaligned_faces += 1
             continue
@@ -74,7 +77,7 @@ def evaluate_georgia_tech_faces(model):
                 undetected_faces += 1
                 continue
 
-            emb = extract_feature(faces, rgb, model) 
+            emb = extract_feature(faces, rgb, model, True, True, antispoof_sess, antispoof_input) 
             if emb is None: 
                 misaligned_faces += 1
                 continue
