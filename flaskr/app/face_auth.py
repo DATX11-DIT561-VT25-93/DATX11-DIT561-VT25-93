@@ -105,7 +105,7 @@ def register():
                     session.modified = True
                     return jsonify({"message": "Success, user registered", "next": "/account"})
                 else:
-                    return jsonify({"error": "Spoofing spotted, please retake picture"}), 400
+                    return jsonify({"error": "Error, please retake picture"}), 400
             else:
                 return jsonify({"error": "Error when detecting face, please retry"}), 400
 
