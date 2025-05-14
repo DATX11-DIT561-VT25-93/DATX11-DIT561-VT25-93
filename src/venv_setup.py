@@ -3,7 +3,7 @@ import subprocess
 import sys
 
 # Specify the virtual environment name
-venv_name = ".venv"  # Change this to your desired name
+venv_name = ".venv" 
 
 # Detect the operating system
 is_windows = os.name == "nt"
@@ -22,27 +22,11 @@ if not os.path.exists(venv_path):
 else:
     print(f"Virtual environment '{venv_name}' already exists.")
 
-# Add virtual environment to .gitignore
-if os.path.exists(gitignore_path):
-    with open(gitignore_path, "r") as gitignore_file:
-        gitignore_content = gitignore_file.readlines()
-
-    if venv_name + "/" not in [line.strip() for line in gitignore_content]:
-        with open(gitignore_path, "a") as gitignore_file:
-            gitignore_file.write(f"\n{venv_name}/\n")
-        print(f"Added '{venv_name}/' to .gitignore.")
-    else:
-        print(f"'{venv_name}/' is already in .gitignore.")
-else:
-    with open(gitignore_path, "w") as gitignore_file:
-        gitignore_file.write(f"{venv_name}/\n")
-    print(f".gitignore created and added '{venv_name}/'.")
-
 # Install required libraries
 print("Installing required libraries in the virtual environment...")
 try:
     subprocess.run(
-        [python_executable, "-m", "pip", "install", "jupyter", "ipykernel", "opencv-python", "numpy", "matplotlib", "pillow", "pandas", "albumentations", "scikit-learn", "tensorflow", "torch", "tf-keras", "deepface", "Flask", "Flask-SQLAlchemy", "supabase", "python-dotenv", "onnxruntime"],
+        [python_executable, "-m", "pip", "install", "jupyter", "ipykernel", "opencv-python", "numpy", "matplotlib", "pillow", "pandas", "scikit-learn", "tensorflow==2.15.0", "torch", "keras==2.15.0", "ml-dtypes==0.2.0", "tensorboard==2.15.0", "deepface==0.0.79", "Flask", "Flask-SQLAlchemy", "supabase", "python-dotenv", "onnxruntime", "cryptography"],
         check=True,
     )
     print("Libraries installed successfully.")

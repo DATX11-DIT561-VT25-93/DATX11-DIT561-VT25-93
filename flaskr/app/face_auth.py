@@ -45,7 +45,7 @@ def pre_register():
         session['user'] = {
             'username': data['username'],
             'email': data['email'],
-            'face_data_id': str(uuid.uuid4()),
+            'face_data_id': "", # set in /register/scan
             'status_logged_in': False 
         }
         session['registration_start_time'] = datetime.now(timezone.utc).timestamp()
@@ -67,43 +67,54 @@ def pre_register_scan():
     if request.method == 'POST':
         try:
             data = request.json # Retrieve image data
+            session_user['face_data_id'] = str(uuid.uuid4())
             store_temp_imagedata(session_user['face_data_id'], data['webcam_data'])
             session_user = session['user']
             session['user'] = session_user
             session.modified = True
             return jsonify({"message": "User face scan registered", "next": "/register/summary"})
         except Exception as e:
-            return jsonify({"error": str(e)}), 400
+            return jsonify({"error, please retake picture"}), 400
     
     return render_template('register-face-scan.html', user_obj=session['user'])
 
 @face_auth_bp.route('/register/summary', methods=['POST', 'GET'])
 def register():
-    session_user = session['user']
     if 'user' not in session:
-    # Redirect to registration start if no session exists
         return redirect(url_for('face_auth_bp.pre_register'))
-    if session_user['status_logged_in']: # Prevents the user from registering 'again' and getting errors bcs of it
+
+    session_user = session['user']
+
+    if session_user.get('status_logged_in'):
+        if request.method == 'POST':
+            return jsonify({"message": "Already registered", "next": "/account"})
         return redirect(url_for('face_auth_bp.account'))
-    
+
     if request.method == 'POST':
         try:
             image_data_id = session_user['face_data_id']
             image_data = get_temp_image_data(image_data_id)
             face_data, new_image_data, image_rgb = detect_face(image_data)
-            
+
             if face_data is not None:
-                feature_vector = extract_feature(face_data, image_rgb, rec_model, antispoof_sess, antispoof_input)
-                save_user_to_db(session_user['email'], feature_vector, session_user['username'])
-                session_user['status_logged_in'] = True
-                session['user'] = session_user
-                session.modified = True
-                return jsonify({"message": "Success, user registered", "next": "/account"})
+                feature_vector = extract_feature(face_data, image_rgb, rec_model, antispoof_sess, antispoof_input, skip_spoof=True)
+                if feature_vector is not None:
+                    save_user_to_db(session_user['email'], feature_vector, session_user['username'])
+                    session_user['status_logged_in'] = True
+                    session['user'] = session_user
+                    session.modified = True
+                    return jsonify({"message": "Success, user registered", "next": "/account"})
+                else:
+                    return jsonify({"error": "Error, please retake picture"}), 400
+            else:
+                return jsonify({"error": "Error when detecting face, please retry"}), 400
 
         except Exception as e:
-            return jsonify({"error": str(e)}), 400
-        
-    return render_template('register-summary.html', user_obj=session['user'])
+            print({"error": str(e)})
+            return jsonify({"error": "something went wrong"}), 400
+
+    return render_template('register-summary.html', user_obj=session_user)
+
 
 @face_auth_bp.route('/get-face-image', methods=['POST'])
 def get_face_image():
@@ -113,7 +124,7 @@ def get_face_image():
         
         image_data = get_temp_image_data(image_id)
         if not image_data:
-            return jsonify({'error': 'Image not found or decryption failed'}), 404
+            return jsonify({'error': 'error fetching image'}), 404
 
         face_data, new_image_data, image_rgb = detect_face(image_data)
         
@@ -129,7 +140,7 @@ def get_face_image():
         })
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': "error fetching image"}), 500
     
 
 @face_auth_bp.route('/check-session-status', methods=['GET']) # Client side check
@@ -195,7 +206,7 @@ def login_fr():
                     webcam_feature_vector = extract_feature(face_data, image_rgb, rec_model, antispoof_sess, antispoof_input)
                     
                     if(not compare_faces_euclidean(webcam_feature_vector, stored_face_features)):
-                        return jsonify({"error": f"Face comparison returned false: {str(e)}"}), 400
+                        return jsonify({"error": "Unauthorized request"}), 400
                     
                     # Store logged in user in session
                     if 'user' in session:
@@ -217,7 +228,7 @@ def login_fr():
                     })
 
         except Exception as e:
-            return jsonify({"error": f"Invalid image data: {str(e)}"}), 400 # TODO: remove str(e) for security
+            return jsonify({"error": "No face detected"}), 400 
 
         return jsonify({'message': 'No face detected'})
 
@@ -240,47 +251,6 @@ def check_credentials():
         
     except Exception as e:
         return jsonify({'error': 'Error checking credentials'}), 500
-
-# Old code below, saved to show difference on meeting
-@face_auth_bp.route('/register-face-detection', methods=['POST', 'GET']) 
-def register_old():
-    if request.method == 'POST':
-        data = request.get_json()
-        
-        if 'image' not in data or 'email' not in data:
-            return jsonify({'error': 'Missing image or email'}), 400
-
-        try:
-            image_data = data['image'] # Webcam image in shape of base64 string        
-            email = data['email']
-            username = data['username']
-
-            print("Webcam frame received from " + str(email))
-            
-            face_data, new_image_data, image_rgb = detect_face(image_data) # Get array containing face data and image with marked faces in shape of base64 string
-           
-            if face_data is not None:
-                feature_vector = extract_feature(face_data, image_rgb, rec_model)
-                # Check for existing user
-                existing_user_check = check_existing_email(email)
-                
-                if existing_user_check[1] != 200:  
-                    print("Email already in use.")
-                    return existing_user_check  
-
-                else:
-                    print("user saved")
-                    save_user_to_db(email, feature_vector, username) # Adds new user to database
-                    session['user'] = email
-                    return jsonify({'message': 'Successful registration', 'new_image_data': new_image_data, "redirect": url_for('face_auth_bp.account')})
-      
-        except Exception as e:
-            return jsonify({"error": f"Invalid image data: {str(e)}"}), 400
-
-        return jsonify({'message': 'No face detected'})
-
-    return render_template('register-face-detection.html')
-
 
 @face_auth_bp.route('/update_username', methods=['POST', 'GET'])
 def update_username():
@@ -318,7 +288,7 @@ def update_username():
             return redirect(url_for('face_auth_bp.account')) 
 
         except Exception as e:
-            return jsonify({"Error": str(e)}), 500
+            return jsonify({"Error": "error updating username"}), 500
         
     return render_template('account.html')
 
@@ -358,7 +328,7 @@ def update_email():
         return redirect(url_for('face_auth_bp.account')) 
     
     except Exception as e:
-        return jsonify({"Error": str(e)}), 500
+        return jsonify({"Error": "error updating email"}), 500
     
 
 
@@ -391,6 +361,6 @@ def delete_user():
         
     
     except Exception as e:
-        return jsonify({"Error": str(e)}), 500
+        return jsonify({"Error": "error deleting user"}), 500
         
 
