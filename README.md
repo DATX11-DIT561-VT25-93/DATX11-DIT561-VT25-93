@@ -28,7 +28,7 @@ It is recommended to use a Python Virtual Environment (`.venv`) for package mana
 
 ### Prerequisites
 
-- Python (recommended version: `3.10`)
+- Python (recommended version: `3.11`)
 - Node.js and npm (Node Package Manager)
 
 ### Configuring the `.env` File
@@ -76,9 +76,11 @@ http://127.0.0.1:5000/
 
 ### Common Issues
 
-- **TensorFlow compatibility**: If using a Python version newer than `3.10`, you may encounter issues with TensorFlow. Downgrading to Python `3.10` is recommended. In some cases, manually installing `tensorflow==2.15.0` may resolve the issue.
+- **TensorFlow compatibility**: If using a Python version newer than `3.11`, you may encounter issues with TensorFlow. Downgrading to Python `3.11` is recommended. 
   
 - **Flask not recognized**: If you receive an error like `Flask is not recognized as an internal or external command`, ensure that your IDE is using the correct `.venv` interpreter. Try restarting your IDE after selecting the virtual environment.
+
+- **ONNX Runtime**: If you receive an error caused by the package `onnxruntime` and use Windows, please ensure you have the latest supported Windows C++ redistributable. `https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170`
 
 ## Running the Test Notebooks
 
