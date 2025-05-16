@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from deepface.models.facial_recognition import Facenet
 import onnxruntime as ort
-from anti_spoof import is_real_face
+from .anti_spoof import is_real_face
 import os
 
 
