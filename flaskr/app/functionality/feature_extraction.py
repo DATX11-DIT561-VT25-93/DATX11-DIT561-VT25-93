@@ -74,7 +74,7 @@ def extract_feature(faces, image_rgb, model, antispoof_sess, input_name, skip_sp
     face_crop = image_rgb[y:y+h, x:x+w]
 
     if not skip_spoof:
-        if not is_real_face(crop_face_with_padding(image_rgb, x, y, w, h, padding=30), antispoof_sess, input_name):
+        if not is_real_face(crop_face_with_padding(image_rgb, x, y, w, h, padding=60), antispoof_sess, input_name):
             print("Spoof detected. Skipping feature extraction.\n")
             return None
 
