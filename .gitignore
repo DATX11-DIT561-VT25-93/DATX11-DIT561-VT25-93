@@ -184,3 +184,9 @@ output.css
 
 **/test_images*/
 **/gt_db/
+*.jpg
+*.png
+*.csv
+*.xlsx
+
+node_modules

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BioAuth - OTP</title>
+    <link href="../static/css/output.css" rel="stylesheet" />
+</head>
+
+<body
+    class="bg-gradient-to-tr from-[#F4E4F8] via-[#EFEFEF] to-[#CDF2EC] min-h-screen flex items-center justify-center font-sans">
+    <div
+        class=" bg-white shadow-2xl rounded-2xl p-10 w-full max-w-md text-center transition-all duration-300 ease-in-out">
+        <!-- Email Step -->
+        <div class="flex flex-col justify-center" id="email-step">
+            <a href="/" class="flex flex-row justify-center items-center w-full space-x-2">
+                <img src="../static/images/logoBioAuth.png" alt="BioAuth-logo" class="w-[2.5vw] object-cover">
+                <p class="font-bold text-[2vw]">BioAuth</p>
+            </a>
+
+            <div class="flex flex-row justify-items-center w-full text-center">
+                <button class="cursor-pointer " onclick="window.location.href='/login-fr'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 50 50" fill="none">
+                        <rect width="50" height="50" rx="25" fill="white" class="hover:shadow-2xl" />
+                        <path d="M15 24.5H35M15 24.5L23.5714 16M15 24.5L23.5714 33" stroke="#0A0A0A" stroke-width="3"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+            <p class="text-gray-600 mb-6">Enter your email to receive a verification code</p>
+
+            <form id="email-form" class="space-y-6" onsubmit="showOtpStep(event)">
+                <input type="email" name="email" required placeholder="email"
+                    class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0a0a0a]" />
+                <button id="send-otp-btn" type="submit"
+                    class="w-full bg-[#0A0A0A] text-white font-semibold py-3 rounded-full shadow hover:scale-105 transition duration-200">
+                    Send OTP
+                </button>
+            </form>
+        </div>
+
+        <!-- OTP Step (Hidden by default) -->
+        <div id="otp-step" class="hidden flex flex-col justify-center">
+            <a href="/" class="flex flex-row justify-center items-center w-full space-x-2">
+                <img src="../static/images/logoBioAuth.png" alt="BioAuth-logo" class="w-[2.5vw] object-cover">
+                <p class="font-bold text-[2vw]">BioAuth</p>
+            </a>
+            <div class="flex flex-row justify-items-center w-full text-center">
+                <button class="cursor-pointer " onclick="{hideOtpStep()}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 50 50" fill="none">
+                        <rect width="50" height="50" rx="25" fill="white" class="hover:shadow-2xl" />
+                        <path d="M15 24.5H35M15 24.5L23.5714 16M15 24.5L23.5714 33" stroke="#0A0A0A" stroke-width="3"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-800 mb-2">OTP Verification</h1>
+            <p class="text-gray-600 mb-6">Enter the 6-digit code sent to your email</p>
+
+            <form action="/verify-otp" method="POST" class="space-y-6">
+                <div class="flex justify-center gap-3">
+                    <input type="text" maxlength="1" name="otp1" required
+                        class="w-12 h-12 text-center text-xl border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0A0A0A]" />
+                    <input type="text" maxlength="1" name="otp2" required
+                        class="w-12 h-12 text-center text-xl border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0A0A0A]" />
+                    <input type="text" maxlength="1" name="otp3" required
+                        class="w-12 h-12 text-center text-xl border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0A0A0A]" />
+                    <input type="text" maxlength="1" name="otp4" required
+                        class="w-12 h-12 text-center text-xl border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0A0A0A]" />
+                    <input type="text" maxlength="1" name="otp5" required
+                        class="w-12 h-12 text-center text-xl border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0A0A0A]" />
+                    <input type="text" maxlength="1" name="otp6" required
+                        class="w-12 h-12 text-center text-xl border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0A0A0A]" />
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-[#0A0A0A] text-white font-semibold py-3 rounded-full shadow hover:scale-105 transition duration-300">
+                    Verify Code
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function hideOtpStep() {
+            console.log("hide otp step")
+            document.getElementById("email-step").classList.remove("hidden");
+            document.getElementById("otp-step").classList.add("hidden");
+        }
+
+        function showOtpStep(event) {
+            event.preventDefault();
+
+            const emailInput = document.querySelector('input[name="email"]');
+            const email = emailInput.value;
+
+            const sendBtn = document.getElementById("send-otp-btn");
+
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = `<span class="animate-pulse">...</span>`;
+
+            fetch('/generate-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.message) {
+                        // Success - show OTP input
+                        document.getElementById("email-step").classList.add("hidden");
+                        document.getElementById("otp-step").classList.remove("hidden");
+                        document.querySelector('input[name="otp1"]').focus();
+                    } else {
+                        alert(data.error || 'Failed to send OTP');
+                    }
+                })
+                .catch(() => alert('An error occurred while sending OTP'))
+                .finally(() => {
+                    // Reset button
+                    sendBtn.disabled = false;
+                    sendBtn.innerHTML = `Send OTP`;
+                });
+        }
+
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const inputs = document.querySelectorAll('#otp-step input[type="text"]');
+
+            inputs.forEach((input, index) => {
+                input.addEventListener("input", () => {
+                    const value = input.value;
+                    if (value.length === 1 && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                });
+
+                input.addEventListener("keydown", (e) => {
+                    if (e.key === "Backspace" && input.value === "" && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+
+                input.addEventListener("input", (e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, "").slice(0, 1);
+                });
+            });
+
+            document.getElementById("otp-step").addEventListener("paste", (e) => {
+                e.preventDefault();
+                const data = (e.clipboardData || window.clipboardData).getData("text").replace(/\D/g, "").slice(0, inputs.length);
+                [...data].forEach((char, i) => {
+                    if (inputs[i]) inputs[i].value = char;
+                });
+                if (data.length === inputs.length) {
+                    inputs[inputs.length - 1].focus();
+                }
+            });
+
+            const otpForm = document.querySelector('#otp-step form');
+            otpForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const otp = [...inputs].map(input => input.value).join('');
+                if (otp.length !== 6) {
+                    alert("Please enter the full 6-digit code.");
+                    return;
+                }
+
+                fetch('/verify-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ otp })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.message) {
+                            window.location.href = "/account";
+                        } else {
+                            alert(data.error || 'OTP verification failed');
+                        }
+                    })
+                    .catch(() => alert('An error occurred while verifying OTP'));
+            });
+        });
+
+    </script>
+</body>
+
+</html>

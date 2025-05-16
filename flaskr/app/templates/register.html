@@ -77,16 +77,14 @@
 
     <script>
         document.getElementById('register-form').addEventListener('submit', async function (event) {
-            event.preventDefault(); // Prevent default form submission
+            event.preventDefault();
 
-            // Collect form data
             const formData = {
                 username: document.getElementById('username').value,
                 email: document.getElementById('email').value,
             };
 
             try {
-                // Send data to Flask backend
                 const response = await fetch('/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
