@@ -6,12 +6,15 @@ from feature_extraction import extract_feature, init_facenet
 from anti_spoof import load_antispoof_model
 from verification import compare_faces_euclidean
 
-DATASET_PATH = 'GT_dataset' # The path to the dataset folder
+DATASET_PATH = 'LFW_dataset' # The path to the dataset folder
 TUNED_WEIGHTS_PATH = "facenet_finetuned_weights.h5"
 USE_FINE_TUNED = True # Whether to use the fine-tuned weights or not
                    # True  -> Use fine-tuned weights
                    # False -> Use the original weights
 REF_INDEX = 0 # The index of the reference image in the dataset
+              # FEI -> 11
+              # LFW -> 0
+              # GT  -> 0
 
 def detect_face_no_base64(image_array):
     model_path = os.path.join(os.path.dirname(__file__), "face_detection_yunet_2023mar.onnx")
