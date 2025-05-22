@@ -93,7 +93,7 @@ def register():
             face_data, new_image_data, image_rgb = detect_face(image_data)
             
             if face_data is not None:
-                feature_vector = extract_feature(face_data, image_rgb, rec_model, antispoof_sess, antispoof_input)
+                feature_vector = extract_feature(face_data, image_rgb, rec_model, antispoof_sess, antispoof_input, detect_spoof=False)
                 save_user_to_db(session_user['email'], feature_vector, session_user['username'])
                 session_user['status_logged_in'] = True
                 session['user'] = session_user
