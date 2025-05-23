@@ -14,42 +14,6 @@ def get_planets():
     response = supabase.table('test_planets').select("description").execute()
     return jsonify(response.data)
 
-# @password_auth_bp.route('/register', methods=['POST', 'GET']) 
-# def register():
-#     supabase = current_app.supabase
-
-#     if request.method == 'POST':
-#         # Retrieve the form inputs
-#         username = request.form.get('username')
-#         password = request.form.get('password')
-
-#         if not username or not password:
-#             return jsonify({"error": "Username and password are required"}), 400
-
-#         # Check if user already exists
-#         existing_user = supabase.table('registered_users').select("id").eq("username", username).execute()
-#         if existing_user.data:
-#             return jsonify({"error": "Username already taken"}), 409  
-
-#         new_user = {
-#             "username": username,
-#             "password": password
-#         }
-
-#         response = supabase.table('registered_users').insert(new_user).execute()
-        
-#         # Check if response contains an error
-#         if isinstance(response, dict) and "error" in response and response["error"]:
-#             return jsonify({"error": "Database error", "details": response["error"]}), 500
-        
-#         session['user'] = username  # Store user in session  (this way we can retrive user information like username and display it)
-        
-#         # Redirect to account page (success)
-#         return redirect(url_for('password_auth_bp.account'))
-
-#     return render_template('register.html')
-
-
 @password_auth_bp.route('/login', methods=['POST', 'GET'])
 def login():
     supabase = current_app.supabase
@@ -88,9 +52,9 @@ def logout():
     session.pop('user', None)  # Remove user from session
     return redirect(url_for('face_auth_bp.login_fr'))
 
-@password_auth_bp.route('/account')
-def account():
-    if 'user' not in session or not session['user']['status_logged_in']:
-        return redirect(url_for('face_auth_bp.login_fr'))
-    
-    return render_template('account.html', user_obj=session['user'])
+#@password_auth_bp.route('/account')
+#def account():
+#    if 'user' not in session or not session['user']['status_logged_in']:
+#        return redirect(url_for('face_auth_bp.login_fr'))
+#    
+#    return render_template('account.html', user_obj=session['user'])

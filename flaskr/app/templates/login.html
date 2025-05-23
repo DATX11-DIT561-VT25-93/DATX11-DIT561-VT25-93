@@ -29,14 +29,14 @@
                     </p>
                 </div>
             </div>
-            <p class="text-[1.25vw] opacity-75">Enter your username or email to continue</p>
+            <p class="text-[1.25vw] opacity-75">Enter your username or email to log in</p>
             <div class="flex flex-col w-full justify-center mt-[1vw]">
                 <form>
                     <input class="w-full text-[1vw] rounded-2xl bg-white px-[1.25vw] py-[1.25vw]" id="email_username"
                         type="text" required placeholder="username or email">
                     <button id=".startButton" type="submit"
                         class="bg-[#0A0A0A] mx-auto mt-[5vw] transition duration-300 px-[3vw] py-[0.75vw] rounded-full hover:scale-105 cursor-pointer flex flex-row space-x-[0.5vw] items-center">
-                        <p class="font-semibold text-white text-[1.25vw]">Continue</p>
+                        <p class="font-semibold text-white text-[1.25vw]">Log In</p>
                         <svg xmlns="http://www.w3.org/2000/svg" width="1.5vw" height="1.75vw" viewBox="0 0 24 21"
                             fill="none">
                             <path d="M22 10.5L2 10.5M22 10.5L13.4286 19M22 10.5L13.4286 2" stroke="white"
@@ -44,23 +44,28 @@
                         </svg>
                     </button>
                 </form>
+                <p id="otp-tooltip" class="hidden text-[1.25vw] mt-1 text-center opacity-75">Trouble with face authentication? <span class="underline"><a href="/login-otp">try OTP</a></span> </p>
             </div>
     </section>
-    <section class="w-[64%] flex items-center">
-        <div
-            class="h-[80%] bg-linear-to-br from-zinc-900 from-10% via-zinc-300 via-80% to-zinc-200 to-90% w-full rounded-[5vw]">
-            <video id="webcam" autoplay playsinline class="w-full h-full object-cover -scale-x-100"></video>
-            <canvas id="canvas" class="w-full h-full object-cover" style="display: none"></canvas>
+   <section class="w-[64%] flex items-center ">
+        <div class="h-[80%] bg-white w-full rounded-4xl">
+            <video id="webcam" autoplay playsinline class="w-full h-full object-cover -scale-x-100 bg-white"></video>
+            <canvas id="canvas" class="w-full h-full object-cover " style="display: none"></canvas>
+            <img id="cover" src="../static/images/registerFillerBG.png" alt="filler-art" class="w-full h-full object-cover rounded-4xl">
+
         </div>
     </section>
+
+    
     <script>
         const webcam = document.getElementById('webcam');
         const canvas = document.getElementById('canvas');
+        const webcamcover = document.getElementById('cover');
         const emailUsernameInput = document.getElementById('email_username');
         const form = document.querySelector('form');
+        const otpTooltip = document.getElementById('otp-tooltip');
         let stream = null;
 
-        // Configuration
         const MAX_ATTEMPTS = 5;  // Maximum number of attempts
         const DELAY_BETWEEN_ATTEMPTS = 500; // Delay between attempts in milliseconds
 
@@ -92,14 +97,14 @@
                 stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 webcam.srcObject = stream;
                 webcam.style.display = 'block';
-                webcam.classList.add('w-full', 'h-full', 'object-cover', 'rounded-[5vw]');
+                webcam.classList.add('w-full', 'h-full', 'object-cover', 'rounded-4xl');
+                webcamcover.classList.add('opacity-0')
 
                 // Wait for video to be ready
                 await new Promise((resolve) => {
                     webcam.onloadedmetadata = () => resolve();
                 });
 
-                // Wait additional time for camera to adjust
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
             } catch (error) {
@@ -113,6 +118,9 @@
                 stream.getTracks().forEach(track => track.stop());
                 webcam.srcObject = null;
                 webcam.style.display = 'none';
+                webcamcover.classList.add('opacity-100')
+
+
             }
         }
 
@@ -132,7 +140,7 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    console.log('Login successful:', data.message);
+                    console.log(data.message);
                     if (data.redirect) {
                         stopWebcam();
                         window.location.href = data.redirect;
@@ -191,7 +199,7 @@
                 const credentialCheck = await checkCredentials(email_username);
                 if (!credentialCheck.valid) {
                     alert(credentialCheck.message);
-                    emailUsernameInput.value = ''; // Clear the input
+                    emailUsernameInput.value = ''; 
                     return;
                 }
 
@@ -228,6 +236,7 @@
                 }
 
                 // If we get here, all attempts failed
+                otpTooltip.classList.remove("hidden")
                 throw new Error(`Failed to verify after ${MAX_ATTEMPTS} attempts. Please try again.`);
 
             } catch (error) {
@@ -235,22 +244,18 @@
                 alert(error.message || 'An error occurred during login');
                 stopWebcam();
             } finally {
-                // Reset button state
                 submitButton.disabled = false;
                 submitButton.innerHTML = originalButtonText;
             }
         }
 
-        // Initially hide the webcam
         webcam.style.display = 'none';
 
-        // Prevent default form submission and handle with our custom function
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             await captureAndSend();
         });
 
-        // Clean up webcam when leaving page
         window.addEventListener('beforeunload', () => {
             stopWebcam();
         });

@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from deepface.models.facial_recognition import Facenet
 import onnxruntime as ort
-from anti_spoof import is_real_face
+from .anti_spoof import is_real_face
 import os
 
 def init_facenet():
@@ -73,7 +73,7 @@ def extract_feature(faces, image_rgb, model, detect_alignment=True, detect_spoof
     face_crop = image_rgb[y:y+h, x:x+w]
 
     if detect_spoof:
-        if not is_real_face(crop_face_with_padding(image_rgb, x, y, w, h, padding=30), antispoof_sess, input_name):
+        if not is_real_face(crop_face_with_padding(image_rgb, x, y, w, h, padding=60), antispoof_sess, input_name):
             print("Spoof detected. Skipping feature extraction.\n")
             return None
         else:
