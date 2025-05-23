@@ -192,7 +192,7 @@ def login_fr():
                     
                     # Compare webcam face features with stored face features
                     stored_face_features = np.array(json.loads(stored_face_features), dtype=np.float32)
-                    webcam_feature_vector = extract_feature(face_data, image_rgb, rec_model, antispoof_sess, antispoof_input)
+                    webcam_feature_vector = extract_feature(face_data, image_rgb, rec_model, antispoof_sess, antispoof_input, detect_spoof=False)
                     
                     if(not compare_faces_euclidean(webcam_feature_vector, stored_face_features)):
                         return jsonify({"error": f"Face comparison returned false: {str(e)}"}), 400
