@@ -3,7 +3,18 @@ import cv2
 import time
 import numpy as np
 from feature_extraction import extract_feature, init_facenet
+from anti_spoof import load_antispoof_model
 from verification import compare_faces_euclidean
+
+DATASET_PATH = 'LFW_dataset' # The path to the dataset folder
+TUNED_WEIGHTS_PATH = "facenet_finetuned_weights.h5"
+USE_FINE_TUNED = True # Whether to use the fine-tuned weights or not
+                   # True  -> Use fine-tuned weights
+                   # False -> Use the original weights
+REF_INDEX = 0 # The index of the reference image in the dataset
+              # FEI -> 11
+              # LFW -> 0
+              # GT  -> 0
 
 def detect_face_no_base64(image_array):
     model_path = os.path.join(os.path.dirname(__file__), "face_detection_yunet_2023mar.onnx")
@@ -29,7 +40,7 @@ def detect_face_no_base64(image_array):
 
 def evaluate_georgia_tech_faces(model):
     base_dir = os.path.dirname(__file__)
-    dataset_path = os.path.join(base_dir, "gt_db")
+    dataset_path = os.path.join(base_dir, DATASET_PATH) #"gt_db")
     references = {}
     TP = 0
     FP = 0
@@ -40,18 +51,20 @@ def evaluate_georgia_tech_faces(model):
     undetected_faces = 0
     misaligned_faces = 0
 
+    antispoof_sess, antispoof_input = load_antispoof_model()
+
     for person in sorted(os.listdir(dataset_path)):
         person_path = os.path.join(dataset_path, person)
 
         images = sorted(f for f in os.listdir(person_path) if f.endswith((".jpg", ".png")))
-        ref_img = cv2.imread(os.path.join(person_path, images[0]))
+        ref_img = cv2.imread(os.path.join(person_path, images[REF_INDEX]))
 
         faces, _, rgb = detect_face_no_base64(ref_img)
         if faces is None:
             undetected_faces += 1
             continue
 
-        emb = extract_feature(faces, rgb, model)
+        emb = extract_feature(faces, rgb, model, True, True, antispoof_sess, antispoof_input)
         if emb is None: 
             misaligned_faces += 1
             continue
@@ -67,7 +80,7 @@ def evaluate_georgia_tech_faces(model):
                 undetected_faces += 1
                 continue
 
-            emb = extract_feature(faces, rgb, model) 
+            emb = extract_feature(faces, rgb, model, True, True, antispoof_sess, antispoof_input) 
             if emb is None: 
                 misaligned_faces += 1
                 continue
@@ -99,7 +112,13 @@ def evaluate_georgia_tech_faces(model):
         "Total Classified": count
     }
 
-model = init_facenet()
-results = evaluate_georgia_tech_faces(model)
+recognition_model = init_facenet()
+
+if USE_FINE_TUNED:
+    #base_dir = os.path.abspath(os.path.dirname(__file__))
+    #recognition_model.load_weights(os.path.join(base_dir, "facenet_finetuned_weights.h5"))
+    recognition_model.load_weights(TUNED_WEIGHTS_PATH)
+
+results = evaluate_georgia_tech_faces(recognition_model)
 for k, v in results.items():
     print(f"{k}: {v}")

@@ -134,7 +134,7 @@ def register():
             face_data, new_image_data, image_rgb = detect_face(image_data)
 
             if face_data is not None:
-                feature_vector = extract_feature(face_data, image_rgb, rec_model, antispoof_sess, antispoof_input, skip_spoof=True)
+                feature_vector = extract_feature(face_data, image_rgb, rec_model, detect_spoof=False, antispoof_sess=antispoof_sess, input_name=antispoof_input)
                 if feature_vector is not None:
                     save_user_to_db(session_user['email'], feature_vector, session_user['username'])
                     session_user['status_logged_in'] = True
@@ -155,8 +155,8 @@ def register():
                     }  # Store session data
                     session.modified = True
 
-
                     log_event('register')
+
                 return jsonify({"message": "Success, user registered", "next": "/account"})
                 
             else:
@@ -256,7 +256,8 @@ def login_fr():
                     
                     # Compare webcam face features with stored face features
                     stored_face_features = np.array(json.loads(stored_face_features), dtype=np.float32)
-                    webcam_feature_vector = extract_feature(face_data, image_rgb, rec_model, antispoof_sess, antispoof_input)
+
+                    webcam_feature_vector = extract_feature(face_data, image_rgb, rec_model, detect_spoof=False, antispoof_sess=antispoof_sess, input_name=antispoof_input)
 
                     if webcam_feature_vector is not None:
                         if(not compare_faces_euclidean(webcam_feature_vector, stored_face_features)):

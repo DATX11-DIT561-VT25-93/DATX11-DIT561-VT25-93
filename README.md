@@ -97,11 +97,13 @@ Before running the general performance tests and the anti-spoofing tests, you mu
 
 3. Ensure the dataset folder contains one subfolder per individual (i.e., one folder for each person’s images), as expected by the face detection and feature extraction script.
 
-4. Set the following variables in the notebook:
+4. In *feature_extraction.py*, change `from .anti_spoof import is_real_face` to `from anti_spoof import is_real_face`.
+
+5. Set the following variables in the notebook:
    - `DATASET_PATH` - path to the dataset folder
    - `REF_IMG_INDEX` - **11** for the FEI dataset and **0** for the Georgia Tech and LFW datasets
 
-5. Run the notebook.
+6. Run the notebook.
 
 #### Face Anti-Spoofing Testing - *test_anti-spoofing.ipynb*
 
@@ -109,13 +111,15 @@ Before running the general performance tests and the anti-spoofing tests, you mu
 
 2. Place the dataset folder in the same directory as the testing notebook.
 
-3. Ensure that spoofed images are stored in one folder and genuine (real) images in another. Then, set the following variables:
+3. In *feature_extraction.py*, change `from .anti_spoof import is_real_face` to `from anti_spoof import is_real_face`.
+
+4. Ensure that spoofed images are stored in one folder and genuine (real) images in another. Then, set the following variables:
    - `DATASET_PATH_REAL` - path to the folder with genuine images
    - `DATASET_PATH_ATTACK` - path to the folder with spoofed images
    - `N_SPOOFED` - the number of spoofed images
    - `N_REAL` - the number of genuine images
    - `N_RUNS` - the desired number of test repetitions
 
-4. Run the notebook.
+5. Run the notebook.
 
 
